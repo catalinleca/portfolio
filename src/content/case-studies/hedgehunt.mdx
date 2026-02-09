@@ -1,0 +1,103 @@
+# HedgeHunt
+
+**A full-stack platform for creating and playing real-world treasure hunts — built solo from scratch.**
+
+Solo project · 2024 – Present
+
+---
+
+## What is HedgeHunt?
+
+HedgeHunt lets creators build interactive, real-world treasure hunts with multiple challenge types — clues, quizzes, missions, and tasks. Players navigate step-by-step through hunts using GPS, photos, and audio, validated by AI.
+
+### The Domain
+
+- **4 Challenge Types** — Clue, Quiz, Mission, Task — each with distinct UI and player behavior
+- **Steps** — the building blocks of hunts, with settings for location, hints, time limits, and attempt limits
+- **Creator + Player** — two separate experiences, connected by a shared data model
+
+---
+
+## System Architecture
+
+Monorepo with 5 apps and 3 shared packages. Single source of truth via OpenAPI YAML → generated TypeScript types + Zod schemas.
+
+{/* TODO: Architecture diagram SVG */}
+
+---
+
+## Key Technical Decisions
+
+{/* TODO: ADR cards for each decision */}
+
+### 1. Hunt Versioning — Draft / Publish / Release
+
+**Context:** Active players can't be disrupted by creator edits.
+
+**Decision:** Immutable version snapshots. Each publish creates a new HuntVersion with its own Steps. "Set as live" points to a specific version.
+
+**Trade-off:** Complex data model (Hunt → HuntVersion → Step per version) but zero risk to active sessions.
+
+### 2. Shared Type System — OpenAPI → TypeScript + Zod
+
+**Context:** 5 apps must agree on types. Manual type syncing across apps is a maintenance nightmare.
+
+**Decision:** Single OpenAPI YAML spec generates TypeScript types and Zod validation schemas.
+
+**Trade-off:** Generation step in the workflow, but zero type drift across the entire monorepo.
+
+### 3. Editor-Player iframe SDK — Typed postMessage
+
+**Context:** Editor and Player must be independently deployable apps, but the editor needs to preview the player experience in real-time.
+
+**Decision:** Typed postMessage protocol between iframe-embedded Player and the Editor host.
+
+**Trade-off:** Serialization overhead, but complete app separation and independent deploy cycles.
+
+### 4. Validation Strategy Pattern
+
+**Context:** Each challenge type (exact match, fuzzy/Levenshtein, contains, numeric range) needs different validation logic.
+
+**Decision:** One validator per challenge type, following the Strategy pattern. New types don't modify existing validators.
+
+**Trade-off:** More files, but each is focused and independently testable.
+
+### 5. HATEOAS for Player Navigation
+
+**Context:** The server is the single source of truth for game progression — which step is next, whether the hunt is complete, etc.
+
+**Decision:** Server provides `_links` in every response. Client follows them without hardcoded routes.
+
+**Trade-off:** Larger API responses, but trivially simple client navigation logic.
+
+---
+
+## Patterns Worth Highlighting
+
+- **Optimistic locking** for concurrent step editing
+- **Prefetching** next step while playing current — instant transitions
+- **React Query** as the state layer — no Redux, no global state
+- **AI integration** — GPT-4o for hunt generation and answer validation
+
+---
+
+## What I'd Do Differently
+
+Coming soon — honest reflections on trade-offs, unexpected complexity, and what worked vs. what created friction.
+
+---
+
+## Numbers
+
+- **5** apps in monorepo
+- **3** shared packages
+- **217** backend tests
+- **4** challenge types
+- **1** developer — solo full-stack delivery
+
+---
+
+## Links
+
+- [HedgeHunt](https://hedgehunt.app) — live product
+- GitHub — available on request
