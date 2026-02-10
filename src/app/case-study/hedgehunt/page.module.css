@@ -1,13 +1,7 @@
 .layout {
   display: flex;
   flex-direction: column;
-  max-width: var(--max-width-wide);
+  max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: 0 var(--space-6);
-
-  @media (min-width: 1024px) {
-    flex-direction: row;
-    gap: var(--space-12);
-    padding-top: var(--space-8);
-  }
+  padding: 8rem var(--gutter) var(--space-24);
 }

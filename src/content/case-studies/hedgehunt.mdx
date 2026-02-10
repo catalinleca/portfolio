@@ -36,6 +36,43 @@ HedgeHunt lets creators build interactive, real-world treasure hunts with multip
 
 Monorepo with 5 apps and 3 shared packages. Single source of truth via OpenAPI YAML → generated TypeScript types + Zod schemas.
 
+<Mermaid chart={`graph TD
+  A[HuntHub Monorepo] --> B[Editor App]
+  A --> C[Player App]
+  A --> D[Backend API]
+  A --> E[Landing Page]
+  A --> F[Marketing Site]
+  A --> G["@hunthub/shared"]
+  A --> H["@hunthub/compass"]
+  A --> I["@hunthub/player-sdk"]
+  B --> G
+  B --> I
+  C --> G
+  C --> H
+  D --> G
+  E --> G
+  style A fill:#1a1a1e,stroke:#cc7832,color:#eae8e4
+  style B fill:#1a1a1e,stroke:#6897bb,color:#eae8e4
+  style C fill:#1a1a1e,stroke:#6897bb,color:#eae8e4
+  style D fill:#1a1a1e,stroke:#6a8759,color:#eae8e4
+  style E fill:#1a1a1e,stroke:#6b6966,color:#eae8e4
+  style F fill:#1a1a1e,stroke:#6b6966,color:#eae8e4
+  style G fill:#151518,stroke:#9876aa,color:#eae8e4
+  style H fill:#151518,stroke:#9876aa,color:#eae8e4
+  style I fill:#151518,stroke:#9876aa,color:#eae8e4`}
+  caption="HuntHub monorepo — 5 apps + 3 shared packages"
+/>
+
+<Mermaid chart={`stateDiagram-v2
+  [*] --> Draft: Create Hunt
+  Draft --> Published: Publish (immutable snapshot)
+  Published --> Live: Set as Live
+  Published --> Draft: Continue Editing
+  Live --> Draft: New Draft Version
+  Draft --> Published: Publish v2+`}
+  caption="Hunt version lifecycle — Draft → Published → Live"
+/>
+
 ---
 
 ## Decisions

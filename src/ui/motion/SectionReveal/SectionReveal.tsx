@@ -24,7 +24,7 @@ export const SectionReveal = ({
       transition={{
         duration: prefersReducedMotion ? 0.15 : 0.5,
         delay: prefersReducedMotion ? 0 : delay,
-        ease: [0.2, 0.8, 0.2, 1],
+        ease: [0.16, 1, 0.3, 1],
       }}
       className={className}
     >

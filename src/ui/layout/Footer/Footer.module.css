@@ -1,20 +1,12 @@
 .footer {
   max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: var(--space-8) var(--space-6);
-  border-top: 1px solid var(--color-border-subtle);
+  padding: 2rem var(--gutter);
+  border-top: 1px solid var(--border-dim);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
-}
-
-.footerLink {
-  color: var(--color-text-tertiary);
-  transition: color var(--duration-fast) var(--ease-out);
-
-  &:hover {
-    color: var(--color-text-secondary);
-  }
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
 }

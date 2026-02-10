@@ -1,0 +1,49 @@
+.strip {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-dim);
+  padding: 1.5rem 0;
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  gap: 3rem;
+  width: max-content;
+  animation: marquee var(--marquee-speed) linear infinite;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.5;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}

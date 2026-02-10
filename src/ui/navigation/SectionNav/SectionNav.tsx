@@ -28,7 +28,7 @@ export const SectionNav = ({ sections }: SectionNavProps) => {
             setActiveId(section.id);
           }
         },
-        { rootMargin: "-80px 0px -60% 0px", threshold: 0 },
+        { rootMargin: "-120px 0px -60% 0px", threshold: 0 },
       );
 
       observer.observe(el);

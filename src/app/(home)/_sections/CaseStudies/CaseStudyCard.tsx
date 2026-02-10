@@ -1,53 +1,53 @@
 import Link from "next/link";
+import { WindowChrome, TechTag } from "@/ui/shared";
 import styles from "./CaseStudyCard.module.css";
 
-interface CaseStudyCardProps {
-  label: string;
-  title: string;
-  description: string;
-  bullets: string[];
-  href: string;
-  externalHref?: string;
-  externalLabel?: string;
-}
+const tags = [
+  "react-19",
+  "typescript",
+  "mui-v6",
+  "tanstack-query",
+  "google-maps",
+  "edge-computing",
+];
 
-export const CaseStudyCard = ({
-  label,
-  title,
-  description,
-  bullets,
-  href,
-  externalHref,
-  externalLabel,
-}: CaseStudyCardProps) => {
+export const CaseStudyCard = () => {
   return (
-    <div className={styles.card}>
-      <p className={styles.label}>{label}</p>
-      <h3 className={styles.title}>{title}</h3>
-      <p className={styles.description}>{description}</p>
-      <ul className={styles.bullets}>
-        {bullets.map((bullet) => (
-          <li key={bullet} className={styles.bullet}>
-            {bullet}
-          </li>
-        ))}
-      </ul>
-      <div className={styles.actions}>
-        <Link href={href} className={styles.primaryAction}>
-          Read case study &rarr;
-        </Link>
-        {externalHref && (
-          <a
-            href={externalHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondaryAction}
-          >
-            {externalLabel ?? "Visit product"}
-          </a>
-        )}
+    <WindowChrome title="hedgehunt.app">
+      <div className={styles.body}>
+        <div className={styles.info}>
+          <div className={styles.overline}>Platform · Case Study</div>
+          <h3 className={styles.title}>HedgeHunt</h3>
+          <p className={styles.description}>
+            A full-stack platform for creating and playing real-world treasure
+            hunts — built solo from scratch. React 19 editor with real-time
+            iframe preview, Node.js API with 217 tests, monorepo with 5 apps + 3
+            shared packages.
+          </p>
+          <div className={styles.tags}>
+            {tags.map((tag) => (
+              <TechTag key={tag} label={tag} />
+            ))}
+          </div>
+          <Link href="/case-study/hedgehunt" className={styles.cta}>
+            Read case study <span className={styles.arrow}>→</span>
+          </Link>
+        </div>
+        <div className={styles.preview}>
+          <div className={styles.previewFrame}>
+            <div className={styles.miniChrome}>
+              <div className={styles.miniDots}>
+                <span />
+                <span />
+                <span />
+              </div>
+              <div className={styles.urlBar}>hedgehunt.app/editor</div>
+            </div>
+            <div className={styles.screenshot} />
+          </div>
+          <div className={styles.badge}>hedgehunt.app</div>
+        </div>
       </div>
-    </div>
+    </WindowChrome>
   );
 };
-

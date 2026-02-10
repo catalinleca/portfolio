@@ -1,42 +1,84 @@
 .section {
-  max-width: var(--max-width-text);
+  max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 6rem var(--gutter) 3rem;
+  border-top: 1px solid var(--border);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 4rem;
+  align-items: end;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .heading {
-  font-size: var(--text-3xl);
-  font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-4);
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--text-bright);
+  line-height: 1.15;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--text-muted);
 }
 
 .subtext {
-  font-size: var(--text-lg);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-8);
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.7;
 }
 
-.links {
+.right {
   display: flex;
-  gap: var(--space-6);
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
 }
 
 .link {
-  font-size: var(--text-base);
-  font-weight: var(--weight-medium);
-  color: var(--color-accent);
-  transition: color var(--duration-fast) var(--ease-out);
-
-  &:hover {
-    color: var(--color-accent-hover);
-  }
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    gap var(--duration-fast) var(--ease-out);
 }
 
-.status {
-  margin-top: var(--space-8);
-  font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
+.link:hover {
+  color: var(--text-bright);
+}
+
+.arrow {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.link:hover .arrow {
+  transform: translateX(3px);
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .right {
+    align-items: flex-start;
+  }
+
+  .section {
+    padding: 6rem var(--gutter-mobile) 3rem;
+  }
 }

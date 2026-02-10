@@ -5,6 +5,7 @@ import { PageTransition } from "@/ui/motion";
 import { SectionNav } from "@/ui/navigation";
 import { ExecutiveSummary } from "@/mdx-components/ExecutiveSummary";
 import { DecisionCard } from "@/mdx-components/DecisionCard";
+import { Mermaid } from "@/mdx-components/Mermaid";
 import type { Metadata } from "next";
 import styles from "./page.module.css";
 
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 const mdxComponents = {
   ExecutiveSummary,
   DecisionCard,
+  Mermaid,
 };
 
 const sections = [

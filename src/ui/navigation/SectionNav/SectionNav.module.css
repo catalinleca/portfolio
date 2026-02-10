@@ -1,27 +1,18 @@
-/* Mobile: horizontal scrollable tabs, sticky top */
 .nav {
   position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border-subtle);
+  top: 52px;
+  z-index: 50;
+  background: rgba(14, 14, 17, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-dim);
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
   scrollbar-width: none;
+}
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  @media (min-width: 1024px) {
-    position: sticky;
-    top: var(--space-8);
-    width: 200px;
-    flex-shrink: 0;
-    border-bottom: none;
-    overflow-x: visible;
-    align-self: flex-start;
-  }
+.nav::-webkit-scrollbar {
+  display: none;
 }
 
 .list {
@@ -29,49 +20,34 @@
   padding: 0;
   margin: 0;
   display: flex;
-  gap: var(--space-1);
-
-  @media (min-width: 1024px) {
-    flex-direction: column;
-    gap: 0;
-  }
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
 }
 
 .link {
   display: block;
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--color-text-tertiary);
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   background: none;
   border: none;
+  border-bottom: 2px solid transparent;
   cursor: pointer;
-  text-align: left;
-  width: 100%;
-  font-family: inherit;
   transition:
     color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);
-  border-bottom: 2px solid transparent;
+}
 
-  &:hover {
-    color: var(--color-text-primary);
-  }
-
-  @media (min-width: 1024px) {
-    border-bottom: none;
-    border-left: 2px solid var(--color-border-subtle);
-    padding: var(--space-2) var(--space-4);
-  }
+.link:hover {
+  color: var(--text-bright);
 }
 
 .active {
-  color: var(--color-text-primary);
-  font-weight: var(--weight-medium);
-  border-bottom-color: var(--color-accent);
-
-  @media (min-width: 1024px) {
-    border-bottom-color: transparent;
-    border-left-color: var(--color-accent);
-  }
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }

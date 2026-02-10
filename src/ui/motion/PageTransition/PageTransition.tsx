@@ -12,7 +12,7 @@ export const PageTransition = ({ children }: { children: ReactNode }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: prefersReducedMotion ? 0.15 : 0.4,
-        ease: [0.2, 0.8, 0.2, 1],
+        ease: [0.16, 1, 0.3, 1],
       }}
     >
       {children}

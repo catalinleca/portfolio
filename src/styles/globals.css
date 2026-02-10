@@ -15,11 +15,18 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+
 body {
   font-family: var(--font-sans);
-  color: var(--color-text-primary);
-  background: var(--color-bg);
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
   line-height: var(--leading-normal);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(204, 120, 50, 0.3);
 }
 
 a {

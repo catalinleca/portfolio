@@ -2,32 +2,38 @@
 .prose {
   font-size: var(--text-lg);
   line-height: var(--leading-relaxed);
-  color: var(--color-text-primary);
+  color: var(--text);
   max-width: var(--max-width-text);
   margin: 0 auto;
 
   & h1 {
+    font-family: var(--font-serif);
     font-size: var(--text-4xl);
     font-weight: var(--weight-bold);
     line-height: var(--leading-tight);
+    color: var(--text-bright);
     margin-top: var(--space-16);
     margin-bottom: var(--space-6);
     letter-spacing: -0.02em;
   }
 
   & h2 {
+    font-family: var(--font-serif);
     font-size: var(--text-2xl);
     font-weight: var(--weight-semibold);
     line-height: var(--leading-tight);
+    color: var(--text-bright);
     margin-top: var(--space-12);
     margin-bottom: var(--space-4);
     letter-spacing: -0.01em;
   }
 
   & h3 {
+    font-family: var(--font-serif);
     font-size: var(--text-xl);
     font-weight: var(--weight-semibold);
     line-height: var(--leading-tight);
+    color: var(--text-bright);
     margin-top: var(--space-8);
     margin-bottom: var(--space-3);
   }
@@ -37,13 +43,13 @@
   }
 
   & a {
-    color: var(--color-accent);
+    color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color var(--duration-fast) var(--ease-out);
 
     &:hover {
-      color: var(--color-accent-hover);
+      color: var(--accent-hover);
     }
   }
 
@@ -59,16 +65,17 @@
   & code {
     font-family: var(--font-mono);
     font-size: 0.875em;
-    background: var(--color-border-subtle);
+    background: var(--bg-raised);
     padding: 0.15em 0.4em;
     border-radius: var(--radius-sm);
   }
 
   & pre {
-    background: var(--color-text-primary);
-    color: var(--color-bg);
+    background: var(--bg-raised);
+    color: var(--text-bright);
     padding: var(--space-6);
     border-radius: var(--radius-md);
+    border: 1px solid var(--border-dim);
     overflow-x: auto;
     margin-bottom: var(--space-6);
     font-size: var(--text-sm);
@@ -83,17 +90,17 @@
   }
 
   & blockquote {
-    border-left: 3px solid var(--color-accent);
+    border-left: 3px solid var(--accent);
     padding-left: var(--space-6);
     margin-bottom: var(--space-6);
-    color: var(--color-text-secondary);
+    color: var(--text-muted);
     font-style: italic;
   }
 
   & hr {
     border: none;
     height: 1px;
-    background: var(--color-border);
+    background: var(--border);
     margin: var(--space-12) 0;
   }
 
@@ -114,15 +121,17 @@
     text-align: left;
     font-weight: var(--weight-semibold);
     padding: var(--space-3) var(--space-4);
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: 2px solid var(--border);
+    color: var(--text-bright);
   }
 
   & td {
     padding: var(--space-3) var(--space-4);
-    border-bottom: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--border-dim);
   }
 
   & strong {
     font-weight: var(--weight-semibold);
+    color: var(--text-bright);
   }
 }
