@@ -1,12 +1,26 @@
+---
+title: "HedgeHunt"
+description: "A full-stack platform for creating and playing real-world treasure hunts — architecture, technical decisions, and patterns."
+date: "2024-01-01"
+tags: ["full-stack", "typescript", "monorepo", "react", "node"]
+---
+
 # HedgeHunt
 
 **A full-stack platform for creating and playing real-world treasure hunts — built solo from scratch.**
 
 Solo project · 2024 – Present
 
+<ExecutiveSummary
+  problem="Treasure hunt creators need to build and publish multi-step hunts with clues, quizzes, and GPS challenges — without disrupting active players."
+  constraints="Solo developer. 4 challenge types with distinct UI and validation. Real-time editor preview. Immutable versioning. AI-powered generation."
+  architecture="TypeScript monorepo — 5 apps, 3 shared packages. OpenAPI as single source of truth. Editor ↔ Player iframe SDK."
+  results="217 backend tests. Full type safety across all apps. Immutable version snapshots prevent active-session disruptions. Live at hedgehunt.app."
+/>
+
 ---
 
-## What is HedgeHunt?
+## Overview
 
 HedgeHunt lets creators build interactive, real-world treasure hunts with multiple challenge types — clues, quizzes, missions, and tasks. Players navigate step-by-step through hunts using GPS, photos, and audio, validated by AI.
 
@@ -18,61 +32,53 @@ HedgeHunt lets creators build interactive, real-world treasure hunts with multip
 
 ---
 
-## System Architecture
+## Architecture
 
 Monorepo with 5 apps and 3 shared packages. Single source of truth via OpenAPI YAML → generated TypeScript types + Zod schemas.
 
-{/* TODO: Architecture diagram SVG */}
+---
+
+## Decisions
+
+<DecisionCard
+  title="Hunt Versioning — Draft / Publish / Release"
+  context="Active players can't be disrupted by creator edits."
+  decision="Immutable version snapshots. Each publish creates a new HuntVersion with its own Steps. 'Set as live' points to a specific version."
+  tradeoff="Complex data model (Hunt → HuntVersion → Step per version) but zero risk to active sessions."
+  defaultOpen
+/>
+
+<DecisionCard
+  title="Shared Type System — OpenAPI → TypeScript + Zod"
+  context="5 apps must agree on types. Manual type syncing across apps is a maintenance nightmare."
+  decision="Single OpenAPI YAML spec generates TypeScript types and Zod validation schemas."
+  tradeoff="Generation step in the workflow, but zero type drift across the entire monorepo."
+/>
+
+<DecisionCard
+  title="Editor-Player iframe SDK — Typed postMessage"
+  context="Editor and Player must be independently deployable apps, but the editor needs to preview the player experience in real-time."
+  decision="Typed postMessage protocol between iframe-embedded Player and the Editor host."
+  tradeoff="Serialization overhead, but complete app separation and independent deploy cycles."
+/>
+
+<DecisionCard
+  title="Validation Strategy Pattern"
+  context="Each challenge type (exact match, fuzzy/Levenshtein, contains, numeric range) needs different validation logic."
+  decision="One validator per challenge type, following the Strategy pattern. New types don't modify existing validators."
+  tradeoff="More files, but each is focused and independently testable."
+/>
+
+<DecisionCard
+  title="HATEOAS for Player Navigation"
+  context="The server is the single source of truth for game progression — which step is next, whether the hunt is complete, etc."
+  decision="Server provides _links in every response. Client follows them without hardcoded routes."
+  tradeoff="Larger API responses, but trivially simple client navigation logic."
+/>
 
 ---
 
-## Key Technical Decisions
-
-{/* TODO: ADR cards for each decision */}
-
-### 1. Hunt Versioning — Draft / Publish / Release
-
-**Context:** Active players can't be disrupted by creator edits.
-
-**Decision:** Immutable version snapshots. Each publish creates a new HuntVersion with its own Steps. "Set as live" points to a specific version.
-
-**Trade-off:** Complex data model (Hunt → HuntVersion → Step per version) but zero risk to active sessions.
-
-### 2. Shared Type System — OpenAPI → TypeScript + Zod
-
-**Context:** 5 apps must agree on types. Manual type syncing across apps is a maintenance nightmare.
-
-**Decision:** Single OpenAPI YAML spec generates TypeScript types and Zod validation schemas.
-
-**Trade-off:** Generation step in the workflow, but zero type drift across the entire monorepo.
-
-### 3. Editor-Player iframe SDK — Typed postMessage
-
-**Context:** Editor and Player must be independently deployable apps, but the editor needs to preview the player experience in real-time.
-
-**Decision:** Typed postMessage protocol between iframe-embedded Player and the Editor host.
-
-**Trade-off:** Serialization overhead, but complete app separation and independent deploy cycles.
-
-### 4. Validation Strategy Pattern
-
-**Context:** Each challenge type (exact match, fuzzy/Levenshtein, contains, numeric range) needs different validation logic.
-
-**Decision:** One validator per challenge type, following the Strategy pattern. New types don't modify existing validators.
-
-**Trade-off:** More files, but each is focused and independently testable.
-
-### 5. HATEOAS for Player Navigation
-
-**Context:** The server is the single source of truth for game progression — which step is next, whether the hunt is complete, etc.
-
-**Decision:** Server provides `_links` in every response. Client follows them without hardcoded routes.
-
-**Trade-off:** Larger API responses, but trivially simple client navigation logic.
-
----
-
-## Patterns Worth Highlighting
+## Patterns
 
 - **Optimistic locking** for concurrent step editing
 - **Prefetching** next step while playing current — instant transitions
@@ -81,9 +87,15 @@ Monorepo with 5 apps and 3 shared packages. Single source of truth via OpenAPI Y
 
 ---
 
-## What I'd Do Differently
+## What I'd Do Next
 
-Coming soon — honest reflections on trade-offs, unexpected complexity, and what worked vs. what created friction.
+1. **Contract tests for the Editor ↔ Player boundary** — The iframe postMessage SDK is the highest-risk integration surface. I'd add Playwright contract tests to catch protocol drift between independent deploys before it reaches production.
+
+2. **Optimise developer velocity** — Cache the OpenAPI codegen step and add incremental builds so only affected packages regenerate. At 5 apps, the full build pipeline has room to be faster without sacrificing the type safety guarantee.
+
+3. **Read-optimised projections for versioned content** — The Hunt → HuntVersion → Step model is correct for write-time immutability, but read queries are more complex than they need to be. Materialised views or denormalised read models would simplify the player-facing API.
+
+4. **Consolidate deployable surfaces if the product stays solo** — 5 independently deployed apps is architecturally clean, but the operational surface area is large for one developer. If the team doesn't grow, merging the editor and marketing site into a single Next.js app would reduce deploy coordination without sacrificing code modularity.
 
 ---
 

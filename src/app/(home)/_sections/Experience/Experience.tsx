@@ -49,6 +49,9 @@ export const Experience = () => {
           </div>
         ))}
       </div>
+      <a href="/resume.pdf" className={styles.resumeLink}>
+        Full resume &rarr;
+      </a>
     </div>
   );
 };

@@ -92,17 +92,3 @@
   }
 }
 
-.comingSoon {
-  composes: card;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 280px;
-  opacity: 0.6;
-}
-
-.comingSoonText {
-  font-size: var(--text-lg);
-  color: var(--color-text-tertiary);
-  font-weight: var(--weight-medium);
-}

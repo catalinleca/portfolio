@@ -11,16 +11,21 @@ export const Hero = () => {
       </p>
       <ul className={styles.proof}>
         <li className={styles.proofItem}>
-          Built a multi-app platform solo — 5 apps, 3 shared packages
+          Reduced system vulnerabilities 90% at the Financial Times
         </li>
         <li className={styles.proofItem}>
-          5+ years across Vodafone, Financial Times, Trading 212, Zafran
+          Rearchitected a legacy CMS into a modular React system at Education
+          First
         </li>
         <li className={styles.proofItem}>
-          217 backend tests, full-stack solo delivery
+          Shipped a full-stack platform solo — editor, player, API, shared SDK,
+          217 automated tests
         </li>
       </ul>
       <div className={styles.links}>
+        <a href="/resume.pdf" className={styles.resumeLink}>
+          Resume
+        </a>
         <a
           href="https://github.com/catalinleca"
           target="_blank"

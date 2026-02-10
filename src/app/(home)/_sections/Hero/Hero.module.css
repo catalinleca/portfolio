@@ -69,6 +69,16 @@
   margin-top: var(--space-4);
 }
 
+.resumeLink {
+  font-weight: var(--weight-medium);
+  color: var(--color-accent);
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent-hover);
+  }
+}
+
 .iconLink {
   color: var(--color-text-tertiary);
   transition: color var(--duration-fast) var(--ease-out);

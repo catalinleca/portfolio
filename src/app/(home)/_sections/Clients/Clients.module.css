@@ -10,6 +10,12 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text-tertiary);
+  margin-bottom: var(--space-3);
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-8);
 }
 
@@ -30,4 +36,36 @@
   &:hover {
     opacity: 1;
   }
+}
+
+.proofStrip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8);
+  margin-top: var(--space-12);
+  padding-top: var(--space-12);
+  border-top: 1px solid var(--color-border-subtle);
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.proofItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.proofNumber {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  color: var(--color-accent);
+  letter-spacing: -0.02em;
+  line-height: var(--leading-tight);
+}
+
+.proofLabel {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
 }

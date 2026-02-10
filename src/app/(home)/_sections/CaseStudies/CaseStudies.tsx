@@ -1,4 +1,4 @@
-import { CaseStudyCard, ComingSoonCard } from "./CaseStudyCard";
+import { CaseStudyCard } from "./CaseStudyCard";
 import styles from "./CaseStudies.module.css";
 
 export const CaseStudies = () => {
@@ -19,7 +19,6 @@ export const CaseStudies = () => {
           externalHref="https://hedgehunt.app"
           externalLabel="Visit product"
         />
-        <ComingSoonCard title="Performance Remediation" />
       </div>
     </div>
   );

@@ -51,14 +51,3 @@ export const CaseStudyCard = ({
   );
 };
 
-export const ComingSoonCard = ({ title }: { title: string }) => {
-  return (
-    <div className={styles.comingSoon}>
-      <div>
-        <p className={styles.label}>Case Study</p>
-        <h3 className={styles.title}>{title}</h3>
-        <p className={styles.comingSoonText}>Coming soon</p>
-      </div>
-    </div>
-  );
-};
