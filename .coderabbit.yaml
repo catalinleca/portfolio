@@ -1,0 +1,64 @@
+language: "en-US"
+
+tone_instructions: "Direct, technical. Flag pattern deviations, broken imports, and non-self-explanatory code. Skip trivial nitpicks and style preferences."
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: false
+  high_level_summary: true
+  sequence_diagrams: false
+  poem: false
+
+  path_filters:
+    - "!**/*.md"
+    - "!.claude/**"
+
+  path_instructions:
+    - path: "src/app/**/*.tsx"
+      instructions: |
+        This is a Next.js 15 App Router project with CSS Modules (no Tailwind).
+
+        STRUCTURE RULES:
+        - Page-specific UI lives in `_sections/` or `_components/` next to the page
+        - Shared UI lives in `src/ui/`
+        - If a component is only used by one page, it should NOT be in `src/ui/`
+
+        Focus on:
+        - Broken imports (wrong barrel paths, direct file imports instead of barrel)
+        - Missing 'use client' where browser APIs or Framer Motion are used
+        - 'use client' where it's not needed (should be server components by default)
+        - Hardcoded values that should reference design tokens from tokens.css
+
+        Skip:
+        - Accessibility suggestions
+        - Formatting and style preferences
+        - Suggesting Tailwind or other CSS frameworks
+
+    - path: "src/ui/**/*.tsx"
+      instructions: |
+        These are shared UI components used across multiple routes.
+        Only `src/ui/motion/` components should have 'use client'.
+
+        Focus on:
+        - Components that are only used in one place (should be colocated with the route instead)
+        - CSS Modules using hardcoded values instead of design tokens
+        - Missing or incorrect barrel exports
+
+        Skip:
+        - Accessibility suggestions
+        - Style preferences
+
+    - path: "src/content/**/*.mdx"
+      instructions: |
+        Case study content. Focus on:
+        - Broken links or image references
+        - Frontmatter completeness (title, description, date, tags)
+        - Heading hierarchy (no skipped levels)
+
+        Skip:
+        - Writing style opinions
+        - Grammar nitpicks
+
+  tools:
+    gitleaks:
+      enabled: true
