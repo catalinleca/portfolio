@@ -1,0 +1,33 @@
+.section {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.heading {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-8);
+}
+
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-10);
+}
+
+.logo {
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-tertiary);
+  opacity: 0.6;
+  transition: opacity var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    opacity: 1;
+  }
+}
