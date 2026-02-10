@@ -15,7 +15,7 @@ const capabilities = [
   },
 ];
 
-export function Capabilities() {
+export const Capabilities = () => {
   return (
     <div className={styles.section}>
       <h2 className={styles.heading}>Capabilities</h2>
@@ -29,4 +29,4 @@ export function Capabilities() {
       </div>
     </div>
   );
-}
+};

@@ -1,0 +1,4 @@
+.claude/implementation-plans/**
+.next/
+node_modules/
+.idea/

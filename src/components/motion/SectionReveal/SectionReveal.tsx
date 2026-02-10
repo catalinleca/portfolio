@@ -9,11 +9,11 @@ interface SectionRevealProps {
   className?: string;
 }
 
-export function SectionReveal({
+export const SectionReveal = ({
   children,
   delay = 0,
   className,
-}: SectionRevealProps) {
+}: SectionRevealProps) => {
   return (
     <motion.section
       initial={{ opacity: 0, y: 24 }}
@@ -29,4 +29,4 @@ export function SectionReveal({
       {children}
     </motion.section>
   );
-}
+};

@@ -8,7 +8,7 @@ const clients = [
   "Zafran",
 ];
 
-export function Clients() {
+export const Clients = () => {
   return (
     <div className={styles.section}>
       <h2 className={styles.heading}>Selected Clients</h2>
@@ -21,4 +21,4 @@ export function Clients() {
       </div>
     </div>
   );
-}
+};

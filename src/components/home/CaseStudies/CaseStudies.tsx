@@ -1,7 +1,7 @@
 import { CaseStudyCard, ComingSoonCard } from "./CaseStudyCard";
 import styles from "./CaseStudies.module.css";
 
-export function CaseStudies() {
+export const CaseStudies = () => {
   return (
     <div className={styles.section}>
       <h2 className={styles.heading}>Featured Work</h2>
@@ -23,4 +23,4 @@ export function CaseStudies() {
       </div>
     </div>
   );
-}
+};

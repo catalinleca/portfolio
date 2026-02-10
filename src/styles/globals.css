@@ -1,5 +1,5 @@
-@import '../styles/tokens.css';
-@import '../styles/prose.css';
+@import './tokens.css';
+@import './prose.css';
 
 *,
 *::before,

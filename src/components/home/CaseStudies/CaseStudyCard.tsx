@@ -11,7 +11,7 @@ interface CaseStudyCardProps {
   externalLabel?: string;
 }
 
-export function CaseStudyCard({
+export const CaseStudyCard = ({
   label,
   title,
   description,
@@ -19,7 +19,7 @@ export function CaseStudyCard({
   href,
   externalHref,
   externalLabel,
-}: CaseStudyCardProps) {
+}: CaseStudyCardProps) => {
   return (
     <div className={styles.card}>
       <p className={styles.label}>{label}</p>
@@ -49,9 +49,9 @@ export function CaseStudyCard({
       </div>
     </div>
   );
-}
+};
 
-export function ComingSoonCard({ title }: { title: string }) {
+export const ComingSoonCard = ({ title }: { title: string }) => {
   return (
     <div className={styles.comingSoon}>
       <div>
@@ -61,4 +61,4 @@ export function ComingSoonCard({ title }: { title: string }) {
       </div>
     </div>
   );
-}
+};

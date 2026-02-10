@@ -1,6 +1,6 @@
 import styles from "./Footer.module.css";
 
-export function Footer() {
+export const Footer = () => {
   return (
     <footer className={styles.footer}>
       <span>&copy; {new Date().getFullYear()} Catalin Leca</span>
@@ -14,4 +14,4 @@ export function Footer() {
       </a>
     </footer>
   );
-}
+};

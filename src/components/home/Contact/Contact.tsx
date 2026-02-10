@@ -1,6 +1,6 @@
 import styles from "./Contact.module.css";
 
-export function Contact() {
+export const Contact = () => {
   return (
     <div className={styles.section}>
       <h2 className={styles.heading}>Get in touch</h2>
@@ -31,4 +31,4 @@ export function Contact() {
       <p className={styles.status}>Currently building HedgeHunt.</p>
     </div>
   );
-}
+};

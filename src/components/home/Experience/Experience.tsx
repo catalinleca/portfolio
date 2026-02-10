@@ -29,7 +29,7 @@ const experience = [
   },
 ];
 
-export function Experience() {
+export const Experience = () => {
   return (
     <div className={styles.section}>
       <h2 className={styles.heading}>Experience</h2>
@@ -51,4 +51,4 @@ export function Experience() {
       </div>
     </div>
   );
-}
+};

@@ -1,6 +1,6 @@
 import styles from "./Hero.module.css";
 
-export function Hero() {
+export const Hero = () => {
   return (
     <div className={styles.hero}>
       <p className={styles.name}>Catalin Leca</p>
@@ -49,4 +49,4 @@ export function Hero() {
       </div>
     </div>
   );
-}
+};
