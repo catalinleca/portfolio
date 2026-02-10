@@ -1,6 +1,6 @@
 import { compileMDX } from "next-mdx-remote/rsc";
 import { getCaseStudySource } from "@/lib/mdx";
-import { PageTransition } from "@/components/motion";
+import { PageTransition } from "@/ui/motion";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
