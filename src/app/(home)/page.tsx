@@ -1,6 +1,5 @@
 import {
   Hero,
-  TechStrip,
   CaseStudies,
   Capabilities,
   Experience,
@@ -15,7 +14,6 @@ export default function Home() {
     <PageTransition>
       <main className={styles.main}>
         <Hero />
-        <TechStrip />
 
         <SectionReveal>
           <CaseStudies />

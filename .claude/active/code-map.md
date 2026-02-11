@@ -6,13 +6,12 @@
 - `src/app/case-study/hedgehunt/page.tsx` — HedgeHunt case study (MDX via next-mdx-remote, SSG)
 
 ## Homepage Sections — `src/app/(home)/_sections/`
-- `Hero/` — Headline, proof points, resume/social buttons (ExternalLink), stat cards
-- `TechStrip/` — Scrolling marquee of tech stack items
+- `Hero/` — Headline, proof points, case study CTA + resume/social buttons, stat cards
 - `CaseStudies/` — Featured work section (SectionShell + CaseStudyCard + WindowChrome)
 - `Capabilities/` — Three capability rows (SectionShell, 2-col grid)
 - `Experience/` — Work history list + ArrowLink to resume (SectionShell)
 - `Contact/` — CTA with ArrowLinks to email/social (SectionShell)
-- `content.ts` — All static data for home sections (heroStats, techStack, hedgehuntTags, capabilities, experience, contactLinks)
+- `content.ts` — All static data for home sections (heroStats, hedgehuntTags, capabilities, experience, contactLinks)
 
 ## Case Study Content — `src/app/case-study/hedgehunt/`
 - `page.tsx` — MDX compilation + rendering, imports from `@/ui/case-study`

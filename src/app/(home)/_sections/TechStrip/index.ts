@@ -1,1 +1,0 @@
-export { TechStrip } from "./TechStrip";

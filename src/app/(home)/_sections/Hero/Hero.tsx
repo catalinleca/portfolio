@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ExternalLink } from "@/ui/shared";
 import { heroStats } from "../content";
 import styles from "./Hero.module.css";
@@ -23,9 +24,15 @@ export const Hero = () => {
         <div className={styles.bottom}>
           <div className={styles.actions}>
             <div className={styles.btns}>
+              <Link
+                href="/case-study/hedgehunt"
+                className={`${styles.btn} ${styles.btnAccent}`}
+              >
+                View Case Study
+              </Link>
               <ExternalLink
                 href="/resume.pdf"
-                className={`${styles.btn} ${styles.btnAccent}`}
+                className={styles.btn}
               >
                 Download Resume
               </ExternalLink>
@@ -65,7 +72,6 @@ export const Hero = () => {
               <div
                 key={card.val}
                 className={styles.numberCard}
-                data-color={card.color}
               >
                 <span className={styles.numberVal}>{card.val}</span>
                 <span className={styles.numberLabel}>{card.label}</span>

@@ -41,7 +41,7 @@
 
 - **Static data lives in `content.ts` files**, not inline in components. Components are pure presentation.
 - **Home sections:** `src/app/(home)/_sections/content.ts` — heroStats, techStack, hedgehuntTags, capabilities, experience, contactLinks
-- **Case studies:** `src/app/case-study/hedgehunt/content.ts` — hedgehuntMeta, hedgehuntSections (with exported interfaces for React Flow readiness)
+- **Case studies:** `src/app/case-study/hedgehunt/content.ts` — hedgehuntMeta, hedgehuntSections (with exported typed interfaces)
 - **Theme tokens for JS:** `src/data/theme.ts` — used by Mermaid and any future JS-side color usage
 
 ## Shared Components

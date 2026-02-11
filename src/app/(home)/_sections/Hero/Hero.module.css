@@ -168,14 +168,6 @@
   line-height: 1;
 }
 
-.numberCard[data-color="blue"] .numberVal {
-  color: var(--blue);
-}
-
-.numberCard[data-color="green"] .numberVal {
-  color: var(--green);
-}
-
 .numberLabel {
   font-size: 0.8rem;
   color: var(--text-muted);

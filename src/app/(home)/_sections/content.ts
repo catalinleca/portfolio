@@ -1,23 +1,8 @@
 export const heroStats = [
   { val: "7+", label: "Years production React" },
-  { val: "5", label: "Platform services shipped", color: "blue" as const },
-  { val: "90%", label: "Vulnerability reduction", color: "green" as const },
+  { val: "5", label: "Platform services shipped" },
+  { val: "90%", label: "Vulnerability reduction" },
   { val: "217", label: "Automated tests" },
-];
-
-export const techStack = [
-  "React 19",
-  "TypeScript",
-  "React Native",
-  "Next.js",
-  "TanStack Query",
-  "Material-UI",
-  "GraphQL",
-  "Node.js",
-  "React Flow",
-  "Google Maps API",
-  "Edge Computing",
-  "MDX",
 ];
 
 export const hedgehuntTags = [
