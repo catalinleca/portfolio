@@ -1,8 +1,9 @@
 import {
   Hero,
-  CaseStudies,
   Capabilities,
   Experience,
+  CaseStudies,
+  HowIWork,
   Contact,
 } from "./_sections";
 import { Footer } from "@/ui/layout";
@@ -16,15 +17,19 @@ export default function Home() {
         <Hero />
 
         <SectionReveal>
-          <CaseStudies />
-        </SectionReveal>
-
-        <SectionReveal>
           <Capabilities />
         </SectionReveal>
 
         <SectionReveal>
           <Experience />
+        </SectionReveal>
+
+        <SectionReveal>
+          <CaseStudies />
+        </SectionReveal>
+
+        <SectionReveal>
+          <HowIWork />
         </SectionReveal>
 
         <SectionReveal>

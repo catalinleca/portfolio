@@ -1,10 +1,3 @@
-export const heroStats = [
-  { val: "7+", label: "Years production React" },
-  { val: "5", label: "Platform services shipped" },
-  { val: "90%", label: "Vulnerability reduction" },
-  { val: "217", label: "Automated tests" },
-];
-
 export const hedgehuntTags = [
   "react-19",
   "typescript",
@@ -15,47 +8,48 @@ export const hedgehuntTags = [
 ];
 
 export const capabilities = [
-  {
-    num: "01",
-    title: "Architecture & System Design",
-    description:
-      "Multi-service platforms, monorepo structures, shared packages, API boundaries. I design systems that scale without drowning in complexity.",
-  },
-  {
-    num: "02",
-    title: "Performance-Critical UIs",
-    description:
-      "Editor interfaces, real-time previews, drag-and-drop, map-based experiences. Complex interactions that stay fast under load.",
-  },
-  {
-    num: "03",
-    title: "Quality & Delivery",
-    description:
-      "Type-safe API contracts, comprehensive test coverage, CI/CD pipelines. I ship reliably because the systems I build are designed to be shipped.",
-  },
+  "Architecture & system design for multi-service platforms",
+  "Performance-critical UIs — editors, maps, real-time previews",
+  "Type-safe API contracts and comprehensive test coverage",
+  "CI/CD pipelines, monorepo tooling, and developer experience",
+  "Turning ambiguous requirements into shipped, maintainable products",
 ];
 
-export const experience = [
+export interface ExperienceEntry {
+  role: string;
+  company: string;
+  period: string;
+  logo?: string;
+}
+
+export const experience: ExperienceEntry[] = [
   {
-    role: "React Native Engineer",
+    role: "Software Engineer",
     company: "Trading 212",
     period: "2025 — now",
   },
   {
-    role: "Senior React Engineer",
+    role: "Senior Software Engineer",
     company: "Cybersecurity Platform",
     period: "2022 — 2025",
   },
   {
-    role: "React Engineer",
+    role: "Software Engineer",
     company: "EdTech / CMS Products",
     period: "2020 — 2022",
   },
   {
-    role: "Frontend Developer",
+    role: "Software Developer",
     company: "Agency & Freelance",
     period: "2018 — 2020",
   },
+];
+
+export const howIWork = [
+  "I care a lot about the work itself. I like building things, improving them, and seeing them used. I tend to do my best work in environments that are challenging but well run, where decisions are made, tools make sense, and time is respected.",
+  "I'm comfortable working autonomously and taking ownership end to end, but I don't work in isolation. I enjoy collaborating, thinking out loud, and being direct when something feels off or could be better. I don't need endless meetings. Clarity and trust go a long way.",
+  "Teams matter to me more than titles or org charts. I try to think in terms of how this helps the team, whether that's unblocking someone, improving a process, or pushing a bit further to make something cleaner than initially planned. I'm often the person who finds time in a sprint to fix, simplify, or suggest an improvement, even when it wasn't explicitly asked for.",
+  "Over the years, I've been trusted to lead work end to end, collaborate closely with stakeholders, and help raise the bar on quality. Not by enforcing rules, but by caring about the outcome and the people building it.",
 ];
 
 export const contactLinks = [

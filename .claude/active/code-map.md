@@ -6,12 +6,15 @@
 - `src/app/case-study/hedgehunt/page.tsx` — HedgeHunt case study (MDX via next-mdx-remote, SSG)
 
 ## Homepage Sections — `src/app/(home)/_sections/`
-- `Hero/` — Headline, proof points, case study CTA + resume/social buttons, stat cards
+Order: Hero → Capabilities → Experience → CaseStudies → HowIWork → Contact
+
+- `Hero/` — Headline, eyebrow, CTAs (case study + resume + social), photo placeholder. 2-col grid layout
+- `Capabilities/` — "What I'm usually trusted with" heading + 5 accent-dot bullet items (SectionShell)
+- `Experience/` — Inline logo-strip entries: logo placeholder + role · company · period (SectionShell)
 - `CaseStudies/` — Featured work section (SectionShell + CaseStudyCard + WindowChrome)
-- `Capabilities/` — Three capability rows (SectionShell, 2-col grid)
-- `Experience/` — Work history list + ArrowLink to resume (SectionShell)
+- `HowIWork/` — "Operating principles" heading + 4 accent-dot bullet items (SectionShell)
 - `Contact/` — CTA with ArrowLinks to email/social (SectionShell)
-- `content.ts` — All static data for home sections (heroStats, hedgehuntTags, capabilities, experience, contactLinks)
+- `content.ts` — All static data for home sections (hedgehuntTags, capabilities, ExperienceEntry interface, experience, howIWork, contactLinks)
 
 ## Case Study Content — `src/app/case-study/hedgehunt/`
 - `page.tsx` — MDX compilation + rendering, imports from `@/ui/case-study`
@@ -20,9 +23,9 @@
 
 ## Shared UI — `src/ui/shared/`
 - `SectionLabel/` — Mono-font label with `#` prefix and trailing line
-- `ArrowLink/` — `<Link>` or `<a>` with animated arrow span (gap animation on hover). Used by CaseStudyCard, Experience, Contact
+- `ArrowLink/` — `<Link>` or `<a>` with animated arrow span (gap animation on hover). Used by CaseStudyCard, Contact
 - `ExternalLink/` — Thin `<a>` wrapper with `target="_blank" rel="noopener noreferrer"`. Used by Hero, Nav
-- `SectionShell/` — Shared section layout (max-width, padding, border, responsive gutter, optional SectionLabel). Used by CaseStudies, Capabilities, Experience, Contact
+- `SectionShell/` — Shared section layout (max-width, padding, border, responsive gutter, optional SectionLabel). Used by CaseStudies, Capabilities, Experience, HowIWork, Contact
 
 ## Case Study UI — `src/ui/case-study/`
 - `ExecutiveSummary/` — 2×2 grid (problem, constraints, architecture, results)
@@ -31,7 +34,7 @@
 - `SectionNav/` — Sticky nav with IntersectionObserver-based active tracking
 
 ## Navigation — `src/ui/navigation/`
-- `Nav/` — Fixed top nav. Hash links use `<Link href="/#section">`. Resume uses `<ExternalLink>`
+- `Nav/` — Fixed top nav. Hash links: about, experience, work. Resume uses `<ExternalLink>`
 
 ## Layout — `src/ui/layout/`
 - `Footer/` — Copyright + "Built with" line
@@ -55,14 +58,14 @@
 ## Import Conventions
 Every folder has a barrel `index.ts`. Import from the group:
 ```ts
-import { Hero, CaseStudies } from "@/app/(home)/_sections";
+import { Hero, CaseStudies, HowIWork } from "@/app/(home)/_sections";
 import { PageTransition, SectionReveal } from "@/ui/motion";
 import { SectionShell, ArrowLink, ExternalLink } from "@/ui/shared";
 import { ExecutiveSummary, DecisionCard, Mermaid, SectionNav } from "@/ui/case-study";
 ```
 Content modules imported with relative paths:
 ```ts
-import { heroStats, techStack } from "../content";        // home sections
+import { capabilities, howIWork } from "../content";        // home sections
 import { hedgehuntMeta, hedgehuntSections } from "./content"; // case study page
 ```
 

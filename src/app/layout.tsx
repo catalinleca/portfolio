@@ -26,16 +26,16 @@ const jbMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Catalin Leca — Senior Frontend Engineer",
+  title: "Catalin Leca — Senior Software Engineer",
   description:
-    "I build complex, production-grade frontend systems — from editor UIs and real-time experiences to performance-critical platforms.",
+    "I build complex, production-grade systems — from complex UIs and real-time experiences to multi-service platforms and infrastructure.",
   other: {
     "theme-color": "#0e0e11",
   },
   openGraph: {
-    title: "Catalin Leca — Senior Frontend Engineer",
+    title: "Catalin Leca — Senior Software Engineer",
     description:
-      "I build complex, production-grade frontend systems — from editor UIs and real-time experiences to performance-critical platforms.",
+      "I build complex, production-grade systems — from complex UIs and real-time experiences to multi-service platforms and infrastructure.",
     type: "website",
   },
 };

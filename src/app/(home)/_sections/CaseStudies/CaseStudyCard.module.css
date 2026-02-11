@@ -144,13 +144,9 @@
 }
 
 .screenshot {
-  aspect-ratio: 16 / 10;
-  background: linear-gradient(
-    135deg,
-    var(--bg-surface) 0%,
-    var(--bg-raised) 50%,
-    var(--bg-surface) 100%
-  );
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .badge {

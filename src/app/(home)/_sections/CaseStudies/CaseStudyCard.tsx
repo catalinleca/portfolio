@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowLink } from "@/ui/shared";
 import { hedgehuntTags } from "../content";
 import { WindowChrome } from "./WindowChrome";
@@ -5,7 +6,7 @@ import styles from "./CaseStudyCard.module.css";
 
 export const CaseStudyCard = () => {
   return (
-    <WindowChrome title="hedgehunt.app">
+    <WindowChrome title="build.hedgehunt.app">
       <div className={styles.body}>
         <div className={styles.info}>
           <div className={styles.overline}>Platform · Case Study</div>
@@ -33,11 +34,17 @@ export const CaseStudyCard = () => {
                 <span />
                 <span />
               </div>
-              <div className={styles.urlBar}>hedgehunt.app/editor</div>
+              <div className={styles.urlBar}>build.hedgehunt.app</div>
             </div>
-            <div className={styles.screenshot} />
+            <Image
+              src="/images/hedgehunt-website.webp"
+              alt="HedgeHunt website screenshot"
+              width={720}
+              height={450}
+              className={styles.screenshot}
+            />
           </div>
-          <div className={styles.badge}>hedgehunt.app</div>
+          <div className={styles.badge}>build.hedgehunt.app</div>
         </div>
       </div>
     </WindowChrome>

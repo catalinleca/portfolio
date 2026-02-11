@@ -7,17 +7,17 @@ export function Nav() {
     <nav className={styles.nav}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          catalin<span className={styles.dot}>.</span>leca
+          Catalin Leca
         </Link>
         <div className={styles.links}>
-          <Link href="/#work" className={styles.link}>
-            work
-          </Link>
           <Link href="/#about" className={styles.link}>
             about
           </Link>
           <Link href="/#experience" className={styles.link}>
             experience
+          </Link>
+          <Link href="/#work" className={styles.link}>
+            work
           </Link>
           <ExternalLink
             href="/resume.pdf"
