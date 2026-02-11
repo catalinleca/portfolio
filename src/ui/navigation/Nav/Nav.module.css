@@ -62,7 +62,6 @@
 .resumeLink:hover {
   background: rgba(204, 120, 50, 0.1);
   border-color: var(--accent);
-  color: var(--accent);
 }
 
 @media (max-width: 500px) {

@@ -1,12 +1,13 @@
+import Link from "next/link";
 import styles from "./Nav.module.css";
 
 export function Nav() {
   return (
     <nav className={styles.nav}>
       <div className={styles.container}>
-        <a href="/" className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           catalin<span className={styles.dot}>.</span>leca
-        </a>
+        </Link>
         <div className={styles.links}>
           <a href="#work" className={styles.link}>
             work

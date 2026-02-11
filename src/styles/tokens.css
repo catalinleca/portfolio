@@ -12,11 +12,9 @@
 
   --accent: #cc7832;
   --accent-hover: #b5692b;
-  --accent-glow: rgba(204, 120, 50, 0.08);
 
   --blue: #6897bb;
   --green: #6a8759;
-  --purple: #9876aa;
 
   --border: #2a2a2f;
   --border-dim: #1e1e23;
@@ -40,7 +38,6 @@
   --leading-normal: 1.6;
   --leading-relaxed: 1.75;
 
-  --weight-normal: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
@@ -62,7 +59,6 @@
   /* Layout */
   --max-width-text: 720px;
   --max-width-content: 1120px;
-  --max-width-wide: 1200px;
   --gutter: 2.5rem;
   --gutter-mobile: 1.5rem;
 
@@ -71,8 +67,6 @@
   --ease-hero: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
   --duration-normal: 220ms;
-  --duration-slow: 400ms;
-  --duration-hero: 0.55s;
   --marquee-speed: 35s;
 
   /* Shadows */

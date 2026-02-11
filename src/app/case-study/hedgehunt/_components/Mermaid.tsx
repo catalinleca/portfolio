@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useId } from "react";
+import { useState, useEffect, useId } from "react";
 import styles from "./Mermaid.module.css";
 
 interface MermaidProps {
@@ -9,8 +9,7 @@ interface MermaidProps {
 }
 
 export function Mermaid({ chart, caption }: MermaidProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(true);
+  const [svg, setSvg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const id = useId().replace(/:/g, "m");
 
@@ -42,16 +41,13 @@ export function Mermaid({ chart, caption }: MermaidProps) {
             "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace",
         });
 
-        const { svg } = await mermaid.render(`mermaid-${id}`, chart);
-
-        if (!cancelled && containerRef.current) {
-          containerRef.current.innerHTML = svg;
-          setLoading(false);
-        }
+        const result = await mermaid.render(`mermaid-${id}`, chart);
+        if (!cancelled) setSvg(result.svg);
       } catch (err) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "Failed to render diagram");
-          setLoading(false);
+          setError(
+            err instanceof Error ? err.message : "Failed to render diagram",
+          );
         }
       }
     })();
@@ -71,9 +67,16 @@ export function Mermaid({ chart, caption }: MermaidProps) {
 
   return (
     <figure className={styles.figure}>
-      <div className={styles.container} ref={containerRef}>
-        {loading && <span className={styles.loading}>Loading diagram...</span>}
-      </div>
+      {svg ? (
+        <div
+          className={styles.container}
+          dangerouslySetInnerHTML={{ __html: svg }}
+        />
+      ) : (
+        <div className={styles.container}>
+          <span className={styles.loading}>Loading diagram…</span>
+        </div>
+      )}
       {caption && <figcaption className={styles.caption}>{caption}</figcaption>}
     </figure>
   );

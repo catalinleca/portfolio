@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WindowChrome, TechTag } from "@/ui/shared";
+import { WindowChrome } from "./WindowChrome";
 import styles from "./CaseStudyCard.module.css";
 
 const tags = [
@@ -26,7 +26,7 @@ export const CaseStudyCard = () => {
           </p>
           <div className={styles.tags}>
             {tags.map((tag) => (
-              <TechTag key={tag} label={tag} />
+              <span key={tag} className={styles.tag}>{tag}</span>
             ))}
           </div>
           <Link href="/case-study/hedgehunt" className={styles.cta}>
