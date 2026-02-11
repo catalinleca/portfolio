@@ -1,7 +1,7 @@
 # Portfolio Project Context
 
 ## Stack
-- **Next.js 15** + React 19 + TypeScript
+- **Next.js 16** + React 19 + TypeScript
 - **CSS Modules** + design tokens (no Tailwind — intentional)
 - **Framer Motion** for page transitions and scroll-triggered reveals
 - **MDX** via `next-mdx-remote` for case study content
@@ -26,10 +26,10 @@
 - No gratuitous animation — motion serves readability
 
 ## Design Direction
-- Editorial / Stripe-ish aesthetic (content-focused, precise typography, subtle motion)
-- Palette: #FAFAFA bg, #0F172A text, #2563EB accent
-- Inter font, generous whitespace
-- No dark mode in v1
+- Dark editorial aesthetic (content-focused, precise typography, subtle motion)
+- Palette: #0e0e11 bg, #c8c5bf text, #cc7832 accent (dark theme)
+- Fonts: DM Sans (body), DM Serif Display (headings), JetBrains Mono (code/labels)
+- Generous whitespace
 - Aesthetic direction not fully finalized — open to refinement
 
 ## Details

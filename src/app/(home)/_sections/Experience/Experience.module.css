@@ -1,14 +1,7 @@
-.section {
-  max-width: var(--max-width-content);
-  margin: 0 auto;
-  padding: 5rem var(--gutter);
-  border-top: 1px solid var(--border);
-}
-
 .layout {
   display: grid;
   grid-template-columns: 280px 1fr;
-  gap: 4rem;
+  gap: var(--space-16);
 }
 
 .left {
@@ -37,7 +30,7 @@
 .entry {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 2rem;
+  gap: var(--space-8);
   padding: 1.15rem 0;
   border-bottom: 1px solid var(--border-dim);
   align-items: baseline;
@@ -54,9 +47,9 @@
 
 .entry:hover {
   background: var(--bg-raised);
-  margin: 0 -1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  margin: 0 calc(var(--space-4) * -1);
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
 }
 
 .role {
@@ -78,33 +71,18 @@
 }
 
 .resumeLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--accent);
-  margin-top: 1.5rem;
-  transition: gap var(--duration-fast) var(--ease-out);
-}
-
-.resumeLink:hover {
-  gap: 0.6rem;
+  margin-top: var(--space-6);
 }
 
 @media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--space-6);
   }
 
   .entry:hover {
     margin: 0;
     padding-left: 0;
     padding-right: 0;
-  }
-
-  .section {
-    padding: 5rem var(--gutter-mobile);
   }
 }

@@ -1,22 +1,10 @@
+import { SectionShell, ArrowLink } from "@/ui/shared";
+import { contactLinks } from "../content";
 import styles from "./Contact.module.css";
-
-const links = [
-  { label: "catalin@catalinleca.dev", href: "mailto:catalin@catalinleca.dev" },
-  {
-    label: "linkedin.com/in/catalinleca",
-    href: "https://linkedin.com/in/catalinleca",
-    external: true,
-  },
-  {
-    label: "github.com/catalinleca",
-    href: "https://github.com/catalinleca",
-    external: true,
-  },
-];
 
 export const Contact = () => {
   return (
-    <section className={styles.section}>
+    <SectionShell className={styles.section}>
       <div className={styles.layout}>
         <div className={styles.left}>
           <h2 className={styles.heading}>
@@ -31,20 +19,18 @@ export const Contact = () => {
           </p>
         </div>
         <div className={styles.right}>
-          {links.map((link) => (
-            <a
+          {contactLinks.map((link) => (
+            <ArrowLink
               key={link.label}
               href={link.href}
+              external={link.external}
               className={styles.link}
-              {...(link.external
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
             >
-              {link.label} <span className={styles.arrow}>→</span>
-            </a>
+              {link.label}
+            </ArrowLink>
           ))}
         </div>
       </div>
-    </section>
+    </SectionShell>
   );
 };

@@ -1,15 +1,7 @@
-import Link from "next/link";
+import { ArrowLink } from "@/ui/shared";
+import { hedgehuntTags } from "../content";
 import { WindowChrome } from "./WindowChrome";
 import styles from "./CaseStudyCard.module.css";
-
-const tags = [
-  "react-19",
-  "typescript",
-  "mui-v6",
-  "tanstack-query",
-  "google-maps",
-  "edge-computing",
-];
 
 export const CaseStudyCard = () => {
   return (
@@ -25,13 +17,13 @@ export const CaseStudyCard = () => {
             shared packages.
           </p>
           <div className={styles.tags}>
-            {tags.map((tag) => (
+            {hedgehuntTags.map((tag) => (
               <span key={tag} className={styles.tag}>{tag}</span>
             ))}
           </div>
-          <Link href="/case-study/hedgehunt" className={styles.cta}>
-            Read case study <span className={styles.arrow}>→</span>
-          </Link>
+          <ArrowLink href="/case-study/hedgehunt" className={styles.cta}>
+            Read case study
+          </ArrowLink>
         </div>
         <div className={styles.preview}>
           <div className={styles.previewFrame}>

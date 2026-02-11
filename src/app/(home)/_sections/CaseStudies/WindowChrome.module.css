@@ -7,7 +7,7 @@
 }
 
 .chrome:hover {
-  border-color: rgba(204, 120, 50, 0.4);
+  border-color: rgba(204, 120, 50, 0.4); /* --accent with opacity */
 }
 
 .titleBar {

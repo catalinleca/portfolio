@@ -1,11 +1,6 @@
+import { ExternalLink } from "@/ui/shared";
+import { heroStats } from "../content";
 import styles from "./Hero.module.css";
-
-const numberCards = [
-  { val: "7+", label: "Years production React" },
-  { val: "5", label: "Platform services shipped", color: "blue" as const },
-  { val: "90%", label: "Vulnerability reduction", color: "green" as const },
-  { val: "217", label: "Automated tests" },
-];
 
 export const Hero = () => {
   return (
@@ -28,30 +23,24 @@ export const Hero = () => {
         <div className={styles.bottom}>
           <div className={styles.actions}>
             <div className={styles.btns}>
-              <a
+              <ExternalLink
                 href="/resume.pdf"
                 className={`${styles.btn} ${styles.btnAccent}`}
-                target="_blank"
-                rel="noopener noreferrer"
               >
                 Download Resume
-              </a>
-              <a
+              </ExternalLink>
+              <ExternalLink
                 href="https://github.com/catalinleca"
-                target="_blank"
-                rel="noopener noreferrer"
                 className={styles.btn}
               >
                 GitHub
-              </a>
-              <a
+              </ExternalLink>
+              <ExternalLink
                 href="https://linkedin.com/in/catalinleca"
-                target="_blank"
-                rel="noopener noreferrer"
                 className={styles.btn}
               >
                 LinkedIn
-              </a>
+              </ExternalLink>
               <a href="mailto:catalin@catalinleca.dev" className={styles.btn}>
                 Email
               </a>
@@ -72,7 +61,7 @@ export const Hero = () => {
             </ul>
           </div>
           <div className={styles.numbers}>
-            {numberCards.map((card) => (
+            {heroStats.map((card) => (
               <div
                 key={card.val}
                 className={styles.numberCard}

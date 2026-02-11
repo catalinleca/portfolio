@@ -1,33 +1,10 @@
-import { SectionLabel } from "@/ui/shared";
+import { SectionShell, ArrowLink } from "@/ui/shared";
+import { experience } from "../content";
 import styles from "./Experience.module.css";
-
-const experience = [
-  {
-    role: "React Native Engineer",
-    company: "Trading 212",
-    period: "2025 — now",
-  },
-  {
-    role: "Senior React Engineer",
-    company: "Cybersecurity Platform",
-    period: "2022 — 2025",
-  },
-  {
-    role: "React Engineer",
-    company: "EdTech / CMS Products",
-    period: "2020 — 2022",
-  },
-  {
-    role: "Frontend Developer",
-    company: "Agency & Freelance",
-    period: "2018 — 2020",
-  },
-];
 
 export const Experience = () => {
   return (
-    <section id="experience" className={styles.section}>
-      <SectionLabel label="experience" />
+    <SectionShell id="experience" label="experience">
       <div className={styles.layout}>
         <div className={styles.left}>
           <h2 className={styles.heading}>
@@ -48,16 +25,15 @@ export const Experience = () => {
               </div>
             ))}
           </div>
-          <a
+          <ArrowLink
             href="/resume.pdf"
+            external
             className={styles.resumeLink}
-            target="_blank"
-            rel="noopener noreferrer"
           >
-            Full resume →
-          </a>
+            Full resume
+          </ArrowLink>
         </div>
       </div>
-    </section>
+    </SectionShell>
   );
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useId } from "react";
+import { theme } from "@/data/theme";
 import styles from "./Mermaid.module.css";
 
 interface MermaidProps {
@@ -23,22 +24,21 @@ export function Mermaid({ chart, caption }: MermaidProps) {
           startOnLoad: false,
           theme: "dark",
           themeVariables: {
-            primaryColor: "#cc7832",
-            primaryTextColor: "#eae8e4",
-            primaryBorderColor: "#2a2a2f",
-            lineColor: "#6b6966",
-            secondaryColor: "#1a1a1e",
-            tertiaryColor: "#151518",
-            background: "#0e0e11",
-            mainBkg: "#1a1a1e",
-            nodeBorder: "#2a2a2f",
-            clusterBkg: "#151518",
-            clusterBorder: "#2a2a2f",
-            titleColor: "#eae8e4",
-            edgeLabelBackground: "#151518",
+            primaryColor: theme.accent,
+            primaryTextColor: theme.textBright,
+            primaryBorderColor: theme.border,
+            lineColor: theme.textMuted,
+            secondaryColor: theme.bgSurface,
+            tertiaryColor: theme.bgRaised,
+            background: theme.bg,
+            mainBkg: theme.bgSurface,
+            nodeBorder: theme.border,
+            clusterBkg: theme.bgRaised,
+            clusterBorder: theme.border,
+            titleColor: theme.textBright,
+            edgeLabelBackground: theme.bgRaised,
           },
-          fontFamily:
-            "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace",
+          fontFamily: theme.fontMono,
         });
 
         const result = await mermaid.render(`mermaid-${id}`, chart);

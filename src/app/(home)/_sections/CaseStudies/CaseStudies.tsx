@@ -1,12 +1,10 @@
-import { SectionLabel } from "@/ui/shared";
+import { SectionShell } from "@/ui/shared";
 import { CaseStudyCard } from "./CaseStudyCard";
-import styles from "./CaseStudies.module.css";
 
 export const CaseStudies = () => {
   return (
-    <section id="work" className={styles.section}>
-      <SectionLabel label="featured work" />
+    <SectionShell id="work" label="featured work" noBorder>
       <CaseStudyCard />
-    </section>
+    </SectionShell>
   );
 };

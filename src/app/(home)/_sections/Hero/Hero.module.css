@@ -10,7 +10,7 @@
 }
 
 .top {
-  margin-bottom: 4rem;
+  margin-bottom: var(--space-16);
 }
 
 .eyebrow {
@@ -20,7 +20,7 @@
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--accent);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .eyebrow::before {
@@ -36,7 +36,7 @@
   line-height: 1.08;
   letter-spacing: -0.035em;
   color: var(--text-bright);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .headline em {
@@ -59,13 +59,13 @@
 .bottom {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: var(--space-16);
 }
 
 .actions {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--space-8);
 }
 
 .btns {
@@ -116,7 +116,7 @@
 .proofItem {
   font-size: 0.88rem;
   color: var(--text);
-  padding-left: 1rem;
+  padding-left: var(--space-4);
   position: relative;
   line-height: 1.5;
 }

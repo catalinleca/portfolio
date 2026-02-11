@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(14, 14, 17, 0.88);
+  background: rgba(14, 14, 17, 0.88); /* --bg with opacity */
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-dim);
@@ -33,7 +33,7 @@
 .links {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--space-6);
 }
 
 .link {
@@ -51,7 +51,7 @@
 .resumeLink {
   color: var(--accent);
   padding: 0.35rem 0.85rem;
-  border: 1px solid rgba(204, 120, 50, 0.3);
+  border: 1px solid rgba(204, 120, 50, 0.3); /* --accent with opacity */
   border-radius: 4px;
   transition:
     color var(--duration-fast) var(--ease-out),
@@ -60,7 +60,7 @@
 }
 
 .resumeLink:hover {
-  background: rgba(204, 120, 50, 0.1);
+  background: rgba(204, 120, 50, 0.1); /* --accent with opacity */
   border-color: var(--accent);
 }
 

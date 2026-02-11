@@ -4,7 +4,7 @@
   background: var(--bg-raised);
   border-top: 1px solid var(--border-dim);
   border-bottom: 1px solid var(--border-dim);
-  padding: 1.5rem 0;
+  padding: var(--space-6) 0;
   overflow: hidden;
 }
 

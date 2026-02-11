@@ -17,7 +17,7 @@ export const SectionReveal = ({
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <motion.section
+    <motion.div
       initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -29,6 +29,6 @@ export const SectionReveal = ({
       className={className}
     >
       {children}
-    </motion.section>
+    </motion.div>
   );
 };

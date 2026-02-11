@@ -1,0 +1,16 @@
+.section {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: var(--space-20) var(--gutter);
+  border-top: 1px solid var(--border);
+}
+
+.noBorder {
+  border-top: none;
+}
+
+@media (max-width: 860px) {
+  .section {
+    padding: var(--space-20) var(--gutter-mobile);
+  }
+}

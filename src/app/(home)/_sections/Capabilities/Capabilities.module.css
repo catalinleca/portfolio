@@ -1,20 +1,13 @@
-.section {
-  max-width: var(--max-width-content);
-  margin: 0 auto;
-  padding: 5rem var(--gutter);
-  border-top: 1px solid var(--border);
-}
-
 .layout {
   display: grid;
   grid-template-columns: 280px 1fr;
-  gap: 4rem;
+  gap: var(--space-16);
 }
 
 .left {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-6);
 }
 
 .heading {
@@ -39,7 +32,7 @@
 .row {
   display: grid;
   grid-template-columns: 44px 1fr;
-  gap: 1.5rem;
+  gap: var(--space-6);
   padding: 1.75rem 0;
   border-bottom: 1px solid var(--border-dim);
 }
@@ -55,7 +48,7 @@
 }
 
 .capTitle {
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 500;
   color: var(--text-bright);
   margin-bottom: 0.5rem;
@@ -70,10 +63,6 @@
 @media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .section {
-    padding: 5rem var(--gutter-mobile);
+    gap: var(--space-6);
   }
 }

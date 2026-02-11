@@ -1,31 +1,10 @@
-import { SectionLabel } from "@/ui/shared";
+import { SectionShell } from "@/ui/shared";
+import { capabilities } from "../content";
 import styles from "./Capabilities.module.css";
-
-const capabilities = [
-  {
-    num: "01",
-    title: "Architecture & System Design",
-    description:
-      "Multi-service platforms, monorepo structures, shared packages, API boundaries. I design systems that scale without drowning in complexity.",
-  },
-  {
-    num: "02",
-    title: "Performance-Critical UIs",
-    description:
-      "Editor interfaces, real-time previews, drag-and-drop, map-based experiences. Complex interactions that stay fast under load.",
-  },
-  {
-    num: "03",
-    title: "Quality & Delivery",
-    description:
-      "Type-safe API contracts, comprehensive test coverage, CI/CD pipelines. I ship reliably because the systems I build are designed to be shipped.",
-  },
-];
 
 export const Capabilities = () => {
   return (
-    <section id="about" className={styles.section}>
-      <SectionLabel label="capabilities" />
+    <SectionShell id="about" label="capabilities">
       <div className={styles.layout}>
         <div className={styles.left}>
           <h2 className={styles.heading}>
@@ -51,6 +30,6 @@ export const Capabilities = () => {
           ))}
         </div>
       </div>
-    </section>
+    </SectionShell>
   );
 };

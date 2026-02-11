@@ -7,7 +7,7 @@
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .overline {
@@ -67,24 +67,9 @@
 }
 
 .cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--accent);
   font-weight: 500;
   margin-top: auto;
   padding-top: 0.5rem;
-  transition: gap var(--duration-fast) var(--ease-out);
-}
-
-.cta:hover {
-  gap: 0.6rem;
-}
-
-.arrow {
-  transition: transform var(--duration-fast) var(--ease-out);
 }
 
 .preview {
@@ -95,7 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: var(--space-8);
 }
 
 .preview::before {
@@ -104,7 +89,7 @@
   inset: 0;
   background-image: radial-gradient(
     circle at 1px 1px,
-    rgba(204, 120, 50, 0.06) 1px,
+    rgba(204, 120, 50, 0.06) 1px, /* --accent with opacity */
     transparent 0
   );
   background-size: 24px 24px;
@@ -170,15 +155,15 @@
 
 .badge {
   position: absolute;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: var(--space-4);
+  right: var(--space-4);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--accent);
-  background: rgba(14, 14, 17, 0.85);
+  background: rgba(14, 14, 17, 0.85); /* --bg with opacity */
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(204, 120, 50, 0.2);
+  border: 1px solid rgba(204, 120, 50, 0.2); /* --accent with opacity */
   border-radius: 4px;
   padding: 0.3rem 0.6rem;
   z-index: 2;
