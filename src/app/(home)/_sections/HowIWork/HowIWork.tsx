@@ -6,13 +6,13 @@ export const HowIWork = () => {
   return (
     <SectionShell label="how I work">
       <h2 className={styles.heading}>Operating principles</h2>
-      <div className={styles.body}>
-        {howIWork.map((paragraph) => (
-          <p key={paragraph.slice(0, 20)} className={styles.paragraph}>
-            {paragraph}
-          </p>
+      <ul className={styles.list}>
+        {howIWork.map((item) => (
+          <li key={item} className={styles.item}>
+            {item}
+          </li>
         ))}
-      </div>
+      </ul>
     </SectionShell>
   );
 };

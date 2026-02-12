@@ -7,15 +7,29 @@
   margin-bottom: var(--space-8);
 }
 
-.body {
+.list {
+  list-style: none;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  max-width: 640px;
+  gap: 0.75rem;
 }
 
-.paragraph {
+.item {
   font-size: 0.95rem;
   color: var(--text);
-  line-height: 1.75;
+  line-height: 1.5;
+  padding-left: var(--space-4);
+  position: relative;
+}
+
+.item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
 }

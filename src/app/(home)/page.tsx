@@ -1,5 +1,6 @@
 import {
   Hero,
+  About,
   Capabilities,
   Experience,
   CaseStudies,
@@ -15,6 +16,10 @@ export default function Home() {
     <PageTransition>
       <main className={styles.main}>
         <Hero />
+
+        <SectionReveal>
+          <About />
+        </SectionReveal>
 
         <SectionReveal>
           <Capabilities />

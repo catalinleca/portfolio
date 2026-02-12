@@ -1,8 +1,5 @@
 .hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 8.5rem 0 0;
+  padding: var(--space-32) 0 var(--space-8);
 }
 
 .content {
@@ -12,7 +9,7 @@
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: var(--space-16);
-  align-items: center;
+  align-items: end;
   width: 100%;
 }
 
@@ -142,13 +139,12 @@
 /* Responsive */
 @media (max-width: 860px) {
   .hero {
-    min-height: auto;
-    padding-top: 7rem;
+    padding: var(--space-24) 0 var(--space-6);
   }
 
   .content {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: var(--space-10);
     padding: 0 var(--gutter-mobile);
   }
 
