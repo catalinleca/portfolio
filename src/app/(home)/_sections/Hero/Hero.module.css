@@ -9,7 +9,7 @@
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: var(--space-16);
-  align-items: end;
+  align-items: center;
   width: 100%;
 }
 
@@ -37,7 +37,7 @@
 
 .headline {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
   line-height: 1.08;
   letter-spacing: -0.035em;
   color: var(--text-bright);
@@ -45,16 +45,17 @@
 }
 
 .intro {
-  font-size: 1.05rem;
+  font-size: 1.0625rem;
   color: var(--text);
-  line-height: 1.7;
+  line-height: 1.65;
   max-width: 540px;
   margin-bottom: var(--space-8);
 }
 
-.btns {
+.actions {
   display: flex;
-  gap: 0.65rem;
+  align-items: center;
+  gap: var(--space-6);
   flex-wrap: wrap;
 }
 
@@ -89,6 +90,12 @@
   color: var(--bg);
 }
 
+.secondaryLinks {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
 .photo {
   display: flex;
   justify-content: center;
@@ -105,7 +112,7 @@
   .eyebrow,
   .headline,
   .intro,
-  .btns,
+  .actions,
   .photo {
     opacity: 0;
     transform: translateY(16px);
@@ -120,7 +127,7 @@
     animation-delay: 0.14s;
   }
 
-  .btns {
+  .actions {
     animation-delay: 0.21s;
   }
 
@@ -149,7 +156,7 @@
   }
 
   .headline {
-    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-size: clamp(2rem, 6vw, 3rem);
   }
 
   .photoImage {
@@ -159,7 +166,8 @@
 }
 
 @media (max-width: 500px) {
-  .btns {
+  .actions {
     flex-direction: column;
+    align-items: flex-start;
   }
 }

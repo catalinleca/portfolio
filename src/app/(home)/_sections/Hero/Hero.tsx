@@ -15,31 +15,36 @@ export const Hero = () => {
           <p className={styles.intro}>
             I focus on shaping software so it stays clear, reliable, and easy to build on.
           </p>
-          <div className={styles.btns}>
+          <div className={styles.actions}>
             <Link
-              href="/case-study/hedgehunt"
+              href="/#work"
               className={`${styles.btn} ${styles.btnAccent}`}
             >
-              View Case Study
+              View My Work
             </Link>
-            <ExternalLink href="/resume.pdf" className={styles.btn}>
-              Resume
-            </ExternalLink>
-            <ExternalLink
-              href="https://github.com/catalinleca"
-              className={styles.btn}
-            >
-              GitHub
-            </ExternalLink>
-            <ExternalLink
-              href="https://linkedin.com/in/catalinleca"
-              className={styles.btn}
-            >
-              LinkedIn
-            </ExternalLink>
-            <a href="mailto:catalin@catalinleca.dev" className={styles.btn}>
-              Email
-            </a>
+            <div className={styles.secondaryLinks}>
+              <ExternalLink href="/resume.pdf" className={styles.btn}>
+                Resume
+              </ExternalLink>
+              <ExternalLink
+                href="https://github.com/catalinleca"
+                className={styles.btn}
+              >
+                GitHub
+              </ExternalLink>
+              <ExternalLink
+                href="https://linkedin.com/in/catalinleca"
+                className={styles.btn}
+              >
+                LinkedIn
+              </ExternalLink>
+              <a
+                href="mailto:catalin@catalinleca.dev"
+                className={styles.btn}
+              >
+                Email
+              </a>
+            </div>
           </div>
         </div>
         <div className={styles.photo}>

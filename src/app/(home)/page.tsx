@@ -18,6 +18,10 @@ export default function Home() {
         <Hero />
 
         <SectionReveal>
+          <CaseStudies />
+        </SectionReveal>
+
+        <SectionReveal>
           <About />
         </SectionReveal>
 
@@ -27,10 +31,6 @@ export default function Home() {
 
         <SectionReveal>
           <Experience />
-        </SectionReveal>
-
-        <SectionReveal>
-          <CaseStudies />
         </SectionReveal>
 
         <SectionReveal>

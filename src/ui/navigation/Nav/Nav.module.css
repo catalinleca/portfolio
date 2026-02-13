@@ -64,8 +64,23 @@
   border-color: var(--accent);
 }
 
+.ctaLink {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.35rem 0.85rem;
+  border-radius: 4px;
+  font-weight: 500;
+  transition:
+    background var(--duration-fast) var(--ease-out);
+}
+
+.ctaLink:hover {
+  background: var(--accent-hover);
+  color: var(--bg);
+}
+
 @media (max-width: 500px) {
-  .link:not(.resumeLink) {
+  .link:not(.resumeLink):not(.ctaLink) {
     display: none;
   }
 

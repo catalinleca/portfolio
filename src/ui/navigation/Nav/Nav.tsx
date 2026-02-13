@@ -25,6 +25,9 @@ export function Nav() {
           >
             resume.pdf
           </ExternalLink>
+          <Link href="/#contact" className={`${styles.link} ${styles.ctaLink}`}>
+            Let&apos;s Talk
+          </Link>
         </div>
       </div>
     </nav>
