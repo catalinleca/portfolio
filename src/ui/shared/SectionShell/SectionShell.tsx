@@ -7,7 +7,6 @@ interface SectionShellProps {
   label?: string;
   children: ReactNode;
   className?: string;
-  noBorder?: boolean;
 }
 
 export function SectionShell({
@@ -15,11 +14,9 @@ export function SectionShell({
   label,
   children,
   className,
-  noBorder,
 }: SectionShellProps) {
   const sectionClass = [
     styles.section,
-    noBorder ? styles.noBorder : "",
     className ?? "",
   ]
     .filter(Boolean)

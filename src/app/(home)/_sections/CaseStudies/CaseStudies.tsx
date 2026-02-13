@@ -3,7 +3,7 @@ import { CaseStudyCard } from "./CaseStudyCard";
 
 export const CaseStudies = () => {
   return (
-    <SectionShell id="work" label="featured work" noBorder>
+    <SectionShell id="work" label="featured work">
       <CaseStudyCard />
     </SectionShell>
   );

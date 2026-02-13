@@ -4,7 +4,7 @@ import styles from "./About.module.css";
 
 export const About = () => {
   return (
-    <SectionShell id="about" label="about me" noBorder>
+    <SectionShell id="about" label="about me">
       <div className={styles.body}>
         {aboutMe.map((paragraph, i) => (
           <p
