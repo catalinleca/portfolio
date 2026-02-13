@@ -1,1 +1,0 @@
-export { Capabilities } from "./Capabilities";

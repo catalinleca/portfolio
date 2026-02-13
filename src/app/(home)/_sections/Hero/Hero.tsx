@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ExternalLink } from "@/ui/shared";
 import { contactEmail } from "../content";
 import { CopyEmailBtn } from "./CopyEmailBtn";
@@ -24,12 +23,12 @@ export const Hero = () => {
             I focus on shaping software so it stays clear, reliable, and easy to build on.
           </p>
           <div className={styles.actions}>
-            <Link
-              href="/#work"
+            <a
+              href="#work"
               className={`${styles.btn} ${styles.btnAccent}`}
             >
               View My Work
-            </Link>
+            </a>
             <div className={styles.secondaryLinks}>
               <ExternalLink href="/resume.pdf" className={styles.btn}>
                 Resume

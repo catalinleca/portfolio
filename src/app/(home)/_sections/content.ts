@@ -7,14 +7,6 @@ export const hedgehuntTags = [
   "edge-computing",
 ];
 
-export const capabilities = [
-  "Architecture & system design for multi-service platforms",
-  "Performance-critical UIs — editors, maps, real-time previews",
-  "Type-safe API contracts and comprehensive test coverage",
-  "CI/CD pipelines, monorepo tooling, and developer experience",
-  "Turning ambiguous requirements into shipped, maintainable products",
-];
-
 export interface CompanyLogo {
   name: string;
   logo: string;
