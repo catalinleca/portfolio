@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ExternalLink } from "@/ui/shared";
+import { contactEmail } from "../content";
+import { CopyEmailBtn } from "./CopyEmailBtn";
 import styles from "./Hero.module.css";
 
 const CAREER_START = new Date(2018, 3, 1); // April 2018
@@ -44,12 +46,7 @@ export const Hero = () => {
               >
                 LinkedIn
               </ExternalLink>
-              <a
-                href="mailto:catalin@catalinleca.dev"
-                className={styles.btn}
-              >
-                Email
-              </a>
+              <CopyEmailBtn email={contactEmail} className={styles.btn} />
             </div>
           </div>
         </div>

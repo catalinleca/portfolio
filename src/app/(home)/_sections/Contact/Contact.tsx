@@ -1,5 +1,6 @@
 import { SectionShell, ArrowLink } from "@/ui/shared";
-import { contactLinks } from "../content";
+import { contactEmail, contactLinks } from "../content";
+import { CopyEmail } from "./CopyEmail";
 import styles from "./Contact.module.css";
 
 export const Contact = () => {
@@ -14,6 +15,7 @@ export const Contact = () => {
           </h2>
         </div>
         <div className={styles.right}>
+          <CopyEmail email={contactEmail} />
           {contactLinks.map((link) => (
             <ArrowLink
               key={link.label}

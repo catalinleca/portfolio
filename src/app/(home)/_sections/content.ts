@@ -42,8 +42,9 @@ export const howIWork = [
   "Write for the next reader. Clear naming and structure over clever abstractions",
 ];
 
+export const contactEmail = "leca.catalin1995@gmail.com";
+
 export const contactLinks = [
-  { label: "catalin@catalinleca.dev", href: "mailto:catalin@catalinleca.dev" },
   {
     label: "linkedin.com/in/catalinleca",
     href: "https://linkedin.com/in/catalinleca",
