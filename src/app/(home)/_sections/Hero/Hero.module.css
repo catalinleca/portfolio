@@ -9,7 +9,7 @@
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: var(--space-16);
-  align-items: end;
+  align-items: center;
   width: 100%;
 }
 
@@ -37,7 +37,7 @@
 
 .headline {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(2.5rem, 5vw, 4rem);
   line-height: 1.08;
   letter-spacing: -0.035em;
   color: var(--text-bright);
@@ -45,9 +45,9 @@
 }
 
 .intro {
-  font-size: 1.05rem;
+  font-size: 1.0625rem;
   color: var(--text);
-  line-height: 1.7;
+  line-height: 1.65;
   max-width: 540px;
   margin-bottom: var(--space-8);
 }
@@ -149,7 +149,7 @@
   }
 
   .headline {
-    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-size: clamp(2rem, 6vw, 3rem);
   }
 
   .photoImage {
