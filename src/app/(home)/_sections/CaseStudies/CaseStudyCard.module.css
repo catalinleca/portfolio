@@ -106,7 +106,7 @@
     0 0 0 1px rgba(255, 255, 255, 0.06);
   transition: transform 0.4s var(--ease-out);
   width: 100%;
-  max-width: 360px;
+  max-width: 480px;
 }
 
 .previewFrame:hover {
@@ -147,22 +147,6 @@
   width: 100%;
   height: auto;
   display: block;
-}
-
-.badge {
-  position: absolute;
-  bottom: var(--space-4);
-  right: var(--space-4);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: var(--accent);
-  background: rgba(14, 14, 17, 0.85); /* --bg with opacity */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(204, 120, 50, 0.2); /* --accent with opacity */
-  border-radius: 4px;
-  padding: 0.3rem 0.6rem;
-  z-index: 2;
 }
 
 @media (max-width: 860px) {

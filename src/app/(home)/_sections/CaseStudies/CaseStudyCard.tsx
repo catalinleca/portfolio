@@ -37,14 +37,13 @@ export const CaseStudyCard = () => {
               <div className={styles.urlBar}>build.hedgehunt.app</div>
             </div>
             <Image
-              src="/images/hedgehunt-website.webp"
-              alt="HedgeHunt website screenshot"
+              src="/images/hedgehunt-editor.webp"
+              alt="HedgeHunt editor screenshot"
               width={720}
               height={450}
               className={styles.screenshot}
             />
           </div>
-          <div className={styles.badge}>build.hedgehunt.app</div>
         </div>
       </div>
     </WindowChrome>

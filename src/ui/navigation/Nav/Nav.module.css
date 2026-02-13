@@ -8,6 +8,11 @@
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-dim);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.hidden {
+  transform: translateY(-100%);
 }
 
 .container {

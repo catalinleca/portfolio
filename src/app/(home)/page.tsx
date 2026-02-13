@@ -1,10 +1,8 @@
+import Link from "next/link";
 import {
   Hero,
   About,
-  Capabilities,
-  Experience,
   CaseStudies,
-  HowIWork,
   Contact,
 } from "./_sections";
 import { Footer } from "@/ui/layout";
@@ -22,19 +20,18 @@ export default function Home() {
         </SectionReveal>
 
         <SectionReveal>
+          <div className={styles.bridge}>
+            <p className={styles.bridgeText}>
+              Like what you see?
+            </p>
+            <Link href="/#contact" className={styles.bridgeLink}>
+              Let&apos;s talk →
+            </Link>
+          </div>
+        </SectionReveal>
+
+        <SectionReveal>
           <About />
-        </SectionReveal>
-
-        <SectionReveal>
-          <Capabilities />
-        </SectionReveal>
-
-        <SectionReveal>
-          <Experience />
-        </SectionReveal>
-
-        <SectionReveal>
-          <HowIWork />
         </SectionReveal>
 
         <SectionReveal>

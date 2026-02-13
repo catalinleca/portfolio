@@ -12,11 +12,6 @@ export const Contact = () => {
             <br />
             <em>something real.</em>
           </h2>
-          <p className={styles.subtext}>
-            Open to senior React or React Native roles.
-            <br />
-            Based in Romania, working globally.
-          </p>
         </div>
         <div className={styles.right}>
           {contactLinks.map((link) => (

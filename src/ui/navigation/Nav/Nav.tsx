@@ -1,23 +1,47 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ExternalLink } from "@/ui/shared";
 import styles from "./Nav.module.css";
 
 export function Nav() {
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const THRESHOLD = 10;
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+
+      if (Math.abs(currentY - lastScrollY.current) < THRESHOLD) {
+        return;
+      }
+
+      setIsHidden(currentY > lastScrollY.current && currentY > 80);
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className={styles.nav}>
+    <nav className={`${styles.nav} ${isHidden ? styles.hidden : ""}`}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
           Catalin Leca
         </Link>
         <div className={styles.links}>
-          <Link href="/#about" className={styles.link}>
-            about
-          </Link>
-          <Link href="/#experience" className={styles.link}>
-            experience
-          </Link>
           <Link href="/#work" className={styles.link}>
             work
+          </Link>
+          <Link href="/#about" className={styles.link}>
+            about
           </Link>
           <ExternalLink
             href="/resume.pdf"

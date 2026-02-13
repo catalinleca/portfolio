@@ -15,34 +15,18 @@ export const capabilities = [
   "Turning ambiguous requirements into shipped, maintainable products",
 ];
 
-export interface ExperienceEntry {
-  role: string;
-  company: string;
-  period: string;
-  logo?: string;
+export interface CompanyLogo {
+  name: string;
+  logo: string;
 }
 
-export const experience: ExperienceEntry[] = [
-  {
-    role: "Software Engineer",
-    company: "Trading 212",
-    period: "2025 — now",
-  },
-  {
-    role: "Senior Software Engineer",
-    company: "Cybersecurity Platform",
-    period: "2022 — 2025",
-  },
-  {
-    role: "Software Engineer",
-    company: "EdTech / CMS Products",
-    period: "2020 — 2022",
-  },
-  {
-    role: "Software Developer",
-    company: "Agency & Freelance",
-    period: "2018 — 2020",
-  },
+export const companies: CompanyLogo[] = [
+  { name: "Trading 212", logo: "/images/logos/trading-212.svg" },
+  { name: "EF Education First", logo: "/images/logos/ef.svg" },
+  { name: "Financial Times", logo: "/images/logos/FT.webp" },
+  { name: "Vodafone", logo: "/images/logos/vodafone.svg" },
+  { name: "Autodesk", logo: "/images/logos/autodesk-2.svg" },
+  { name: "BearingPoint", logo: "/images/logos/bearingpoint.svg" },
 ];
 
 export const aboutMe = [

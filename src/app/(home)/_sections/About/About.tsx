@@ -1,5 +1,5 @@
 import { SectionShell } from "@/ui/shared";
-import { aboutMe } from "../content";
+import { aboutMe, howIWork } from "../content";
 import styles from "./About.module.css";
 
 export const About = () => {
@@ -14,6 +14,16 @@ export const About = () => {
             {paragraph}
           </p>
         ))}
+      </div>
+      <div className={styles.principles}>
+        <h3 className={styles.principlesHeading}>Operating principles</h3>
+        <ul className={styles.principlesList}>
+          {howIWork.map((item) => (
+            <li key={item} className={styles.principlesItem}>
+              {item}
+            </li>
+          ))}
+        </ul>
       </div>
     </SectionShell>
   );

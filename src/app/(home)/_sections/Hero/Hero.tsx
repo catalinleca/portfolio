@@ -3,12 +3,18 @@ import Link from "next/link";
 import { ExternalLink } from "@/ui/shared";
 import styles from "./Hero.module.css";
 
+const CAREER_START = new Date(2018, 3, 1); // April 2018
+
 export const Hero = () => {
+  const years = Math.floor(
+    (Date.now() - CAREER_START.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+  );
+
   return (
     <header className={styles.hero}>
       <div className={styles.content}>
         <div className={styles.text}>
-          <div className={styles.eyebrow}>Senior Software Engineer</div>
+          <div className={styles.eyebrow}>Senior Software Engineer · {years}+ years</div>
           <h1 className={styles.headline}>
             Complexity is easy to create. Simplicity takes work.
           </h1>
