@@ -28,22 +28,22 @@
 }
 
 .subtext {
-  font-size: 1rem;
+  font-size: 0.92rem;
   color: var(--text-muted);
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
 .right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--space-1);
+  gap: 0.25rem;
 }
 
 .link {
-  font-size: 0.92rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
-  padding: var(--space-2) 0;
+  padding: 0.5rem 0;
 }
 
 .link:hover {
