@@ -46,10 +46,10 @@ export function Nav() {
             about
           </ScrollLink>
           <ExternalLink
-            href="/resume.pdf"
+            href="/Catalin_Leca_Resume.pdf"
             className={`${styles.link} ${styles.resumeLink}`}
           >
-            resume.pdf
+            Resume
           </ExternalLink>
           <ScrollLink href="#contact" className={`${styles.link} ${styles.ctaLink}`}>
             Let&apos;s Talk

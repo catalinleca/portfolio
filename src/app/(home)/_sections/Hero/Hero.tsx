@@ -30,7 +30,7 @@ export const Hero = () => {
               View My Work
             </ScrollLink>
             <div className={styles.secondaryLinks}>
-              <ExternalLink href="/resume.pdf" className={styles.btn}>
+              <ExternalLink href="/Catalin_Leca_Resume.pdf" className={styles.btn}>
                 Resume
               </ExternalLink>
               <ExternalLink
