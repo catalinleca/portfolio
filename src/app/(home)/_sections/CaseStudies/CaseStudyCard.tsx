@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowLink } from "@/ui/shared";
+import Link from "next/link";
 import { hedgehuntTags } from "../content";
 import { WindowChrome } from "./WindowChrome";
 import styles from "./CaseStudyCard.module.css";
@@ -22,9 +22,19 @@ export const CaseStudyCard = () => {
               <span key={tag} className={styles.tag}>{tag}</span>
             ))}
           </div>
-          <ArrowLink href="/case-study/hedgehunt" className={styles.cta}>
-            Read case study
-          </ArrowLink>
+          <div className={styles.actions}>
+            <Link href="/case-study/hedgehunt" className={styles.cta}>
+              Read case study →
+            </Link>
+            <a
+              href="https://hedgehunt.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.appLink}
+            >
+              Visit app ↗
+            </a>
+          </div>
         </div>
         <div className={styles.preview}>
           <div className={styles.previewFrame}>

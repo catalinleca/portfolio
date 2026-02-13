@@ -70,16 +70,44 @@
   color: var(--accent);
 }
 
-.cta {
-  font-weight: 500;
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
   margin-top: auto;
   padding-top: 0.5rem;
+}
 
-  &::after {
+.cta {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--accent);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.body:hover .cta {
+  color: var(--text-bright);
+}
+
+.cta::after {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 2;
+  }
+}
+
+.appLink {
+  position: relative;
+  z-index: 3;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--text-bright);
   }
 }
 
