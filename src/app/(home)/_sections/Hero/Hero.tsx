@@ -1,21 +1,21 @@
 import Image from "next/image";
-import { ExternalLink } from "@/ui/shared";
+import { ExternalLink, ScrollLink } from "@/ui/shared";
 import { contactEmail } from "../content";
 import { CopyEmailBtn } from "./CopyEmailBtn";
 import styles from "./Hero.module.css";
 
 const CAREER_START = new Date(2018, 3, 1); // April 2018
+const YEARS_EXPERIENCE = Math.floor(
+  (Date.now() - CAREER_START.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
+);
 
 export const Hero = () => {
-  const years = Math.floor(
-    (Date.now() - CAREER_START.getTime()) / (365.25 * 24 * 60 * 60 * 1000)
-  );
 
   return (
     <header className={styles.hero}>
       <div className={styles.content}>
         <div className={styles.text}>
-          <div className={styles.eyebrow}>Senior Software Engineer · {years}+ years</div>
+          <div className={styles.eyebrow}>Senior Software Engineer · {YEARS_EXPERIENCE}+ years</div>
           <h1 className={styles.headline}>
             Complexity is easy to create. Simplicity takes work.
           </h1>
@@ -23,12 +23,12 @@ export const Hero = () => {
             I focus on shaping software so it stays clear, reliable, and easy to build on.
           </p>
           <div className={styles.actions}>
-            <a
+            <ScrollLink
               href="#work"
               className={`${styles.btn} ${styles.btnAccent}`}
             >
               View My Work
-            </a>
+            </ScrollLink>
             <div className={styles.secondaryLinks}>
               <ExternalLink href="/resume.pdf" className={styles.btn}>
                 Resume

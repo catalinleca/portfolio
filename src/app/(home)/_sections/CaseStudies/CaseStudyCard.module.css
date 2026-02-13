@@ -1,6 +1,8 @@
 .body {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1.1fr;
+  cursor: pointer;
 }
 
 .info {
@@ -49,6 +51,8 @@
 }
 
 .tag {
+  position: relative;
+  z-index: 3;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   padding: 0.2rem 0.6rem;
@@ -70,6 +74,13 @@
   font-weight: 500;
   margin-top: auto;
   padding-top: 0.5rem;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
 }
 
 .preview {
@@ -109,7 +120,7 @@
   max-width: 480px;
 }
 
-.previewFrame:hover {
+.body:hover .previewFrame {
   transform: translateY(-4px) scale(1.01);
 }
 

@@ -28,6 +28,7 @@ export default async function HedgeHuntCaseStudy() {
   const { content } = await compileMDX({
     source,
     options: {
+      parseFrontmatter: true,
       mdxOptions: {
         rehypePlugins: [rehypeSlug],
       },

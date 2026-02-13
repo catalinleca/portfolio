@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ExternalLink } from "@/ui/shared";
+import { ExternalLink, ScrollLink } from "@/ui/shared";
 import styles from "./Nav.module.css";
 
 export function Nav() {
@@ -19,7 +19,9 @@ export function Nav() {
         return;
       }
 
-      setIsHidden(currentY > lastScrollY.current && currentY > 80);
+      const hidden = currentY > lastScrollY.current && currentY > 80;
+      setIsHidden(hidden);
+      document.documentElement.style.setProperty("--nav-offset", hidden ? "0px" : "52px");
       lastScrollY.current = currentY;
     };
 
@@ -37,21 +39,21 @@ export function Nav() {
           Catalin Leca
         </Link>
         <div className={styles.links}>
-          <Link href="/#work" className={styles.link}>
+          <ScrollLink href="#work" className={styles.link}>
             work
-          </Link>
-          <Link href="/#about" className={styles.link}>
+          </ScrollLink>
+          <ScrollLink href="#about" className={styles.link}>
             about
-          </Link>
+          </ScrollLink>
           <ExternalLink
             href="/resume.pdf"
             className={`${styles.link} ${styles.resumeLink}`}
           >
             resume.pdf
           </ExternalLink>
-          <Link href="/#contact" className={`${styles.link} ${styles.ctaLink}`}>
+          <ScrollLink href="#contact" className={`${styles.link} ${styles.ctaLink}`}>
             Let&apos;s Talk
-          </Link>
+          </ScrollLink>
         </div>
       </div>
     </nav>

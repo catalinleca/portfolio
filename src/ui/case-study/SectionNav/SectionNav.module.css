@@ -1,10 +1,9 @@
 .nav {
   position: sticky;
-  top: 52px;
+  top: var(--nav-offset, 52px);
+  transition: top 0.3s var(--ease-out);
   z-index: 50;
-  background: rgba(14, 14, 17, 0.9); /* --bg with opacity */
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--bg);
   border-bottom: 1px solid var(--border-dim);
   overflow-x: auto;
   -ms-overflow-style: none;

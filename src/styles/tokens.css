@@ -62,6 +62,10 @@
   --gutter: 2.5rem;
   --gutter-mobile: 1.5rem;
 
+  /* Navigation */
+  --nav-height: 52px;
+  --nav-offset: 52px;
+
   /* Transitions */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-hero: cubic-bezier(0.16, 1, 0.3, 1);

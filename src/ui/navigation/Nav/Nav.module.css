@@ -4,9 +4,7 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(14, 14, 17, 0.88); /* --bg with opacity */
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--bg);
   border-bottom: 1px solid var(--border-dim);
   transition: transform 0.3s var(--ease-out);
 }

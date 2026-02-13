@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   Hero,
   About,
@@ -7,6 +6,7 @@ import {
 } from "./_sections";
 import { Footer } from "@/ui/layout";
 import { PageTransition, SectionReveal } from "@/ui/motion";
+import { ScrollLink } from "@/ui/shared";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -24,9 +24,9 @@ export default function Home() {
             <p className={styles.bridgeText}>
               Like what you see?
             </p>
-            <Link href="/#contact" className={styles.bridgeLink}>
+            <ScrollLink href="#contact" className={styles.bridgeLink}>
               Let&apos;s talk →
-            </Link>
+            </ScrollLink>
           </div>
         </SectionReveal>
 

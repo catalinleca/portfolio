@@ -9,7 +9,7 @@ export const CaseStudyCard = () => {
     <WindowChrome title="build.hedgehunt.app">
       <div className={styles.body}>
         <div className={styles.info}>
-          <div className={styles.overline}>Platform · Case Study</div>
+          <div className={styles.overline}>Platform</div>
           <h3 className={styles.title}>HedgeHunt</h3>
           <p className={styles.description}>
             A full-stack platform for creating and playing real-world treasure

@@ -3,5 +3,5 @@
   flex-direction: column;
   max-width: var(--max-width-content);
   margin: 0 auto;
-  padding: 8rem var(--gutter) var(--space-24);
+  padding: calc(var(--nav-height) + var(--space-6)) var(--gutter) var(--space-24);
 }
