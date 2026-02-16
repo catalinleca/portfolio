@@ -70,6 +70,10 @@
     border-radius: var(--radius-sm);
   }
 
+  & figure[data-rehype-pretty-code-figure] {
+    margin: 0 0 var(--space-6);
+  }
+
   & pre {
     background: var(--bg-raised);
     color: var(--text-bright);
