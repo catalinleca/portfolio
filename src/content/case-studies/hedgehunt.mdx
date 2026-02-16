@@ -240,25 +240,65 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 
 ## Highlights
 
-**Play API and HATEOAS.** The player never decides what comes next. Each API response includes HATEOAS links for available actions: submit an answer, request a hint, skip a step. Step order, availability, and progression logic live entirely on the server. The client follows links. We can change game rules, add step dependencies, or introduce timed releases without touching the Player app.
+<DecisionCard title="Play API and HATEOAS">
 
-**Answer Validation.** Six validators behind one interface. Four challenge types produce six answer types because Quiz splits into choice and free-input, and Mission splits into location and media. Each validator uses a different algorithm: exact match and option lookup for quiz-choice, Levenshtein distance for fuzzy text in quiz-input, Haversine formula for GPS proximity in mission-location, and AI providers for image/audio in mission-media and task. Adding AI validation meant writing two new validator classes. The dispatch code didn't change.
+The player never decides what comes next. Each API response includes HATEOAS links for available actions: submit an answer, request a hint, skip a step. Step order, availability, and progression logic live entirely on the server. The client follows links. We can change game rules, add step dependencies, or introduce timed releases without touching the Player app.
 
-**Asset Pipeline.** Media uploads go through presigned S3 URLs. The server generates a signed upload URL, the client uploads directly to S3 without proxying through the API. CloudFront serves assets from edge locations. Presigned URLs are short-lived. Each upload gets a unique key prefixed with the hunt ID so we can batch-delete all assets when a hunt is removed.
+</DecisionCard>
 
-**Session Management.** When a player starts a hunt, the API creates a `Session` locked to the current `liveVersion`. If the creator releases a new version mid-play, active sessions continue on their original version without interruption. The `sessionId` persists in `localStorage`. Reopening the browser resumes from the last completed step. This version-locking is the main reason the Hunt/HuntVersion separation exists.
+<DecisionCard title="Answer Validation">
 
-**Editor Preview.** The Editor embeds the Player app in an iframe. `@hunthub/player-sdk` handles the typed postMessage protocol between them. Hunt data goes through the same `PlayerExporter` used in production, so the preview matches exactly what a real player sees. Preview sessions use signed tokens instead of real authentication so the Player can render without a backend call.
+Six validators behind one interface. Four challenge types produce six answer types because Quiz splits into choice and free-input, and Mission splits into location and media. Each validator uses a different algorithm: exact match and option lookup for quiz-choice, Levenshtein distance for fuzzy text in quiz-input, Haversine formula for GPS proximity in mission-location, and AI providers for image/audio in mission-media and task. Adding AI validation meant writing two new validator classes. The dispatch code didn't change.
 
-**Prefetching and LRU Cache.** The Player prefetches the next step's media while the current step is active. Images use `new Image()` with `decode()` for async decoding. A bounded LRU cache evicts the oldest entries when the limit is reached. Step transitions feel instant because assets are already decoded and ready to render.
+</DecisionCard>
 
-**Compass Design System.** `@hunthub/compass` wraps MUI's `createTheme` with custom design tokens, typography scales, and component overrides. Any app that imports the package gets the same visual language without duplicating configuration. Includes responsive mixins and type-safe breakpoint selectors that are shared across all frontends.
+<DecisionCard title="Asset Pipeline">
 
-**Hunt Sharing.** Hunts support three permission levels: Owner (full control, can delete and transfer), Admin (can edit and publish, can't delete), and View (read-only access). Enforcement is server-side middleware. The Editor UI adapts based on the user's role, but access control never relies on the client. Shareable play links use the hunt's numeric ID for clean, human-readable URLs.
+Media uploads go through presigned S3 URLs. The server generates a signed upload URL, the client uploads directly to S3 without proxying through the API. CloudFront serves assets from edge locations. Presigned URLs are short-lived. Each upload gets a unique key prefixed with the hunt ID so we can batch-delete all assets when a hunt is removed.
 
-**Media Processing.** Uploaded videos and audio are compressed server-side before final storage. This keeps file sizes predictable and playback consistent across devices. Original uploads are replaced with the compressed versions after processing completes.
+</DecisionCard>
 
-**Type Generation.** A single OpenAPI YAML spec defines every request and response shape across all four apps. `openapi-zod-client` generates TypeScript types and Zod validation schemas from the spec. A post-processing script normalizes the output for consistent naming and import paths. If the spec changes and any consumer doesn't match, CI fails at build time. No manual type syncing.
+<DecisionCard title="Session Management">
+
+When a player starts a hunt, the API creates a `Session` locked to the current `liveVersion`. If the creator releases a new version mid-play, active sessions continue on their original version without interruption. The `sessionId` persists in `localStorage`. Reopening the browser resumes from the last completed step. This version-locking is the main reason the Hunt/HuntVersion separation exists.
+
+</DecisionCard>
+
+<DecisionCard title="Editor Preview">
+
+The Editor embeds the Player app in an iframe. `@hunthub/player-sdk` handles the typed postMessage protocol between them. Hunt data goes through the same `PlayerExporter` used in production, so the preview matches exactly what a real player sees. Preview sessions use signed tokens instead of real authentication so the Player can render without a backend call.
+
+</DecisionCard>
+
+<DecisionCard title="Prefetching and LRU Cache">
+
+The Player prefetches the next step's media while the current step is active. Images use `new Image()` with `decode()` for async decoding. A bounded LRU cache evicts the oldest entries when the limit is reached. Step transitions feel instant because assets are already decoded and ready to render.
+
+</DecisionCard>
+
+<DecisionCard title="Compass Design System">
+
+`@hunthub/compass` wraps MUI's `createTheme` with custom design tokens, typography scales, and component overrides. Any app that imports the package gets the same visual language without duplicating configuration. Includes responsive mixins and type-safe breakpoint selectors that are shared across all frontends.
+
+</DecisionCard>
+
+<DecisionCard title="Hunt Sharing">
+
+Hunts support three permission levels: Owner (full control, can delete and transfer), Admin (can edit and publish, can't delete), and View (read-only access). Enforcement is server-side middleware. The Editor UI adapts based on the user's role, but access control never relies on the client. Shareable play links use the hunt's numeric ID for clean, human-readable URLs.
+
+</DecisionCard>
+
+<DecisionCard title="Media Processing">
+
+Uploaded videos and audio are compressed server-side before final storage. This keeps file sizes predictable and playback consistent across devices. Original uploads are replaced with the compressed versions after processing completes.
+
+</DecisionCard>
+
+<DecisionCard title="Type Generation">
+
+A single OpenAPI YAML spec defines every request and response shape across all four apps. `openapi-zod-client` generates TypeScript types and Zod validation schemas from the spec. A post-processing script normalizes the output for consistent naming and import paths. If the spec changes and any consumer doesn't match, CI fails at build time. No manual type syncing.
+
+</DecisionCard>
 
 ---
 
