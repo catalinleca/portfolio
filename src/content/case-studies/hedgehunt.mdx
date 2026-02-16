@@ -79,7 +79,7 @@ Hunts go through three states: Draft, Published, and Live. Publishing freezes th
 
 ## Decisions
 
-<DecisionCard title="Hunt Versioning Model" defaultOpen>
+<DecisionCard id="hunt-versioning" title="Hunt Versioning Model" defaultOpen>
 <CardField label="Context">
 
 Creators edit hunts while players are actively solving them. If a creator modifies step 3 while a player is on step 1, the player could eventually reach content that changed mid-session. We needed complete isolation between editing and playing.
@@ -121,7 +121,7 @@ More complex schema. Every read that needs step data requires two lookups (versi
 </CardField>
 </DecisionCard>
 
-<DecisionCard title="Why MongoDB">
+<DecisionCard id="why-mongodb" title="Why MongoDB">
 <CardField label="Context">
 
 Each challenge type has a completely different data shape. A Quiz has options, correct answers, and validation modes. A Mission has GPS coordinates, radius, and media requirements. A Task has AI prompts and audio settings. We needed storage that handles this polymorphism without fighting the schema.
@@ -152,7 +152,7 @@ No compile-time query validation like Prisma provides. Some denormalization is n
 </CardField>
 </DecisionCard>
 
-<DecisionCard title="Player Format (PlayerExporter)">
+<DecisionCard id="player-exporter" title="Player Format (PlayerExporter)">
 <CardField label="Context">
 
 The full `Step` document contains everything: correct answers, AI validation prompts, scoring criteria, admin notes. Players must never see any of this. Filtering on the client is not an option because the data has already left the server. One missed field or a browser devtools inspection would leak answers.
@@ -179,7 +179,7 @@ Extra type definitions and a transformation function to maintain for every schem
 </CardField>
 </DecisionCard>
 
-<DecisionCard title="Challenge Type System">
+<DecisionCard id="challenge-type-system" title="Challenge Type System">
 <CardField label="Context">
 
 Four challenge types (Clue, Quiz, Mission, Task) with completely different field schemas. The editor needs to let creators switch a step between types without destroying shared data like title and description. The API needs to validate based on type. The OpenAPI spec needs to generate clean schemas for all four.
@@ -205,7 +205,7 @@ No compile-time exhaustiveness checking. If you access `challenge.quiz` when the
 </CardField>
 </DecisionCard>
 
-<DecisionCard title="AI Integration">
+<DecisionCard id="ai-integration" title="AI Integration">
 <CardField label="Context">
 
 Two distinct AI use cases. First: validating player submissions for Missions (photos of specific locations or objects) and Tasks (audio recordings) where exact matching is impossible. Second: generating complete, playable hunts from a text prompt like "a treasure hunt around Central Park about American history." Multiple AI providers handle different media types, and provider failures can never block a player mid-hunt.
@@ -240,65 +240,58 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 
 ## Highlights
 
-<DecisionCard title="Play API and HATEOAS">
+<HighlightGrid>
+<HighlightCard title="Play API and HATEOAS">
 
-The player never decides what comes next. Each API response includes HATEOAS links for available actions: submit an answer, request a hint, skip a step. Step order, availability, and progression logic live entirely on the server. The client follows links. We can change game rules, add step dependencies, or introduce timed releases without touching the Player app.
+Each API response includes HATEOAS links for available actions. The Player follows links. Game rules change server-side without touching the client.
 
-</DecisionCard>
+</HighlightCard>
+<HighlightCard title="Answer Validation">
 
-<DecisionCard title="Answer Validation">
+Six validators behind one interface, from Levenshtein distance for fuzzy text to Haversine for GPS proximity to AI for image/audio. Adding new validators required zero changes to dispatch.
 
-Six validators behind one interface. Four challenge types produce six answer types because Quiz splits into choice and free-input, and Mission splits into location and media. Each validator uses a different algorithm: exact match and option lookup for quiz-choice, Levenshtein distance for fuzzy text in quiz-input, Haversine formula for GPS proximity in mission-location, and AI providers for image/audio in mission-media and task. Adding AI validation meant writing two new validator classes. The dispatch code didn't change.
+</HighlightCard>
+<HighlightCard title="Asset Pipeline">
 
-</DecisionCard>
+Direct-to-S3 uploads via presigned URLs, served through CloudFront. Hunt-prefixed keys enable batch deletion on hunt removal.
 
-<DecisionCard title="Asset Pipeline">
+</HighlightCard>
+<HighlightCard title="Session Management">
 
-Media uploads go through presigned S3 URLs. The server generates a signed upload URL, the client uploads directly to S3 without proxying through the API. CloudFront serves assets from edge locations. Presigned URLs are short-lived. Each upload gets a unique key prefixed with the hunt ID so we can batch-delete all assets when a hunt is removed.
+Sessions are version-locked. Releasing a new version mid-play doesn't interrupt active players. `localStorage` persistence resumes from the last completed step.
 
-</DecisionCard>
+</HighlightCard>
+<HighlightCard title="Editor Preview">
 
-<DecisionCard title="Session Management">
+The Editor embeds the Player in an iframe via a typed `postMessage` protocol. Same `PlayerExporter` as production. Preview matches exactly what real players see.
 
-When a player starts a hunt, the API creates a `Session` locked to the current `liveVersion`. If the creator releases a new version mid-play, active sessions continue on their original version without interruption. The `sessionId` persists in `localStorage`. Reopening the browser resumes from the last completed step. This version-locking is the main reason the Hunt/HuntVersion separation exists.
+</HighlightCard>
+<HighlightCard title="Prefetching and LRU Cache">
 
-</DecisionCard>
+The Player prefetches next-step media with async `decode()` and a bounded LRU cache. Step transitions feel instant because assets are already decoded.
 
-<DecisionCard title="Editor Preview">
+</HighlightCard>
+<HighlightCard title="Compass Design System">
 
-The Editor embeds the Player app in an iframe. `@hunthub/player-sdk` handles the typed postMessage protocol between them. Hunt data goes through the same `PlayerExporter` used in production, so the preview matches exactly what a real player sees. Preview sessions use signed tokens instead of real authentication so the Player can render without a backend call.
+`@hunthub/compass` wraps MUI's `createTheme` with shared tokens, typography scales, and responsive mixins. One import gives any app the full design system.
 
-</DecisionCard>
+</HighlightCard>
+<HighlightCard title="Hunt Sharing">
 
-<DecisionCard title="Prefetching and LRU Cache">
+Three permission levels (Owner, Admin, View) enforced in server-side middleware. The Editor adapts UI per role, but access control never relies on the client.
 
-The Player prefetches the next step's media while the current step is active. Images use `new Image()` with `decode()` for async decoding. A bounded LRU cache evicts the oldest entries when the limit is reached. Step transitions feel instant because assets are already decoded and ready to render.
+</HighlightCard>
+<HighlightCard title="Media Processing">
 
-</DecisionCard>
+Uploaded videos and audio are compressed server-side before final storage. Originals are replaced after processing for consistent playback across devices.
 
-<DecisionCard title="Compass Design System">
+</HighlightCard>
+<HighlightCard title="Type Generation">
 
-`@hunthub/compass` wraps MUI's `createTheme` with custom design tokens, typography scales, and component overrides. Any app that imports the package gets the same visual language without duplicating configuration. Includes responsive mixins and type-safe breakpoint selectors that are shared across all frontends.
+A single OpenAPI spec generates TypeScript types and Zod schemas via `openapi-zod-client`. Spec changes that break any consumer fail CI at build time.
 
-</DecisionCard>
-
-<DecisionCard title="Hunt Sharing">
-
-Hunts support three permission levels: Owner (full control, can delete and transfer), Admin (can edit and publish, can't delete), and View (read-only access). Enforcement is server-side middleware. The Editor UI adapts based on the user's role, but access control never relies on the client. Shareable play links use the hunt's numeric ID for clean, human-readable URLs.
-
-</DecisionCard>
-
-<DecisionCard title="Media Processing">
-
-Uploaded videos and audio are compressed server-side before final storage. This keeps file sizes predictable and playback consistent across devices. Original uploads are replaced with the compressed versions after processing completes.
-
-</DecisionCard>
-
-<DecisionCard title="Type Generation">
-
-A single OpenAPI YAML spec defines every request and response shape across all four apps. `openapi-zod-client` generates TypeScript types and Zod validation schemas from the spec. A post-processing script normalizes the output for consistent naming and import paths. If the spec changes and any consumer doesn't match, CI fails at build time. No manual type syncing.
-
-</DecisionCard>
+</HighlightCard>
+</HighlightGrid>
 
 ---
 

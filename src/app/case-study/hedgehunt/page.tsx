@@ -8,6 +8,8 @@ import {
   ExecutiveSummary,
   DecisionCard,
   CardField,
+  HighlightGrid,
+  HighlightCard,
   Mermaid,
 } from "@/ui/case-study";
 import type { Metadata } from "next";
@@ -24,6 +26,8 @@ const mdxComponents = {
   ExecutiveSummary,
   DecisionCard,
   CardField,
+  HighlightGrid,
+  HighlightCard,
   Mermaid,
 };
 
