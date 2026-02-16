@@ -1,67 +1,65 @@
 ---
 title: "HedgeHunt"
-description: "A full-stack platform for creating and playing real-world treasure hunts — architecture, technical decisions, and patterns."
+description: "Architecture and technical decisions behind a full-stack treasure hunt platform."
 date: "2024-01-01"
 tags: ["full-stack", "typescript", "monorepo", "react", "node"]
 ---
 
 # HedgeHunt
 
-**A full-stack platform for creating and playing real-world treasure hunts — built solo from scratch.**
+A platform for creating and playing location-based treasure hunts.
 
-Solo project · 2024 – Present
+2024 – Present
 
 <ExecutiveSummary
-  problem="Treasure hunt creators need to build and publish multi-step hunts with clues, quizzes, and GPS challenges — without disrupting active players."
-  constraints="Solo developer. 4 challenge types with distinct UI and validation. Real-time editor preview. Immutable versioning. AI-powered generation."
-  architecture="TypeScript monorepo — 5 apps, 3 shared packages. OpenAPI as single source of truth. Editor ↔ Player iframe SDK."
-  results="217 backend tests. Full type safety across all apps. Immutable version snapshots prevent active-session disruptions. Live at hedgehunt.app."
+  problem="A content platform where creators build interactive hunts and players solve them in real-time. 4 challenge types with different validation — including AI for image and audio. Creators edit while players are actively solving. Editor and Player are separate apps that need to stay in sync."
+  constraints="4 independently deployed apps sharing one type system. Real-time editor-to-player preview via iframe. AI-powered answer validation with graceful degradation. Immutable content versions with zero-downtime releases."
+  architecture="TypeScript monorepo — 4 apps, 3 shared packages. OpenAPI spec generates types and Zod schemas as the single source of truth. MongoDB with atomic operations for concurrency control."
+  results="Atomic releases with instant rollback. Zero type drift across apps. Build-time contract enforcement via generated schemas. Live at hedgehunt.app."
 />
 
 ---
 
 ## Overview
 
-HedgeHunt lets creators build interactive, real-world treasure hunts with multiple challenge types — clues, quizzes, missions, and tasks. Players navigate step-by-step through hunts using GPS, photos, and audio, validated by AI.
+HedgeHunt is a platform for creating and playing location-based treasure hunts. Creators build multi-step hunts in a visual editor with real-time player preview. Players solve them on mobile using GPS, photos, and audio.
 
-### The Domain
-
-- **4 Challenge Types** — Clue, Quiz, Mission, Task — each with distinct UI and player behavior
-- **Steps** — the building blocks of hunts, with settings for location, hints, time limits, and attempt limits
-- **Creator + Player** — two separate experiences, connected by a shared data model
+The platform supports 4 challenge types — Clue, Quiz, Mission, and Task — each with distinct player interaction and validation logic. Missions and Tasks use AI for image analysis and audio validation. The server controls game progression through HATEOAS links, and the Editor communicates with the Player through a typed iframe SDK with signed preview tokens.
 
 ---
 
 ## Architecture
 
-Monorepo with 5 apps and 3 shared packages. Single source of truth via OpenAPI YAML → generated TypeScript types + Zod schemas.
+TypeScript monorepo — 4 apps and 3 shared packages. `@hunthub/shared` holds API types and Zod schemas generated from a single OpenAPI spec. `@hunthub/compass` provides the MUI theme and design tokens, extracted as a package so future apps inherit a consistent design language. `@hunthub/player-sdk` implements the typed postMessage protocol between Editor and Player — the Editor sends hunt data through a PlayerExporter that strips answer keys and AI instructions before the iframe receives them.
 
 <Mermaid chart={`graph TD
   A[HuntHub Monorepo] --> B[Editor App]
   A --> C[Player App]
   A --> D[Backend API]
   A --> E[Landing Page]
-  A --> F[Marketing Site]
-  A --> G["@hunthub/shared"]
-  A --> H["@hunthub/compass"]
-  A --> I["@hunthub/player-sdk"]
-  B --> G
-  B --> I
+  A --> F["@hunthub/shared"]
+  A --> G["@hunthub/compass"]
+  A --> H["@hunthub/player-sdk"]
+  B --> F
+  B --> H
+  C --> F
   C --> G
-  C --> H
-  D --> G
-  E --> G
+  D --> F
+  E --> F
   style A fill:#1a1a1e,stroke:#cc7832,color:#eae8e4
   style B fill:#1a1a1e,stroke:#6897bb,color:#eae8e4
   style C fill:#1a1a1e,stroke:#6897bb,color:#eae8e4
   style D fill:#1a1a1e,stroke:#6a8759,color:#eae8e4
   style E fill:#1a1a1e,stroke:#6b6966,color:#eae8e4
-  style F fill:#1a1a1e,stroke:#6b6966,color:#eae8e4
+  style F fill:#151518,stroke:#9876aa,color:#eae8e4
   style G fill:#151518,stroke:#9876aa,color:#eae8e4
-  style H fill:#151518,stroke:#9876aa,color:#eae8e4
-  style I fill:#151518,stroke:#9876aa,color:#eae8e4`}
-  caption="HuntHub monorepo — 5 apps + 3 shared packages"
+  style H fill:#151518,stroke:#9876aa,color:#eae8e4`}
+  caption="HuntHub monorepo — 4 apps + 3 shared packages"
 />
+
+The API runs on Fly.io (Amsterdam region), Editor and Player deploy to Vercel, and the landing page ships to Cloudflare Pages. Static assets go through S3 with CloudFront as the CDN.
+
+Publishing creates an immutable snapshot of the hunt. Releasing points live traffic to it. Rolling back switches the pointer — no data migration, no downtime.
 
 <Mermaid chart={`stateDiagram-v2
   [*] --> Draft: Create Hunt
@@ -78,71 +76,113 @@ Monorepo with 5 apps and 3 shared packages. Single source of truth via OpenAPI Y
 ## Decisions
 
 <DecisionCard
-  title="Hunt Versioning — Draft / Publish / Release"
-  context="Active players can't be disrupted by creator edits."
-  decision="Immutable version snapshots. Each publish creates a new HuntVersion with its own Steps. 'Set as live' points to a specific version."
-  tradeoff="Complex data model (Hunt → HuntVersion → Step per version) but zero risk to active sessions."
+  title="Content Versioning + Atomic Release"
+  context="Creators edit hunts while players are actively solving them. Publishing and releasing are separate operations — publish creates an immutable snapshot, release points live traffic to it."
+  decision="Pointer-based release. Hunt.liveVersion references a published HuntVersion. Releasing is a single atomic findOneAndUpdate with the current live version as a filter — if another operation changed it, the update matches nothing and returns a conflict. No locks, no queues."
+  tradeoff="More complex data model (Hunt → HuntVersion → Step per version), but zero risk to active sessions and instant rollback to any published version."
   defaultOpen
 />
 
 <DecisionCard
-  title="Shared Type System — OpenAPI → TypeScript + Zod"
-  context="5 apps must agree on types. Manual type syncing across apps is a maintenance nightmare."
-  decision="Single OpenAPI YAML spec generates TypeScript types and Zod validation schemas."
-  tradeoff="Generation step in the workflow, but zero type drift across the entire monorepo."
+  title="OpenAPI as Type Authority"
+  context="4 apps need to agree on request/response shapes. Manual type syncing across a monorepo is a guaranteed source of drift."
+  decision="A single OpenAPI YAML spec (~2,000 lines) is the source of truth. openapi-zod-client generates TypeScript types and Zod validation schemas consumed by every app. A post-processing script normalizes the output. Breaking changes are caught at build time — if the spec changes, all consumers that don't match fail CI."
+  tradeoff="Adds a generation step and a post-processing script to the workflow. Worth it — type drift across 4 apps would be significantly more expensive."
 />
 
 <DecisionCard
-  title="Editor-Player iframe SDK — Typed postMessage"
-  context="Editor and Player must be independently deployable apps, but the editor needs to preview the player experience in real-time."
-  decision="Typed postMessage protocol between iframe-embedded Player and the Editor host."
-  tradeoff="Serialization overhead, but complete app separation and independent deploy cycles."
+  title="AI Integration — Validation + Generation"
+  context="Missions and Tasks need AI to validate photo and audio submissions. Hunt generation uses AI to create complete hunts from text prompts — including geocoding each step's location. Multiple AI providers handle different media types. Provider failures can't block players."
+  decision="Validation uses the same strategy pattern as answer checking — each validator calls the appropriate AI provider. GPT-4o handles text validation, Google Gemini handles image and audio analysis, Groq serves as a text fallback. If any provider fails or times out (15s), validation auto-passes with a fallbackUsed flag — players are never blocked by infrastructure. The validation prompt adapts to attempt count: after 3 failed attempts, the AI provides subtle hints; after 4+, direct guidance. Generation uses OpenAI Structured Outputs with a Zod schema to guarantee valid hunt structures, with one retry that feeds validation errors back to the model. Each generated step is geocoded via Google Maps with a quality gate — only ROOFTOP or RANGE_INTERPOLATED precision is accepted; if geocoding fails or returns imprecise results, the step is silently converted to a clue. No unplayable steps."
+  tradeoff="Auto-pass on failure means a bad answer could slip through, but blocking players when AI is unavailable is worse for the experience. The generation quality gate trades coverage for accuracy — some locations become clues instead of GPS challenges, but every generated hunt is immediately playable."
 />
 
 <DecisionCard
-  title="Validation Strategy Pattern"
-  context="Each challenge type (exact match, fuzzy/Levenshtein, contains, numeric range) needs different validation logic."
-  decision="One validator per challenge type, following the Strategy pattern. New types don't modify existing validators."
-  tradeoff="More files, but each is focused and independently testable."
+  title="Data Modeling"
+  context="The platform needs atomic counters for public-facing IDs, a schema that supports 4 challenge types without type drift, and a data model that balances write-time immutability with read-time simplicity. MongoDB was chosen over PostgreSQL for its document model — hunts are naturally JSON-shaped with variable challenge structures — and schema flexibility during rapid iteration. The tradeoff is weaker TypeScript integration compared to Prisma + Postgres, mitigated by using OpenAPI-generated types as the source of truth rather than Mongoose schemas."
+  decision="Numeric IDs via a Counter collection with atomic findOneAndUpdate + $inc — race-condition safe, human-readable, and sequentially meaningful. Challenge types use a constraint pattern: a Challenge document has nullable fields for each type (clue, quiz, etc.) with only one populated at a time, enforced at the application layer rather than through a TypeScript discriminated union. The Zod schema marks all challenge fields as optional + nullable + strict — the runtime constraint that exactly one is populated is enforced by API validation, not the type system."
+  tradeoff="The nullable constraint trades compile-time exhaustiveness checking for database-friendliness and simpler partial updates. Steps are stored as separate documents (not embedded in HuntVersion) — this made versioning simpler (publish clones step documents) but makes reads more expensive (requires a secondary query). See Reflections."
 />
 
 <DecisionCard
-  title="HATEOAS for Player Navigation"
-  context="The server is the single source of truth for game progression — which step is next, whether the hunt is complete, etc."
-  decision="Server provides _links in every response. Client follows them without hardcoded routes."
-  tradeoff="Larger API responses, but trivially simple client navigation logic."
+  title="Editor Form System"
+  context="The editor manages complex, deeply nested forms — each step has shared settings plus a challenge-specific section with different fields depending on the type. Forms need to be composable, type-safe, and swappable between challenge types without data loss."
+  decision="Three-layer architecture: atomic components (raw MUI inputs), bridge components (React Hook Form wrappers like FormInput, FormSelect that handle useController integration), and composed step forms (QuizInput, MissionInput) that declare their own field paths. Field paths are generated via a Proxy-based getFieldPath() that provides full TypeScript autocomplete for deeply nested structures like hunt.steps[0].challenge.quiz.validation.mode. Conditional rendering uses useWatch() — the UI adapts as the creator fills in data."
+  tradeoff="The three-layer separation means more files, but any UI component can be used with or without React Hook Form. Adding a new challenge type means creating one composed form — the atomic and bridge layers don't change."
 />
 
 ---
 
-## Patterns
+## Under the Hood
 
-- **Optimistic locking** for concurrent step editing
-- **Prefetching** next step while playing current — instant transitions
-- **React Query** as the state layer — no Redux, no global state
-- **AI integration** — GPT-4o for hunt generation and answer validation
+Three pieces from the codebase that show how the key decisions play out in practice.
+
+### Atomic Release
+
+```typescript
+// release-manager.helper.ts
+const result = await Hunt.findOneAndUpdate(
+  { huntId, liveVersion: currentLiveVersion },
+  { liveVersion: version, releasedAt: new Date(), releasedBy: userId },
+  { new: true, session }
+);
+if (!result) {
+  throw new ConflictError('Hunt was modified. Retry with current liveVersion.');
+}
+```
+
+The filter clause `liveVersion: currentLiveVersion` is the entire concurrency control. If another operation changed it first, the update matches nothing and a conflict is thrown.
+
+### Validator Dispatch
+
+```typescript
+// answer-validator.helper.ts
+private static validators: Record<AnswerType, IAnswerValidator> = {
+  [AnswerType.Clue]: ClueValidator,
+  [AnswerType.QuizChoice]: QuizChoiceValidator,
+  [AnswerType.QuizInput]: QuizInputValidator,
+  [AnswerType.MissionLocation]: MissionLocationValidator,
+  [AnswerType.MissionMedia]: MissionMediaValidator,
+  [AnswerType.Task]: TaskValidator,
+};
+
+static async validate(type: AnswerType, payload: AnswerPayload, step: IStep) {
+  return this.validators[type].validate(payload, step);
+}
+```
+
+4 challenge types produce 6 answer types — Quiz splits into choice and free-input, Mission splits into location and media. Each validator uses a different algorithm: exact match and option lookup for quiz-choice, Levenshtein distance for fuzzy text matching in quiz-input, Haversine formula for GPS proximity in mission-location, and AI providers for image/audio in mission-media and task. Adding AI validation meant writing two new validators. This file didn't change.
+
+### Type-Safe Field Paths
+
+```typescript
+// getFieldPath — Proxy-based type-safe path builder
+const fields = {
+  title: getFieldPath(h => h.hunt.steps[stepIndex].challenge.quiz.title),
+  type: getFieldPath(h => h.hunt.steps[stepIndex].challenge.quiz.type),
+  options: getFieldPath(h => h.hunt.steps[stepIndex].challenge.quiz.options),
+};
+```
+
+`getFieldPath` uses a Proxy to trace property access and return the path as a string — with full TypeScript autocomplete. Every form field in the editor is addressed this way. Typos in nested paths are caught at compile time, not at runtime when a field silently doesn't bind.
 
 ---
 
-## What I'd Do Next
+## Reflections
 
-1. **Contract tests for the Editor ↔ Player boundary** — The iframe postMessage SDK is the highest-risk integration surface. I'd add Playwright contract tests to catch protocol drift between independent deploys before it reaches production.
+The publish/release separation was the strongest architectural decision. The pointer-based system handles concurrent edge cases without pessimistic locks — releasing is a single atomic update, and rollback is the same operation pointing to a different version.
 
-2. **Optimise developer velocity** — Cache the OpenAPI codegen step and add incremental builds so only affected packages regenerate. At 5 apps, the full build pipeline has room to be faster without sacrificing the type safety guarantee.
-
-3. **Read-optimised projections for versioned content** — The Hunt → HuntVersion → Step model is correct for write-time immutability, but read queries are more complex than they need to be. Materialised views or denormalised read models would simplify the player-facing API.
-
-4. **Consolidate deployable surfaces if the product stays solo** — 5 independently deployed apps is architecturally clean, but the operational surface area is large for one developer. If the team doesn't grow, merging the editor and marketing site into a single Next.js app would reduce deploy coordination without sacrificing code modularity.
+The step data model is where the tradeoff didn't pay off. Steps as separate documents made publishing straightforward — clone the documents — but every read now requires a secondary query. Embedding steps within HuntVersion and using MongoDB's subdocument operations for updates would make the common read path a single document fetch, though it would complicate the publish operation (deep-cloning subdocuments instead of cloning top-level documents). The iframe SDK is also the riskiest integration boundary in the system — it needs contract tests between the independently deployed Editor and Player.
 
 ---
 
 ## Numbers
 
-- **5** apps in monorepo
-- **3** shared packages
-- **217** backend tests
-- **4** challenge types
-- **1** developer — solo full-stack delivery
+- **4** apps — editor, player, API, landing
+- **3** shared packages — API types + Zod schemas, MUI theme, iframe SDK
+- **4** challenge types — clue, quiz, mission, task
+- **6** answer validators — including AI-powered image and audio
+- **~2,000** lines of OpenAPI spec — single source of truth for all apps
 
 ---
 

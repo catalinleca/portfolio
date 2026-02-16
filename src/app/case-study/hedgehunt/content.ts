@@ -11,14 +11,15 @@ export interface CaseStudyMeta {
 export const hedgehuntMeta: CaseStudyMeta = {
   title: "HedgeHunt Case Study — Catalin Leca",
   description:
-    "A deep dive into building a full-stack treasure hunt platform — architecture, technical decisions, and patterns.",
+    "Architecture and technical decisions behind a full-stack treasure hunt platform.",
 };
 
 export const hedgehuntSections: CaseStudySection[] = [
   { id: "overview", label: "Overview" },
   { id: "architecture", label: "Architecture" },
   { id: "decisions", label: "Decisions" },
-  { id: "patterns", label: "Patterns" },
-  { id: "what-id-do-next", label: "What I'd Do Next" },
+  { id: "under-the-hood", label: "Under the Hood" },
+  { id: "reflections", label: "Reflections" },
   { id: "numbers", label: "Numbers" },
+  { id: "links", label: "Links" },
 ];
