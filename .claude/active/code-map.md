@@ -36,7 +36,11 @@ Order: Hero → CaseStudies → CTA Bridge → About → Contact
 
 ## Case Study UI — `src/ui/case-study/`
 - `ExecutiveSummary/` — 2×2 grid (problem, constraints, architecture, results)
-- `DecisionCard/` — Collapsible ADR card using `<details>/<summary>`
+- `DecisionCard/` — Collapsible ADR card using `<details>/<summary>`. Optional `id` prop for deep linking
+- `CodeShowcase/` — Title + description + syntax-highlighted code block. No card wrapper (code block inherits prose.css styling)
+- `Highlight/` — `HighlightGrid` (2-col grid, 1-col on mobile) + `HighlightCard` (compact static card with title + body)
+- `ProcessFlow/` — Horizontal connected steps with CSS arrow connectors. `ProcessFlow` (wrapper with title) + `ProcessStep` (label + detail). Vertical on mobile
+- `StatGrid/` — `StatGrid` (responsive grid) + `Stat` (large number + label). Used for the Numbers section
 - `Mermaid/` — Client-side Mermaid diagram renderer (imports theme from `@/data/theme`)
 - `SectionNav/` — Sticky nav with IntersectionObserver, `top: var(--nav-offset)` syncs with main nav hide/show
 
@@ -75,5 +79,5 @@ import { Hero, CaseStudies, About, Contact } from "@/app/(home)/_sections";
 import { PageTransition, SectionReveal } from "@/ui/motion";
 import { SectionShell, ArrowLink, ExternalLink, CopyButton, ScrollLink } from "@/ui/shared";
 import { CopyIcon, CheckIcon } from "@/ui/icons";
-import { ExecutiveSummary, DecisionCard, Mermaid, SectionNav } from "@/ui/case-study";
+import { ExecutiveSummary, DecisionCard, CardField, HighlightGrid, HighlightCard, CodeShowcase, ProcessFlow, ProcessStep, StatGrid, Stat, Mermaid, SectionNav } from "@/ui/case-study";
 ```
