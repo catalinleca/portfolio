@@ -9,8 +9,6 @@ tags: ["full-stack", "typescript", "monorepo", "react", "node"]
 
 A platform for creating and playing location-based treasure hunts.
 
-2024 – Present
-
 <ExecutiveSummary
   problem="Content platform where creators build interactive treasure hunts and players solve them concurrently. Four challenge types with AI-powered validation. Editing and playing happen at the same time."
   constraints="Four independently deployed apps sharing one type system. Immutable content versions. AI failures can't block players."
@@ -47,11 +45,12 @@ TypeScript monorepo with four apps and three shared packages.
   A --> G["@hunthub/compass"]
   A --> H["@hunthub/player-sdk"]
   B --> F
+  B --> G
   B --> H
   C --> F
   C --> G
+  C --> H
   D --> F
-  E --> F
   style A fill:#1a1a1e,stroke:#cc7832,stroke-width:2px,color:#eae8e4
   style B fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
   style C fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
@@ -222,9 +221,9 @@ Two distinct AI use cases. First: validating player submissions for Missions (ph
 </CardField>
 <CardField label="Decision">
 
-For validation, we use a multi-provider setup. GPT-4o handles text validation. Google Gemini handles image and audio analysis. Groq serves as a text fallback. If any provider fails or times out at 15 seconds, validation auto-passes with a `fallbackUsed` flag. Players are never blocked by infrastructure.
+For validation, GPT-4o handles text validation and Google Gemini handles image and audio analysis. If a provider fails or times out at 15 seconds, validation auto-passes with a `fallbackUsed` flag. Players are never blocked by infrastructure.
 
-The validation prompt adapts based on attempt count. After 3 failed attempts, the AI starts providing subtle hints in its feedback. After 4+, it gives direct guidance. This keeps the experience challenging without being frustrating.
+The validation prompt adapts based on attempt count. After 2 failed attempts, the AI starts providing subtle hints in its feedback. After 3+, it gives direct guidance. This keeps the experience challenging without being frustrating.
 
 For generation, we use OpenAI Structured Outputs with a Zod schema derived from our API types. The schema uses `Mission.omit({ targetLocation })` so the model generates a description of where to go instead of GPS coordinates, which it would hallucinate. After generation, each step goes through a geocoding pipeline: Google Maps geocodes the location description, and only `ROOFTOP` or `RANGE_INTERPOLATED` precision is accepted. If geocoding fails or returns low precision, the step silently converts from a Mission to a Clue. No unplayable hunts. If schema validation fails, one retry feeds the specific Zod errors back to the model.
 
@@ -240,22 +239,36 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 
 ## Highlights
 
+<CodeShowcase title="Answer Validation" description="Six validators behind one interface. Each challenge type maps to a validator — from Levenshtein distance for fuzzy text to Haversine for GPS proximity to AI for image and audio. Adding a new validator means one map entry. Zero changes to dispatch logic.">
+
+```typescript
+interface AnswerValidator {
+  validate(
+    submission: PlayerSubmission,
+    challenge: Challenge,
+  ): Promise<ValidationResult>;
+}
+
+const validators: Record<AnswerType, AnswerValidator> = {
+  "quiz-choice":      new ExactMatchValidator(),
+  "quiz-input":       new LevenshteinValidator(),
+  "mission-location": new HaversineValidator(),
+  "mission-media":    new AIImageValidator([gemini]),
+  "task-audio":       new AIAudioValidator([gemini]),
+  "task-text":        new AITextValidator([openai]),
+};
+```
+
+</CodeShowcase>
+
+<ProcessFlow title="Asset Pipeline">
+  <ProcessStep label="Client" detail="File selected" />
+  <ProcessStep label="Presigned URL" detail="Server generates" />
+  <ProcessStep label="S3" detail="Direct upload" />
+  <ProcessStep label="CloudFront" detail="CDN delivery" />
+</ProcessFlow>
+
 <HighlightGrid>
-<HighlightCard title="Play API and HATEOAS">
-
-Each API response includes HATEOAS links for available actions. The Player follows links. Game rules change server-side without touching the client.
-
-</HighlightCard>
-<HighlightCard title="Answer Validation">
-
-Six validators behind one interface, from Levenshtein distance for fuzzy text to Haversine for GPS proximity to AI for image/audio. Adding new validators required zero changes to dispatch.
-
-</HighlightCard>
-<HighlightCard title="Asset Pipeline">
-
-Direct-to-S3 uploads via presigned URLs, served through CloudFront. Hunt-prefixed keys enable batch deletion on hunt removal.
-
-</HighlightCard>
 <HighlightCard title="Session Management">
 
 Sessions are version-locked. Releasing a new version mid-play doesn't interrupt active players. `localStorage` persistence resumes from the last completed step.
@@ -276,6 +289,36 @@ The Player prefetches next-step media with async `decode()` and a bounded LRU ca
 `@hunthub/compass` wraps MUI's `createTheme` with shared tokens, typography scales, and responsive mixins. One import gives any app the full design system.
 
 </HighlightCard>
+</HighlightGrid>
+
+<CodeShowcase title="Play API and HATEOAS" description="Each API response includes hypermedia links for available actions. The Player follows links — it never decides what comes next. Game rules change server-side without touching the client.">
+
+```json
+{
+  "step": {
+    "id": 3,
+    "type": "mission",
+    "title": "Find the hidden statue",
+    "challenge": { "radius": 50 }
+  },
+  "_links": {
+    "submit": { "href": "/api/play/sessions/abc/submit", "method": "POST" },
+    "hint":   { "href": "/api/play/sessions/abc/hint",   "method": "GET"  },
+    "skip":   null
+  }
+}
+```
+
+</CodeShowcase>
+
+<ProcessFlow title="Type Generation">
+  <ProcessStep label="OpenAPI Spec" detail="Single source of truth" />
+  <ProcessStep label="Codegen" detail="openapi-zod-client" />
+  <ProcessStep label="Types + Zod" detail="Shared package" />
+  <ProcessStep label="CI" detail="Build-time validation" />
+</ProcessFlow>
+
+<HighlightGrid>
 <HighlightCard title="Hunt Sharing">
 
 Three permission levels (Owner, Admin, View) enforced in server-side middleware. The Editor adapts UI per role, but access control never relies on the client.
@@ -283,12 +326,7 @@ Three permission levels (Owner, Admin, View) enforced in server-side middleware.
 </HighlightCard>
 <HighlightCard title="Media Processing">
 
-Uploaded videos and audio are compressed server-side before final storage. Originals are replaced after processing for consistent playback across devices.
-
-</HighlightCard>
-<HighlightCard title="Type Generation">
-
-A single OpenAPI spec generates TypeScript types and Zod schemas via `openapi-zod-client`. Spec changes that break any consumer fail CI at build time.
+Images are compressed client-side via `browser-image-compression` before upload. Audio is captured at low bitrate (32kbps) through `MediaRecorder`. Only the compressed file is uploaded — no originals stored.
 
 </HighlightCard>
 </HighlightGrid>
@@ -309,10 +347,12 @@ The iframe SDK is the riskiest integration boundary. Editor and Player deploy in
 
 ## Numbers
 
-- **4** apps — editor, player, API, landing
-- **3** shared packages — API types + Zod schemas, MUI theme, iframe SDK
-- **4** challenge types — clue, quiz, mission, task
-- **6** answer validators — including AI-powered image and audio
+<StatGrid>
+  <Stat value="4" label="Apps" />
+  <Stat value="3" label="Shared Packages" />
+  <Stat value="4" label="Challenge Types" />
+  <Stat value="6" label="Answer Validators" />
+</StatGrid>
 
 ---
 

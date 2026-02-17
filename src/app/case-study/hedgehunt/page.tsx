@@ -11,6 +11,11 @@ import {
   HighlightGrid,
   HighlightCard,
   Mermaid,
+  CodeShowcase,
+  ProcessFlow,
+  ProcessStep,
+  StatGrid,
+  Stat,
 } from "@/ui/case-study";
 import type { Metadata } from "next";
 import { hedgehuntMeta, hedgehuntSections } from "./content";
@@ -29,6 +34,11 @@ const mdxComponents = {
   HighlightGrid,
   HighlightCard,
   Mermaid,
+  CodeShowcase,
+  ProcessFlow,
+  ProcessStep,
+  StatGrid,
+  Stat,
 };
 
 export default async function HedgeHuntCaseStudy() {
