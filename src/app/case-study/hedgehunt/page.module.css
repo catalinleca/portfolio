@@ -1,0 +1,7 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: calc(var(--nav-height) + var(--space-6)) var(--gutter) var(--space-24);
+}

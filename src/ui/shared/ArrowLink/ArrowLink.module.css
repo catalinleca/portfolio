@@ -1,0 +1,17 @@
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--accent);
+  transition: gap var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    gap: 0.6rem;
+  }
+}
+
+.arrow {
+  transition: transform var(--duration-fast) var(--ease-out);
+}

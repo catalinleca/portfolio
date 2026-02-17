@@ -1,0 +1,11 @@
+.section {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: var(--space-12) var(--gutter);
+}
+
+@media (width <= 860px) {
+  .section {
+    padding: var(--space-12) var(--gutter-mobile);
+  }
+}

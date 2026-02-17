@@ -1,0 +1,30 @@
+.showcase {
+  margin: var(--space-8) 0;
+}
+
+.header {
+  margin-bottom: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 0 0 var(--space-2);
+}
+
+.description {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--text);
+  margin: 0;
+}
+
+.code {
+  & pre {
+    margin: 0;
+  }
+}

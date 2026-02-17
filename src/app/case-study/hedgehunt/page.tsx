@@ -1,24 +1,68 @@
 import { compileMDX } from "next-mdx-remote/rsc";
+import rehypeSlug from "rehype-slug";
+import rehypePrettyCode from "rehype-pretty-code";
 import { getCaseStudySource } from "@/lib/mdx";
-import { PageTransition } from "@/components/PageTransition";
+import { PageTransition } from "@/ui/motion";
+import {
+  SectionNav,
+  ExecutiveSummary,
+  DecisionCard,
+  CardField,
+  HighlightGrid,
+  HighlightCard,
+  Mermaid,
+  CodeShowcase,
+  ProcessFlow,
+  ProcessStep,
+  StatGrid,
+  Stat,
+} from "@/ui/case-study";
 import type { Metadata } from "next";
+import { hedgehuntMeta, hedgehuntSections } from "./content";
+import styles from "./page.module.css";
+import darculaTheme from "@/styles/shiki-darcula.json";
 
 export const metadata: Metadata = {
-  title: "HedgeHunt Case Study — Catalin Leca",
-  description:
-    "A deep dive into building a full-stack treasure hunt platform — architecture, technical decisions, and patterns.",
+  title: hedgehuntMeta.title,
+  description: hedgehuntMeta.description,
+};
+
+const mdxComponents = {
+  ExecutiveSummary,
+  DecisionCard,
+  CardField,
+  HighlightGrid,
+  HighlightCard,
+  Mermaid,
+  CodeShowcase,
+  ProcessFlow,
+  ProcessStep,
+  StatGrid,
+  Stat,
 };
 
 export default async function HedgeHuntCaseStudy() {
   const source = getCaseStudySource("hedgehunt");
   const { content } = await compileMDX({
     source,
-    options: { parseFrontmatter: true },
+    options: {
+      parseFrontmatter: true,
+      mdxOptions: {
+        rehypePlugins: [
+          rehypeSlug,
+          [rehypePrettyCode, { theme: darculaTheme, keepBackground: false }],
+        ],
+      },
+    },
+    components: mdxComponents,
   });
 
   return (
     <PageTransition>
-      <article className="prose">{content}</article>
+      <div className={styles.layout}>
+        <SectionNav sections={hedgehuntSections} />
+        <article className="prose">{content}</article>
+      </div>
     </PageTransition>
   );
 }

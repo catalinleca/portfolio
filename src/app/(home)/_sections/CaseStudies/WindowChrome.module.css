@@ -1,0 +1,55 @@
+.chrome {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color var(--duration-normal) var(--ease-out);
+
+  &:hover {
+    border-color: rgb(204 120 50 / 40%); /* --accent with opacity */
+  }
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-dim);
+  padding: 0.65rem 1rem;
+}
+
+.dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dotRed,
+.dotYellow,
+.dotGreen {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotRed {
+  background: #ff5f57;
+}
+
+.dotYellow {
+  background: #febc2e;
+}
+
+.dotGreen {
+  background: #28c840;
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-left: 0.75rem;
+}
+
+.body {
+  /* content slot */
+}

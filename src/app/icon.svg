@@ -1,0 +1,27 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="512"
+  height="512"
+  viewBox="0 0 512 512"
+>
+  <rect
+    x="8"
+    y="8"
+    width="496"
+    height="496"
+    rx="88"
+    ry="88"
+    fill="#0f0f0f"
+  />
+  <text
+    x="272"
+    y="295"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    font-size="300"
+    font-family="Georgia, Times, serif"
+    font-weight="700"
+    fill="#ffffff"
+    letter-spacing="32"
+  >CL</text>
+</svg>
