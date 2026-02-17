@@ -9,12 +9,12 @@ interface ArrowLinkProps {
   className?: string;
 }
 
-export function ArrowLink({
+export const ArrowLink = ({
   href,
   children,
   external,
   className,
-}: ArrowLinkProps) {
+}: ArrowLinkProps) => {
   const combinedClassName = className
     ? `${styles.link} ${className}`
     : styles.link;
@@ -37,4 +37,4 @@ export function ArrowLink({
       {children} <span className={styles.arrow}>→</span>
     </Link>
   );
-}
+};

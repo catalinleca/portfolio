@@ -10,7 +10,6 @@ const YEARS_EXPERIENCE = Math.floor(
 );
 
 export const Hero = () => {
-
   return (
     <header className={styles.hero}>
       <div className={styles.content}>

@@ -38,10 +38,10 @@
   transition:
     color var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);
-}
 
-.link:hover {
-  color: var(--text-bright);
+  &:hover {
+    color: var(--text-bright);
+  }
 }
 
 .active {

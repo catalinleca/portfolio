@@ -20,8 +20,8 @@
   font-size: 0.85rem;
   color: var(--accent);
   transition: color var(--duration-fast) var(--ease-out);
-}
 
-.bridgeLink:hover {
-  color: var(--accent-hover);
+  &:hover {
+    color: var(--accent-hover);
+  }
 }

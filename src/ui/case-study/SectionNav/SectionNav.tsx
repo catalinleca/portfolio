@@ -12,6 +12,10 @@ interface SectionNavProps {
   sections: Section[];
 }
 
+const prefersReducedMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 export const SectionNav = ({ sections }: SectionNavProps) => {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? "");
 
@@ -41,10 +45,6 @@ export const SectionNav = ({ sections }: SectionNavProps) => {
       }
     };
   }, [sections]);
-
-  const prefersReducedMotion =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const handleClick = (id: string) => {
     const el = document.getElementById(id);

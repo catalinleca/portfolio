@@ -9,12 +9,12 @@ interface SectionShellProps {
   className?: string;
 }
 
-export function SectionShell({
+export const SectionShell = ({
   id,
   label,
   children,
   className,
-}: SectionShellProps) {
+}: SectionShellProps) => {
   const sectionClass = [
     styles.section,
     className ?? "",
@@ -28,4 +28,4 @@ export function SectionShell({
       {children}
     </section>
   );
-}
+};

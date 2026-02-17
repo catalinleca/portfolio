@@ -63,11 +63,11 @@
   transition:
     border-color var(--duration-fast) var(--ease-out),
     color var(--duration-fast) var(--ease-out);
-}
 
-.tag:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  &:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 }
 
 .actions {

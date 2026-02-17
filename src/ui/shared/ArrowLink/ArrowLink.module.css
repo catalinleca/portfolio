@@ -6,10 +6,10 @@
   font-size: 0.82rem;
   color: var(--accent);
   transition: gap var(--duration-fast) var(--ease-out);
-}
 
-.link:hover {
-  gap: 0.6rem;
+  &:hover {
+    gap: 0.6rem;
+  }
 }
 
 .arrow {

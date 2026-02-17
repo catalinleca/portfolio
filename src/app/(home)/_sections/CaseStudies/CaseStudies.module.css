@@ -13,10 +13,10 @@
   object-fit: contain;
   opacity: 0.4;
   transition: opacity var(--duration-normal) var(--ease-out);
-}
 
-.logo:hover {
-  opacity: 0.7;
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 @media (width <= 600px) {

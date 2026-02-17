@@ -6,14 +6,14 @@ interface ExternalLinkProps
   children: ReactNode;
 }
 
-export function ExternalLink({
+export const ExternalLink = ({
   href,
   children,
   ...rest
-}: ExternalLinkProps) {
+}: ExternalLinkProps) => {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>
       {children}
     </a>
   );
-}
+};

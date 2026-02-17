@@ -45,10 +45,10 @@
   color: var(--text-muted);
   letter-spacing: 0.03em;
   transition: color var(--duration-fast) var(--ease-out);
-}
 
-.link:hover {
-  color: var(--text-bright);
+  &:hover {
+    color: var(--text-bright);
+  }
 }
 
 .resumeLink {
@@ -60,11 +60,11 @@
     color var(--duration-fast) var(--ease-out),
     background var(--duration-fast) var(--ease-out),
     border-color var(--duration-fast) var(--ease-out);
-}
 
-.resumeLink:hover {
-  background: rgb(204 120 50 / 10%); /* --accent with opacity */
-  border-color: var(--accent);
+  &:hover {
+    background: rgb(204 120 50 / 10%); /* --accent with opacity */
+    border-color: var(--accent);
+  }
 }
 
 .ctaLink {
@@ -75,11 +75,11 @@
   font-weight: 500;
   transition:
     background var(--duration-fast) var(--ease-out);
-}
 
-.ctaLink:hover {
-  background: var(--accent-hover);
-  color: var(--bg);
+  &:hover {
+    background: var(--accent-hover);
+    color: var(--bg);
+  }
 }
 
 @media (width <= 500px) {

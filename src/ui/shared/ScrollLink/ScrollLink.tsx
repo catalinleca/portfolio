@@ -2,9 +2,9 @@
 
 import type { AnchorHTMLAttributes, MouseEvent } from "react";
 
-type ScrollLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+interface ScrollLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
-};
+}
 
 export const ScrollLink = ({ href, onClick, ...rest }: ScrollLinkProps) => {
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {

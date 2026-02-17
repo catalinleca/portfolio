@@ -7,7 +7,7 @@ import styles from "./Nav.module.css";
 
 const NAV_HEIGHT = "52px";
 
-export function Nav() {
+export const Nav = () => {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
 
@@ -60,4 +60,4 @@ export function Nav() {
       </div>
     </nav>
   );
-}
+};

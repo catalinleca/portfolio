@@ -9,7 +9,7 @@ interface MermaidProps {
   caption?: string;
 }
 
-export function Mermaid({ chart, caption }: MermaidProps) {
+export const Mermaid = ({ chart, caption }: MermaidProps) => {
   const [svg, setSvg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const id = useId().replace(/:/g, "m");
@@ -80,4 +80,4 @@ export function Mermaid({ chart, caption }: MermaidProps) {
       {caption && <figcaption className={styles.caption}>{caption}</figcaption>}
     </figure>
   );
-}
+};

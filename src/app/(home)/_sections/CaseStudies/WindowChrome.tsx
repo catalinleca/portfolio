@@ -1,11 +1,12 @@
+import type { ReactNode } from "react";
 import styles from "./WindowChrome.module.css";
 
 interface WindowChromeProps {
   title?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export function WindowChrome({ title, children }: WindowChromeProps) {
+export const WindowChrome = ({ title, children }: WindowChromeProps) => {
   return (
     <div className={styles.chrome}>
       <div className={styles.titleBar}>
@@ -19,4 +20,4 @@ export function WindowChrome({ title, children }: WindowChromeProps) {
       <div className={styles.body}>{children}</div>
     </div>
   );
-}
+};

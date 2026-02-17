@@ -4,10 +4,10 @@
   border-radius: 10px;
   overflow: hidden;
   transition: border-color var(--duration-normal) var(--ease-out);
-}
 
-.chrome:hover {
-  border-color: rgb(204 120 50 / 40%); /* --accent with opacity */
+  &:hover {
+    border-color: rgb(204 120 50 / 40%); /* --accent with opacity */
+  }
 }
 
 .titleBar {
