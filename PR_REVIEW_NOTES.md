@@ -1,6 +1,6 @@
 # PR #1 Review — CodeRabbit Comments Resolution
 
-40 inline review comments from CodeRabbit. All assessed. 22 fixed, 18 skipped with reasoning.
+47 inline review comments from CodeRabbit. All assessed. 25 fixed, 22 skipped with reasoning.
 
 ## Fixed
 
@@ -20,6 +20,9 @@
 - **Nav.tsx magic number** — Extracted `52px` to `NAV_HEIGHT` constant, used in `setProperty` call.
 - **CaseStudyCard hardcoded colors** — `#111114` → `var(--bg-raised)`, `#1c1c20` → `var(--bg-surface)`.
 - **SectionNav redundant declarations** — Removed duplicate `margin: 0` and `padding: 0` that were immediately overridden.
+- **Nav container height** — Replaced hardcoded `height: 52px` with `var(--nav-height)` token.
+- **Nav :not() selector** — Modernized `.link:not(.resumeLink):not(.ctaLink)` → `.link:not(.resumeLink, .ctaLink)`.
+- **Contact .emailBtn gap transition** — Was relying on CopyButton's `.copyBtn` for flex context. Made self-contained with explicit `display: inline-flex`, base `gap`, and tokenized hover gap.
 
 ## Intentionally Skipped (with reasoning)
 
@@ -40,3 +43,15 @@ All flagged values (0.65rem, 0.7rem, 0.72rem, 0.78rem, 5px bullets, 7px chevrons
 
 ### Keyframe name casing (comment #26)
 `floatUp` follows the camelCase convention used throughout CSS Modules. CSS Modules auto-scopes keyframe names anyway. Switching to kebab-case would be inconsistent with all other naming in the codebase.
+
+### .cta::after overlay scope (new comment, MAJOR)
+CodeRabbit says `.cta::after` should be scoped to `.cta` with `position: relative`. Wrong — the stretched `::after` covering `.body` is the intentional full-card-clickable pattern (documented in MEMORY.md). z-index layers: frame=1, link=2, tags=3.
+
+### CSS nesting won't work in production (new comment, CRITICAL)
+Wrong. Next.js 16.1.6 uses Turbopack for production builds (confirmed in build output). Turbopack supports native CSS nesting via Lightning CSS. Build passes clean.
+
+### Font tokens lowercase (new comment)
+`BlinkMacSystemFont`, `Roboto`, `Georgia`, `Menlo` are font family names, not CSS keywords. Lowercasing is unconventional and hurts readability for zero benefit.
+
+### CopyButton "use client" / useRef type (new comment, CRITICAL)
+Repeat of the wrong "client components only in ui/motion" claim. useRef type compiles fine — React 19 types handle `useRef<T>(null)` correctly. Build passes.

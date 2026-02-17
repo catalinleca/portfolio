@@ -45,6 +45,9 @@
 }
 
 .emailBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--accent);
@@ -52,7 +55,7 @@
   transition: gap var(--duration-fast) var(--ease-out);
 
   &:hover {
-    gap: 0.6rem;
+    gap: var(--space-2);
   }
 }
 
