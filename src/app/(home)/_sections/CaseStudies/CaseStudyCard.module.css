@@ -112,7 +112,7 @@
 
 .preview {
   position: relative;
-  background: #111114;
+  background: var(--bg-raised);
   border-left: 1px solid var(--border-dim);
   min-height: 380px;
   display: flex;
@@ -127,7 +127,7 @@
   inset: 0;
   background-image: radial-gradient(
     circle at 1px 1px,
-    rgba(204, 120, 50, 0.06) 1px, /* --accent with opacity */
+    rgb(204 120 50 / 6%) 1px, /* --accent with opacity */
     transparent 0
   );
   background-size: 24px 24px;
@@ -140,8 +140,8 @@
   border-radius: 8px;
   overflow: hidden;
   box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
+    0 4px 24px rgb(0 0 0 / 40%),
+    0 0 0 1px rgb(255 255 255 / 6%);
   transition: transform 0.4s var(--ease-out);
   width: 100%;
   max-width: 480px;
@@ -155,7 +155,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #1c1c20;
+  background: var(--bg-surface);
   padding: 0.5rem 0.75rem;
 }
 
@@ -168,14 +168,14 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
 }
 
 .urlBar {
   font-family: var(--font-mono);
   font-size: 0.65rem;
   color: var(--text-dim);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgb(255 255 255 / 4%);
   padding: 0.2rem 0.5rem;
   border-radius: 3px;
   flex: 1;
@@ -187,7 +187,7 @@
   display: block;
 }
 
-@media (max-width: 860px) {
+@media (width <= 860px) {
   .body {
     grid-template-columns: 1fr;
   }

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ExternalLink, ScrollLink } from "@/ui/shared";
 import styles from "./Nav.module.css";
 
+const NAV_HEIGHT = "52px";
+
 export function Nav() {
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
@@ -21,7 +23,7 @@ export function Nav() {
 
       const hidden = currentY > lastScrollY.current && currentY > 80;
       setIsHidden(hidden);
-      document.documentElement.style.setProperty("--nav-offset", hidden ? "0px" : "52px");
+      document.documentElement.style.setProperty("--nav-offset", hidden ? "0px" : NAV_HEIGHT);
       lastScrollY.current = currentY;
     };
 

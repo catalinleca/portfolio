@@ -8,7 +8,7 @@
   border-radius: var(--radius-lg);
   background: var(--bg-surface);
 
-  @media (min-width: 640px) {
+  @media (width >= 640px) {
     grid-template-columns: 1fr 1fr;
   }
 }

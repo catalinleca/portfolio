@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { CopyIcon, CheckIcon } from "@/ui/icons";
 import styles from "./CopyButton.module.css";
 
@@ -14,16 +14,26 @@ export const CopyButton = ({ text, className, children }: CopyButtonProps) => {
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
-  const handleCopy = useCallback(async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setCopied(false), 1500);
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard API can fail in insecure contexts or when denied
+    }
   }, [text]);
 
   return (
-    <button onClick={handleCopy} className={`${styles.copyBtn} ${className ?? ""}`}>
+    <button type="button" onClick={handleCopy} className={`${styles.copyBtn} ${className ?? ""}`}>
       {children}
       <span className={styles.iconWrap}>
         <CopyIcon className={`${styles.icon} ${copied ? styles.iconOut : styles.iconIn}`} />

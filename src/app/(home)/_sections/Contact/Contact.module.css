@@ -56,7 +56,7 @@
   }
 }
 
-@media (max-width: 860px) {
+@media (width <= 860px) {
   .layout {
     grid-template-columns: 1fr;
     gap: var(--space-8);

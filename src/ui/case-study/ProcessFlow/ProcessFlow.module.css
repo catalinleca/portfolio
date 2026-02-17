@@ -55,7 +55,7 @@
   margin-top: var(--space-1);
 }
 
-@media (max-width: 639px) {
+@media (width <= 639px) {
   .steps {
     flex-direction: column;
     gap: var(--space-4);
@@ -63,9 +63,10 @@
 
   .step {
     flex: none;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
     gap: var(--space-3);
-    text-align: left;
+    text-align: center;
     padding: 0;
 
     &:not(:last-child)::after {
@@ -81,10 +82,5 @@
       border-bottom: 2px solid var(--text-dim);
       transform: translateX(-50%) rotate(45deg);
     }
-  }
-
-  .step {
-    align-items: center;
-    flex-direction: column;
   }
 }

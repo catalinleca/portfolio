@@ -6,7 +6,7 @@ export const theme = {
   bgHover: "#1f1f24",
   textBright: "#eae8e4",
   text: "#c8c5bf",
-  textMuted: "#6b6966",
+  textMuted: "#837f7b",
   textDim: "#4a4845",
   accent: "#cc7832",
   accentHover: "#b5692b",
@@ -14,5 +14,5 @@ export const theme = {
   green: "#6a8759",
   border: "#2a2a2f",
   borderDim: "#1e1e23",
-  fontMono: "'JetBrains Mono', ui-monospace, SFMono-Regular, monospace",
+  fontMono: "'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",
 } as const;

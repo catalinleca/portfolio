@@ -17,7 +17,7 @@ export const ScrollLink = ({ href, onClick, ...rest }: ScrollLinkProps) => {
       history.replaceState(null, "", `#${id}`);
     } else {
       e.preventDefault();
-      window.location.href = `/${href}`;
+      window.location.href = `/#${id}`;
     }
 
     onClick?.(e);

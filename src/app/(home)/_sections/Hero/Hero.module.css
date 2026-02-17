@@ -144,7 +144,7 @@
 }
 
 /* Responsive */
-@media (max-width: 860px) {
+@media (width <= 860px) {
   .hero {
     padding: var(--space-24) 0 var(--space-6);
   }
@@ -165,7 +165,7 @@
   }
 }
 
-@media (max-width: 500px) {
+@media (width <= 500px) {
   .actions {
     flex-direction: column;
     align-items: flex-start;

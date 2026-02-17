@@ -5,7 +5,7 @@
   margin: var(--space-6) 0 var(--space-8);
 }
 
-@media (min-width: 640px) {
+@media (width >= 640px) {
   .grid {
     grid-template-columns: repeat(4, 1fr);
   }
