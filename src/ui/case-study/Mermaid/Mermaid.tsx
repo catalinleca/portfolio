@@ -16,6 +16,8 @@ export const Mermaid = ({ chart, caption }: MermaidProps) => {
 
   useEffect(() => {
     let cancelled = false;
+    setError(null);
+    setSvg(null);
 
     (async () => {
       try {

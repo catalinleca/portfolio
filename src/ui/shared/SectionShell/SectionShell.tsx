@@ -17,7 +17,7 @@ export const SectionShell = ({
 }: SectionShellProps) => {
   const sectionClass = [
     styles.section,
-    className ?? "",
+    className,
   ]
     .filter(Boolean)
     .join(" ");
