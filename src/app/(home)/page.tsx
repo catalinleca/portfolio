@@ -20,17 +20,6 @@ export default function Home() {
         </SectionReveal>
 
         <SectionReveal>
-          <div className={styles.bridge}>
-            <p className={styles.bridgeText}>
-              Like what you see?
-            </p>
-            <ScrollLink href="#contact" className={styles.bridgeLink}>
-              Let&apos;s talk →
-            </ScrollLink>
-          </div>
-        </SectionReveal>
-
-        <SectionReveal>
           <About />
         </SectionReveal>
 
