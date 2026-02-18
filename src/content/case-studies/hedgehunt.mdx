@@ -10,19 +10,19 @@ tags: ["full-stack", "typescript", "monorepo", "react", "node"]
 A platform for creating and playing location-based treasure hunts.
 
 <ExecutiveSummary
-  problem="Content platform where creators build interactive treasure hunts and players solve them concurrently. Four challenge types with AI-powered validation. Editing and playing happen at the same time."
-  constraints="Four independently deployed apps sharing one type system. Immutable content versions. AI failures can't block players."
-  architecture="TypeScript monorepo with OpenAPI-generated types. MongoDB with optimistic concurrency. Server-side player format boundary for answer security."
-  results="Atomic releases with instant rollback. Version-locked play sessions. Zero type drift across apps. Live at hedgehunt.app."
+  problem="Creators design interactive treasure hunts while explorers are out solving them. Four challenge types, three AI providers, and a publishing workflow where editing can never break a live hunt."
+  constraints="Four apps deployed independently need to stay in sync. Published content must be immutable. AI validation must never block an explorer mid-hunt."
+  architecture="TypeScript monorepo where every app shares types generated from a single OpenAPI spec. MongoDB with a versioning model that isolates drafts from live content. A server-side transformation layer ensures explorers never see answer keys."
+  results="Publish and roll back without downtime. Explorers play version-locked sessions that never change mid-hunt. Live at hedgehunt.app."
 />
 
 ---
 
 ## Overview
 
-HedgeHunt lets creators build multi-step treasure hunts in a visual builder and explorers solve them on mobile using GPS, photos, and audio. The platform supports four challenge types: Clue (text-based riddles), Quiz (multiple choice or free-text input), Mission (GPS location verification and media capture), and Task (AI-validated audio and image submissions).
+HedgeHunt lets creators build multi-step treasure hunts in a visual builder. Explorers solve them on mobile using GPS, photos, and audio. Four challenge types cover different kinds of interactions: Clue for text-based riddles, Quiz for multiple choice and free-text answers, Mission for GPS verification and media capture, and Task for AI-validated submissions.
 
-The Builder and Explorer are separate apps. Creators get real-time preview through an iframe that runs the actual Explorer app with stripped-down hunt data. The server controls game progression through hypermedia links, where each API response tells the client what actions are available. Explorers never decide what comes next.
+The Builder and Explorer are separate apps. Creators get real-time preview through an iframe that runs the actual Explorer app, with answer keys and sensitive data removed. The server controls game progression: each API response tells the Explorer what actions are available next. Explorers never decide what comes next.
 
 ---
 
@@ -30,11 +30,11 @@ The Builder and Explorer are separate apps. Creators get real-time preview throu
 
 TypeScript monorepo with four apps and three shared packages.
 
-`@hunthub/shared` holds API types and Zod schemas generated from a single OpenAPI spec. Every app imports from here. If the spec changes and a consumer doesn't update, CI fails at build time.
+`@hunthub/shared` is the single source of truth for all types and validation schemas. They're generated from one OpenAPI spec, and every app imports from here. If the spec changes and an app doesn't update, CI catches it at build time.
 
-`@hunthub/compass` wraps MUI's `createTheme` into a shared package with custom design tokens, typography scales, and component overrides. Any app that imports it gets a consistent visual language without duplicating theme configuration.
+`@hunthub/compass` is the shared design system. It wraps MUI's `createTheme` with custom tokens, typography, and component overrides. Any app that imports it gets a consistent look without duplicating configuration.
 
-`@hunthub/player-sdk` handles the typed postMessage protocol between Builder and Explorer. The Builder sends hunt data through a `PlayerExporter` that strips answer keys and AI instructions before the iframe receives them.
+`@hunthub/player-sdk` handles communication between Builder and Explorer. The Builder sends hunt data to the Explorer iframe through a typed messaging layer. A `PlayerExporter` strips answer keys and AI instructions before anything reaches the Explorer.
 
 <Mermaid chart={`graph TD
   A[HuntHub Monorepo] --> B[Builder App]
@@ -139,9 +139,9 @@ MongoDB. Challenges are naturally document-shaped with variable structures that 
 
 For numeric IDs (MongoDB defaults to ObjectIds), I built a `Counter` collection. Each model has a counter document. `findOneAndUpdate` with `$inc` gives sequential, race-condition-safe, human-readable IDs for URLs and display.
 
-I gave up JOINs. Every "join" is an explicit batch query using `$in` on arrays of IDs to avoid N+1 patterns. I gave up cross-collection ACID, but `withTransaction` covers the critical paths: publish, release, and delete.
+I gave up JOINs. Every "join" is an explicit batch query using `$in` on arrays of IDs, which avoids N+1 problems. Cross-collection ACID isn't available, but `withTransaction` covers the critical paths: publish, release, and delete.
 
-The weaker TypeScript integration compared to Prisma is mitigated by using OpenAPI-generated types as the source of truth. Mongoose schemas are secondary, not authoritative.
+MongoDB's TypeScript support isn't as strong as Prisma's. But since the OpenAPI spec is the source of truth for all types, Mongoose schemas just follow along. They're secondary, not authoritative.
 
 </CardField>
 <CardField label="Tradeoff">
@@ -225,7 +225,9 @@ For validation, GPT-4o handles text validation and Google Gemini handles image a
 
 The validation prompt adapts based on attempt count. After 2 failed attempts, the AI starts providing subtle hints in its feedback. After 3+, it gives direct guidance. This keeps the experience challenging without being frustrating.
 
-For generation, I use OpenAI Structured Outputs with a Zod schema derived from the API types. The schema uses `Mission.omit({ targetLocation })` so the model generates a description of where to go instead of GPS coordinates, which it would hallucinate. After generation, each step goes through a geocoding pipeline: Google Maps geocodes the location description, and only `ROOFTOP` or `RANGE_INTERPOLATED` precision is accepted. If geocoding fails or returns low precision, the step silently converts from a Mission to a Clue. No unplayable hunts. If schema validation fails, one retry feeds the specific Zod errors back to the model.
+For generation, I use OpenAI Structured Outputs with a Zod schema derived from the API types. The schema intentionally omits GPS coordinates from Missions, since the model would hallucinate them. Instead, it generates a text description of the location.
+
+After generation, each step goes through a geocoding pipeline. Google Maps converts the location description to coordinates, and only high-precision results are accepted. If geocoding fails or the precision is too low, the step silently converts from a Mission to a Clue. Every generated hunt is immediately playable. If schema validation fails, one retry feeds the specific Zod errors back to the model.
 
 </CardField>
 <CardField label="Tradeoff">
@@ -239,7 +241,7 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 
 ## Highlights
 
-<CodeShowcase title="Answer Validation" description="Six validators behind one interface. Each challenge type maps to a validator, from Levenshtein distance for fuzzy text to Haversine for GPS proximity to AI for image and audio. Adding a new validator means one map entry. Zero changes to dispatch logic.">
+<CodeShowcase title="Answer Validation" description="Six validators behind one interface. Each challenge type maps to a validator: fuzzy text matching for quiz inputs, GPS distance checks for location missions, and AI analysis for image and audio. Adding a new validator means one map entry. Zero changes to dispatch logic.">
 
 ```typescript
 interface AnswerValidator {
@@ -271,12 +273,12 @@ const validators: Record<AnswerType, AnswerValidator> = {
 <HighlightGrid>
 <HighlightCard title="Session Management">
 
-Sessions are version-locked. Releasing a new version mid-play doesn't interrupt active explorers. `localStorage` persistence resumes from the last completed step.
+Sessions are locked to the hunt version that was live when the explorer started. Releasing a new version mid-play doesn't interrupt active explorers. `localStorage` persistence resumes from the last completed step.
 
 </HighlightCard>
 <HighlightCard title="Builder Preview">
 
-The Builder embeds the Explorer in an iframe via a typed `postMessage` protocol. Same `PlayerExporter` as production. Preview matches exactly what real explorers see.
+The Builder embeds the Explorer in an iframe with a typed messaging layer. Same `PlayerExporter` as production. Preview matches exactly what real explorers see.
 
 </HighlightCard>
 <HighlightCard title="Prefetching and LRU Cache">
@@ -291,7 +293,7 @@ The Explorer prefetches next-step media with async `decode()` and a bounded LRU 
 </HighlightCard>
 </HighlightGrid>
 
-<CodeShowcase title="Play API and HATEOAS" description="Each API response includes hypermedia links for available actions. The Explorer follows links, it never decides what comes next. Game rules change server-side without touching the client.">
+<CodeShowcase title="Play API and HATEOAS" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
 
 ```json
 {
