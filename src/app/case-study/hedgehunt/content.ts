@@ -20,6 +20,5 @@ export const hedgehuntSections: CaseStudySection[] = [
   { id: "decisions", label: "Decisions" },
   { id: "highlights", label: "Highlights" },
   { id: "reflections", label: "Reflections" },
-  { id: "numbers", label: "Numbers" },
   { id: "links", label: "Links" },
 ];
