@@ -129,7 +129,7 @@ if (!result) {
 }
 ```
 
-The filter `liveVersion: currentLiveVersion` acts as optimistic locking. If someone else released between the read and the write, the filter matches nothing and the server throws a conflict. No distributed locks, no queues.
+The filter `liveVersion: currentLiveVersion` acts as optimistic locking. If someone else released between the read and the write, the filter matches nothing and the server throws a conflict. No distributed locks, no queues. The same pattern protects saves. Each update includes the client's `updatedAt` timestamp in the filter, catching concurrent edits at both the hunt and individual step level.
 
 Automatic version pruning protects against unbounded growth. Old published versions are cleaned up, but the currently live version is always protected from deletion.
 
@@ -333,6 +333,8 @@ The Explorer prefetches next-step media with async `decode()` and an LRU cache. 
   <ProcessStep label="Types + Zod" detail="Shared package" />
   <ProcessStep label="CI" detail="Build-time validation" />
 </ProcessFlow>
+
+The generated types define what the API accepts. But the Builder's form state has different needs. A location field that's required in the API needs to be nullable in the form, the creator hasn't chosen a spot yet. Steps that don't exist on the server need stable keys for React to track them across re-renders. Two transform functions sit at the boundary. On load, API data gains form keys and nullable settings. On save, form artifacts are stripped and nulls convert back to omissions. UI components only touch form types. The API shape is never exposed to rendering code.
 
 <HighlightGrid>
 <HighlightCard title="Hunt Sharing">
