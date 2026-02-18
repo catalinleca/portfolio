@@ -22,7 +22,23 @@ A platform where creators build treasure hunts and explorers solve them in the r
 
 The platform has three main pieces: a Builder where creators design hunts, an Explorer where players solve them on mobile, and a Backend API that controls game logic and progression. The Builder is a form-heavy React app for designing multi-step hunts. The Explorer is a mobile-first app that walks players through steps one at a time.
 
-Creators start with an empty hunt and add steps through a visual editor. Each step is a different type of challenge. A Clue asks explorers to solve a text riddle. A Quiz tests knowledge with multiple choice or free-text answers. A Mission sends them to GPS coordinates to capture photos or audio. A Task accepts open-ended submissions that AI validates. The Builder includes a live preview, an iframe running the actual Explorer with answer keys stripped server-side. When the hunt is ready, the creator publishes it. Publishing freezes the content into an immutable snapshot. Releasing points live traffic to that snapshot.
+Creators start with an empty hunt and add steps. Each step is a different type of challenge.
+
+<DetailGrid>
+  <DetailItem label="Clue" description="Explorers solve a text riddle. No media, no location, just lateral thinking." />
+  <DetailItem label="Quiz" description="Multiple choice or free-text answers. The server validates against stored correct answers." />
+  <DetailItem label="Mission" description="GPS coordinates, photo capture, or audio recording. The explorer goes somewhere and proves it." />
+  <DetailItem label="Task" description="Open-ended submissions that AI validates. No single correct answer." />
+</DetailGrid>
+
+The Builder includes a live preview, an iframe running the actual Explorer with answer keys stripped server-side. When the hunt is ready, the creator publishes it.
+
+<ProcessFlow title="Creator Journey">
+  <ProcessStep label="Design" detail="Add steps in the Builder" />
+  <ProcessStep label="Preview" detail="Live iframe with real Explorer" />
+  <ProcessStep label="Publish" detail="Freeze content into snapshot" />
+  <ProcessStep label="Release" detail="Point live traffic to version" />
+</ProcessFlow>
 
 An explorer opens a hunt link and works through steps one at a time. Walk to a park entrance and photograph the sign. Answer a quiz about local history. Record an audio response explaining what you see. GPS, camera, and microphone all run through the browser. The explorer submits, the server validates, and the next step appears.
 
@@ -34,31 +50,34 @@ The server controls game progression. Each API response tells the Explorer what 
 
 All four apps live in a TypeScript monorepo. They deploy independently but share types, UI, and the messaging layer through three packages.
 
-`@hunthub/shared` is the single source of truth for all types and validation schemas. They're generated from one OpenAPI spec, and every app imports from here. If the spec changes and an app doesn't update, CI catches it at build time.
+<DetailGrid>
+  <DetailItem label="@hunthub/shared" description="Single source of truth for all types and validation schemas. Generated from one OpenAPI spec. If the spec changes and an app doesn't update, CI catches it at build time." />
+  <DetailItem label="@hunthub/compass" description="Shared design system. Wraps MUI's createTheme with custom tokens, typography, and component overrides. One import gives any app the full design system." />
+  <DetailItem label="@hunthub/player-sdk" description="Communication layer between Builder and Explorer. Sends hunt data to the Explorer iframe through typed messages. A PlayerExporter strips answer keys before anything reaches the Explorer." />
+</DetailGrid>
 
-`@hunthub/compass` is the shared design system. It wraps MUI's `createTheme` with custom tokens, typography, and component overrides. Any app that imports it gets a consistent look without duplicating configuration.
-
-`@hunthub/player-sdk` handles communication between Builder and Explorer. The Builder sends hunt data to the Explorer iframe through a typed messaging layer. A `PlayerExporter` strips answer keys and AI instructions before anything reaches the Explorer.
-
-<Mermaid chart={`graph TD
-  A[HuntHub Monorepo] --> B[Builder App]
-  A --> C[Explorer App]
-  A --> D[Backend API]
-  A --> E[Landing Page]
-  A --> F["@hunthub/shared"]
-  A --> G["@hunthub/compass"]
-  A --> H["@hunthub/player-sdk"]
-  B --> F
-  B --> G
-  B --> H
+<Mermaid chart={`graph TB
+  subgraph apps ["Applications"]
+    D[Backend API]
+    C[Explorer App]
+    B[Builder App]
+    E[Landing Page]
+  end
+  subgraph pkgs ["Shared Packages"]
+    F["@hunthub/shared"]
+    G["@hunthub/compass"]
+    H["@hunthub/player-sdk"]
+  end
+  D --> F
   C --> F
   C --> G
   C --> H
-  D --> F
-  style A fill:#1a1a1e,stroke:#cc7832,stroke-width:2px,color:#eae8e4
-  style B fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
-  style C fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
+  B --> F
+  B --> G
+  B --> H
   style D fill:#1a1a1e,stroke:#6a8759,stroke-width:2px,color:#eae8e4
+  style C fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
+  style B fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
   style E fill:#1a1a1e,stroke:#9b978f,stroke-width:2px,color:#eae8e4
   style F fill:#151518,stroke:#9876aa,stroke-width:2px,color:#eae8e4
   style G fill:#151518,stroke:#9876aa,stroke-width:2px,color:#eae8e4

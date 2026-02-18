@@ -12,6 +12,7 @@ export const theme = {
   accentHover: "#b5692b",
   blue: "#6897bb",
   green: "#6a8759",
+  purple: "#9876aa",
   border: "#2a2a2f",
   borderDim: "#1e1e23",
   fontMono: "'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace",

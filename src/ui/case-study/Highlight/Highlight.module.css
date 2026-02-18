@@ -43,5 +43,6 @@
     background: var(--bg-raised);
     padding: 0.15em 0.4em;
     border-radius: var(--radius-sm);
+    color: var(--purple);
   }
 }
