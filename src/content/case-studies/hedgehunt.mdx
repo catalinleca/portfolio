@@ -1,6 +1,6 @@
 ---
 title: "HedgeHunt"
-description: "How I built a platform where creators and explorers share the same data without breaking each other's experience."
+description: "Building a platform where creators design treasure hunts and explorers solve them on mobile, without either side breaking the other's experience."
 date: "2024-01-01"
 tags: ["full-stack", "typescript", "monorepo", "react", "node"]
 ---
@@ -10,27 +10,29 @@ tags: ["full-stack", "typescript", "monorepo", "react", "node"]
 A platform where creators build treasure hunts and explorers solve them in the real world.
 
 <ExecutiveSummary
-  problem="Creators edit hunts while explorers are actively solving them. If a creator changes step 3 while an explorer is on step 1, the explorer could eventually reach content that no longer exists. Editing and playing need to be completely isolated."
-  constraints="Four apps deployed independently need to stay in sync. Published content must be immutable. AI validation must never block an explorer mid-hunt."
-  architecture="TypeScript monorepo where every app shares types generated from a single OpenAPI spec. MongoDB with a versioning model that isolates drafts from live content. A server-side exporter (PlayerExporter) strips answer keys before anything reaches the explorer."
-  results="Publish and roll back without downtime. Explorers play version-locked sessions that never change mid-hunt. Live at hedgehunt.app."
+  product="HedgeHunt is a platform for building and solving real-world treasure hunts. Creators design multi-step hunts with GPS challenges, quizzes, and AI-validated missions in a visual builder. Explorers solve them on mobile using location, camera, and audio."
+  challenge="Creators need to edit hunts while explorers are actively solving them. Both sides share the same data, but a creator's changes can never break an explorer's experience. The platform also generates complete hunts from a text prompt, so AI failures can never block an explorer mid-hunt."
+  approach="A versioning model isolates drafts from live content. Publishing creates an immutable snapshot. A server-side exporter (PlayerExporter) strips answer keys before anything reaches the explorer. All four apps share types generated from a single OpenAPI spec."
+  outcome="Publish and roll back without downtime. Explorers play version-locked sessions that never change mid-hunt. Live at hedgehunt.app."
 />
 
 ---
 
 ## Overview
 
-HedgeHunt lets creators build multi-step treasure hunts in a visual builder. Explorers solve them on mobile using GPS, photos, and audio. Hunts are made of steps, and each step can be a different type of challenge. A Clue asks explorers to solve a text riddle. A Quiz tests knowledge with multiple choice or free-text. A Mission sends them to GPS coordinates to capture photos or audio. A Task accepts open-ended submissions that AI validates.
+The platform has three main pieces: a Builder where creators design hunts, an Explorer where players solve them on mobile, and a Backend API that controls game logic and progression. The Builder is a form-heavy React app for designing multi-step hunts. The Explorer is a mobile-first app that walks players through steps one at a time.
 
-The Builder and Explorer are separate apps because they serve different users with different trust levels. Creators get a real-time preview through an iframe that runs the actual Explorer, with answer keys stripped server-side.
+Creators start with an empty hunt and add steps through a visual editor. Each step is a different type of challenge. A Clue asks explorers to solve a text riddle. A Quiz tests knowledge with multiple choice or free-text answers. A Mission sends them to GPS coordinates to capture photos or audio. A Task accepts open-ended submissions that AI validates. The Builder includes a live preview, an iframe running the actual Explorer with answer keys stripped server-side. When the hunt is ready, the creator publishes it. Publishing freezes the content into an immutable snapshot. Releasing points live traffic to that snapshot.
 
-The server controls game progression. Each API response tells the Explorer what actions are available next. Explorers never decide what comes next.
+An explorer opens a hunt link and works through steps one at a time. Walk to a park entrance and photograph the sign. Answer a quiz about local history. Record an audio response explaining what you see. GPS, camera, and microphone all run through the browser. The explorer submits, the server validates, and the next step appears.
+
+The server controls game progression. Each API response tells the Explorer what actions are available next. Explorers follow server-provided links. They never decide what comes next.
 
 ---
 
 ## Architecture
 
-TypeScript monorepo with four apps and three shared packages.
+All four apps live in a TypeScript monorepo. They deploy independently but share types, UI, and the messaging layer through three packages.
 
 `@hunthub/shared` is the single source of truth for all types and validation schemas. They're generated from one OpenAPI spec, and every app imports from here. If the spec changes and an app doesn't update, CI catches it at build time.
 

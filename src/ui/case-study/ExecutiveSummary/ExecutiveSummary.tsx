@@ -1,35 +1,35 @@
 import styles from "./ExecutiveSummary.module.css";
 
 interface ExecutiveSummaryProps {
-  problem: string;
-  constraints: string;
-  architecture: string;
-  results: string;
+  product: string;
+  challenge: string;
+  approach: string;
+  outcome: string;
 }
 
 export const ExecutiveSummary = ({
-  problem,
-  constraints,
-  architecture,
-  results,
+  product,
+  challenge,
+  approach,
+  outcome,
 }: ExecutiveSummaryProps) => {
   return (
     <div className={styles.grid}>
       <div className={styles.cell}>
-        <h3 className={styles.label}>Problem</h3>
-        <p className={styles.value}>{problem}</p>
+        <h3 className={styles.label}>Product</h3>
+        <p className={styles.value}>{product}</p>
       </div>
       <div className={styles.cell}>
-        <h3 className={styles.label}>Constraints</h3>
-        <p className={styles.value}>{constraints}</p>
+        <h3 className={styles.label}>Challenge</h3>
+        <p className={styles.value}>{challenge}</p>
       </div>
       <div className={styles.cell}>
-        <h3 className={styles.label}>Architecture</h3>
-        <p className={styles.value}>{architecture}</p>
+        <h3 className={styles.label}>Approach</h3>
+        <p className={styles.value}>{approach}</p>
       </div>
       <div className={styles.cell}>
-        <h3 className={styles.label}>Results</h3>
-        <p className={styles.value}>{results}</p>
+        <h3 className={styles.label}>Outcome</h3>
+        <p className={styles.value}>{outcome}</p>
       </div>
     </div>
   );
