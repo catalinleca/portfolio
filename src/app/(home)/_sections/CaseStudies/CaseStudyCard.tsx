@@ -48,7 +48,7 @@ export const CaseStudyCard = () => {
             </div>
             <Image
               src="/images/hedgehunt-editor.webp"
-              alt="HedgeHunt editor screenshot"
+              alt="HedgeHunt builder screenshot"
               width={720}
               height={450}
               className={styles.screenshot}

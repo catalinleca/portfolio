@@ -6,7 +6,6 @@ import {
 } from "./_sections";
 import { Footer } from "@/ui/layout";
 import { PageTransition, SectionReveal } from "@/ui/motion";
-import { ScrollLink } from "@/ui/shared";
 import styles from "./page.module.css";
 
 export default function Home() {

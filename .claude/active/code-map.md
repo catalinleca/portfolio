@@ -1,21 +1,21 @@
 # Code Map
 
 ## App Routes
-- `src/app/(home)/page.tsx` — Homepage (SSG), imports all sections + CTA bridge
+- `src/app/(home)/page.tsx` — Homepage (SSG), imports all sections
 - `src/app/layout.tsx` — Root layout (DM Sans + DM Serif Display + JetBrains Mono, Nav, global styles)
 - `src/app/case-study/hedgehunt/page.tsx` — HedgeHunt case study (MDX via next-mdx-remote with `parseFrontmatter: true`, SSG)
 
 ## Homepage Sections — `src/app/(home)/_sections/`
-Order: Hero → CaseStudies → CTA Bridge → About → Contact
+Order: Hero → CaseStudies → About → Contact
 
 - `Hero/` — Eyebrow with auto-calculated years experience, headline, intro, CTAs (View My Work + Resume + GitHub + LinkedIn + CopyEmailBtn). 2-col grid layout with photo
 - `Hero/CopyEmailBtn.tsx` — Wraps shared CopyButton for Hero button styling
 - `CaseStudies/` — Featured work section (SectionShell + CaseStudyCard + WindowChrome + company logo strip)
 - `CaseStudies/CaseStudyCard.tsx` — Full-card clickable via stretched `::after` link. "Read case study →" + "Visit app ↗" links
-- `About/` — Merged About + HowIWork. Full-width text paragraphs + "Operating principles" subsection with accent bullets
+- `About/` — Full-width text paragraphs (4 paragraphs: what drives you, how you work, team mindset, industry breadth)
 - `Contact/` — CTA heading + CopyEmail + ArrowLinks to social (SectionShell)
 - `Contact/CopyEmail.tsx` — Wraps shared CopyButton for Contact styling
-- `content.ts` — Static data: hedgehuntTags, CompanyLogo[], companies, aboutMe, howIWork, contactEmail, contactLinks
+- `content.ts` — Static data: hedgehuntTags, CompanyLogo[], companies, aboutMe, contactEmail, contactLinks
 
 ## Case Study Content — `src/app/case-study/hedgehunt/`
 - `page.tsx` — MDX compilation + rendering, imports from `@/ui/case-study`

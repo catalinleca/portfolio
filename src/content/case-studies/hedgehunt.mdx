@@ -1,18 +1,18 @@
 ---
 title: "HedgeHunt"
-description: "Architecture and technical decisions behind a full-stack treasure hunt platform."
+description: "How I built a platform where creators and explorers share the same data without breaking each other's experience."
 date: "2024-01-01"
 tags: ["full-stack", "typescript", "monorepo", "react", "node"]
 ---
 
 # HedgeHunt
 
-A platform for creating and playing location-based treasure hunts.
+A platform where creators build treasure hunts and explorers solve them in the real world.
 
 <ExecutiveSummary
-  problem="Creators design interactive treasure hunts while explorers are out solving them. Four challenge types, three AI providers, and a publishing workflow where editing can never break a live hunt."
+  problem="Creators edit hunts while explorers are actively solving them. If a creator changes step 3 while an explorer is on step 1, the explorer could eventually reach content that no longer exists. Editing and playing need to be completely isolated."
   constraints="Four apps deployed independently need to stay in sync. Published content must be immutable. AI validation must never block an explorer mid-hunt."
-  architecture="TypeScript monorepo where every app shares types generated from a single OpenAPI spec. MongoDB with a versioning model that isolates drafts from live content. A server-side transformation layer ensures explorers never see answer keys."
+  architecture="TypeScript monorepo where every app shares types generated from a single OpenAPI spec. MongoDB with a versioning model that isolates drafts from live content. A server-side exporter (PlayerExporter) strips answer keys before anything reaches the explorer."
   results="Publish and roll back without downtime. Explorers play version-locked sessions that never change mid-hunt. Live at hedgehunt.app."
 />
 
@@ -20,9 +20,11 @@ A platform for creating and playing location-based treasure hunts.
 
 ## Overview
 
-HedgeHunt lets creators build multi-step treasure hunts in a visual builder. Explorers solve them on mobile using GPS, photos, and audio. Four challenge types cover different kinds of interactions: Clue for text-based riddles, Quiz for multiple choice and free-text answers, Mission for GPS verification and media capture, and Task for AI-validated submissions.
+HedgeHunt lets creators build multi-step treasure hunts in a visual builder. Explorers solve them on mobile using GPS, photos, and audio. Hunts are made of steps, and each step can be a different type of challenge. A Clue asks explorers to solve a text riddle. A Quiz tests knowledge with multiple choice or free-text. A Mission sends them to GPS coordinates to capture photos or audio. A Task accepts open-ended submissions that AI validates.
 
-The Builder and Explorer are separate apps. Creators get real-time preview through an iframe that runs the actual Explorer app, with answer keys and sensitive data removed. The server controls game progression: each API response tells the Explorer what actions are available next. Explorers never decide what comes next.
+The Builder and Explorer are separate apps because they serve different users with different trust levels. Creators get a real-time preview through an iframe that runs the actual Explorer, with answer keys stripped server-side.
+
+The server controls game progression. Each API response tells the Explorer what actions are available next. Explorers never decide what comes next.
 
 ---
 
@@ -62,8 +64,6 @@ TypeScript monorepo with four apps and three shared packages.
   caption="HuntHub monorepo, 4 apps + 3 shared packages"
 />
 
-The API runs on Fly.io. Builder and Explorer deploy to Vercel. The landing page ships to Cloudflare Pages. Static assets go through S3 with CloudFront as the CDN.
-
 Hunts go through three states: Draft, Published, and Live. Publishing freezes the current content into an immutable snapshot. Releasing points live traffic to that snapshot. Rolling back switches the pointer to a previous version. No data migration, no downtime.
 
 <Mermaid chart={`graph LR
@@ -93,7 +93,7 @@ Creators edit hunts while explorers are actively solving them. If a creator modi
 </CardField>
 <CardField label="Decision">
 
-I went with the three-model approach. `Hunt` is the master record with a `liveVersion` field pointing to whichever `HuntVersion` is currently live. Publishing clones the draft steps into a new `HuntVersion`. Releasing swaps the pointer. Rolling back swaps it to a different version.
+Three models. `Hunt` is the master record with a `liveVersion` field pointing to whichever `HuntVersion` is currently live. Publishing clones the draft steps into a new `HuntVersion`. Releasing swaps the pointer. Rolling back swaps it to a different version.
 
 The release itself is a single `findOneAndUpdate`:
 
@@ -232,7 +232,7 @@ After generation, each step goes through a geocoding pipeline. Google Maps conve
 </CardField>
 <CardField label="Tradeoff">
 
-Auto-pass on validation failure means a bad answer could slip through. But blocking explorers when AI is down is worse for the experience. The generation quality gate trades geographic coverage for accuracy. Some locations become Clues instead of GPS challenges, but every generated hunt is immediately playable without manual fixes.
+Auto-pass on validation failure means a bad answer could slip through. But blocking explorers when AI is down is worse for the experience. The generation quality gate trades geographic coverage for accuracy. Some locations become Clues instead of GPS challenges, but nothing requires manual fixes.
 
 </CardField>
 </DecisionCard>
@@ -241,7 +241,7 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 
 ## Highlights
 
-<CodeShowcase title="Answer Validation" description="Six validators behind one interface. Each challenge type maps to a validator: fuzzy text matching for quiz inputs, GPS distance checks for location missions, and AI analysis for image and audio. Adding a new validator means one map entry. Zero changes to dispatch logic.">
+<CodeShowcase title="Answer Validation" description="Six validators, one interface. Each challenge type maps to its own: fuzzy text matching for quiz inputs, GPS distance for location missions, AI analysis for image and audio. Adding a new challenge type means adding one entry to the map.">
 
 ```typescript
 interface AnswerValidator {
@@ -263,13 +263,6 @@ const validators: Record<AnswerType, AnswerValidator> = {
 
 </CodeShowcase>
 
-<ProcessFlow title="Asset Pipeline">
-  <ProcessStep label="Client" detail="File selected" />
-  <ProcessStep label="Presigned URL" detail="Server generates" />
-  <ProcessStep label="S3" detail="Direct upload" />
-  <ProcessStep label="CloudFront" detail="CDN delivery" />
-</ProcessFlow>
-
 <HighlightGrid>
 <HighlightCard title="Session Management">
 
@@ -283,7 +276,7 @@ The Builder embeds the Explorer in an iframe with a typed messaging layer. Same 
 </HighlightCard>
 <HighlightCard title="Prefetching and LRU Cache">
 
-The Explorer prefetches next-step media with async `decode()` and a bounded LRU cache. Step transitions feel instant because assets are already decoded.
+The Explorer prefetches next-step media with async `decode()` and an LRU cache. Step transitions feel instant because assets are already decoded.
 
 </HighlightCard>
 <HighlightCard title="Compass Design System">
@@ -328,7 +321,7 @@ Three permission levels (Owner, Admin, View) enforced in server-side middleware.
 </HighlightCard>
 <HighlightCard title="Media Processing">
 
-Images are compressed client-side via `browser-image-compression` before upload. Audio is captured at low bitrate (32kbps) through `MediaRecorder`. Only the compressed file is uploaded, no originals stored.
+Images are compressed client-side before upload. Audio is captured at low bitrate through `MediaRecorder`. Only compressed files reach S3.
 
 </HighlightCard>
 </HighlightGrid>
@@ -350,4 +343,4 @@ The iframe SDK is the riskiest integration boundary. Builder and Explorer deploy
 ## Links
 
 - [HedgeHunt](https://hedgehunt.app), live product
-- GitHub, available on request
+- GitHub, private repo (available on request)
