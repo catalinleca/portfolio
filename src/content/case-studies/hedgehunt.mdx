@@ -129,7 +129,7 @@ if (!result) {
 }
 ```
 
-The filter `liveVersion: currentLiveVersion` acts as optimistic locking. If someone else released between the read and the write, the filter matches nothing and the server throws a conflict. No distributed locks, no queues. The same pattern protects saves. Each update includes the client's `updatedAt` timestamp in the filter, catching concurrent edits at both the hunt and individual step level.
+The filter `liveVersion: currentLiveVersion` acts as optimistic locking. If someone else released between the read and the write, the filter matches nothing and the server throws a conflict. No distributed locks, no queues. The same pattern protects saves, using the client's `updatedAt` timestamp to catch concurrent edits at both the hunt and step level.
 
 Automatic version pruning protects against unbounded growth. Old published versions are cleaned up, but the currently live version is always protected from deletion.
 
@@ -156,13 +156,11 @@ Each challenge type has a completely different data shape. A Quiz has options, c
 </CardField>
 <CardField label="Decision">
 
-MongoDB. Challenges are naturally document-shaped with variable structures that map cleanly to embedded objects. The document model also fits the versioning system well. Publishing clones step documents, which is a straightforward `insertMany` rather than a multi-table transaction.
+MongoDB. Challenges are naturally document-shaped with variable structures that map cleanly to embedded objects. Publishing clones step documents with a straightforward `insertMany` rather than a multi-table transaction.
 
-For numeric IDs (MongoDB defaults to ObjectIds), I built a `Counter` collection. Each model has a counter document. `findOneAndUpdate` with `$inc` gives sequential, race-condition-safe, human-readable IDs for URLs and display.
-
-I gave up JOINs. Every "join" is an explicit batch query using `$in` on arrays of IDs, which avoids N+1 problems. Cross-collection ACID isn't available, but `withTransaction` covers the critical paths: publish, release, and delete.
-
-MongoDB's TypeScript support isn't as strong as Prisma's. But since the OpenAPI spec is the source of truth for all types, Mongoose schemas just follow along. They're secondary, not authoritative.
+- **Numeric IDs.** A `Counter` collection with `findOneAndUpdate` and `$inc` gives sequential, race-condition-safe, human-readable IDs for URLs and display.
+- **No JOINs.** Every "join" is an explicit batch query using `$in` on arrays of IDs, avoiding N+1 problems. `withTransaction` covers the critical paths: publish, release, and delete.
+- **TypeScript tradeoff.** MongoDB's TypeScript support isn't as strong as Prisma's. But the OpenAPI spec is the source of truth, so Mongoose schemas just follow along.
 
 </CardField>
 <CardField label="Tradeoff">
@@ -187,9 +185,9 @@ The full `Step` document contains everything: correct answers, AI validation pro
 </CardField>
 <CardField label="Decision">
 
-`PlayerExporter` runs server-side. It takes a full `Step` and produces a `StepPF` containing only what the explorer needs to see and interact with. Answer keys, AI prompts, validation criteria, and admin metadata are all stripped. Quiz options are randomized at this layer so the order is consistent within a session but unpredictable across sessions.
+`PlayerExporter` runs server-side. It takes a full `Step` and produces a `StepPF` containing only what the explorer needs: no answer keys, no AI prompts, no validation criteria. Quiz options are randomized so the order is consistent within a session but unpredictable across sessions.
 
-The same exporter feeds two consumers: the play API (real explorers solving hunts) and the builder preview (creators previewing through the iframe). Both receive identical explorer-safe output. The preview always matches exactly what a real explorer would experience.
+The same exporter feeds two consumers: the play API and the builder preview. Both receive identical output. The preview always matches exactly what a real explorer would see.
 
 </CardField>
 <CardField label="Tradeoff">
@@ -215,7 +213,11 @@ Four challenge types (Clue, Quiz, Mission, Task) with completely different field
 
 Shared object. The schema marks `clue`, `quiz`, `mission`, and `task` as optional + nullable. A Zod discriminator at the API layer validates that exactly one is populated and matches the `type` field. The constraint is runtime, not compile-time.
 
-This made three things simpler. OpenAPI generation works with one schema instead of union complexity. MongoDB stores one document shape where partial updates work naturally. The builder switches a step from Quiz to Mission by nulling one field and setting the other. No document recreation, no form state loss.
+This made three things simpler:
+
+- OpenAPI generation works with one schema instead of union complexity
+- MongoDB stores one document shape where partial updates work naturally
+- The builder switches types by nulling one field and setting another. No document recreation, no form state loss
 
 </CardField>
 <CardField label="Tradeoff">
@@ -242,13 +244,15 @@ Two distinct AI use cases. First: validating explorer submissions for Missions (
 </CardField>
 <CardField label="Decision">
 
-For validation, GPT-4o handles text validation and Google Gemini handles image and audio analysis. If a provider fails or times out at 15 seconds, validation auto-passes with a `fallbackUsed` flag. Explorers are never blocked by infrastructure.
+**Validation.** GPT-4o handles text, Google Gemini handles image and audio. If a provider fails or times out at 15 seconds, validation auto-passes with a `fallbackUsed` flag. Explorers are never blocked by infrastructure. The prompt adapts based on attempt count: after 2 failures, subtle hints. After 3+, direct guidance.
 
-The validation prompt adapts based on attempt count. After 2 failed attempts, the AI starts providing subtle hints in its feedback. After 3+, it gives direct guidance. This keeps the experience challenging without being frustrating.
+**Generation.** OpenAI Structured Outputs with a Zod schema derived from the API types. The schema intentionally omits GPS coordinates since the model would hallucinate them. After generation, each step goes through a geocoding pipeline:
 
-For generation, I use OpenAI Structured Outputs with a Zod schema derived from the API types. The schema intentionally omits GPS coordinates from Missions, since the model would hallucinate them. Instead, it generates a text description of the location.
+- Google Maps converts location descriptions to coordinates
+- Only high-precision results are accepted
+- If geocoding fails, the step silently converts from a Mission to a Clue
 
-After generation, each step goes through a geocoding pipeline. Google Maps converts the location description to coordinates, and only high-precision results are accepted. If geocoding fails or the precision is too low, the step silently converts from a Mission to a Clue. Every generated hunt is immediately playable. If schema validation fails, one retry feeds the specific Zod errors back to the model.
+Every generated hunt is immediately playable. If schema validation fails, one retry feeds the specific Zod errors back to the model.
 
 </CardField>
 <CardField label="Tradeoff">
@@ -334,7 +338,12 @@ The Explorer prefetches next-step media with async `decode()` and an LRU cache. 
   <ProcessStep label="CI" detail="Build-time validation" />
 </ProcessFlow>
 
-The generated types define what the API accepts. But the Builder's form state has different needs. A location field that's required in the API needs to be nullable in the form, the creator hasn't chosen a spot yet. Steps that don't exist on the server need stable keys for React to track them across re-renders. Two transform functions sit at the boundary. On load, API data gains form keys and nullable settings. On save, form artifacts are stripped and nulls convert back to omissions. UI components only touch form types. The API shape is never exposed to rendering code.
+The generated types define what the API accepts, but the Builder's form state has different needs. A location field that's required in the API needs to be nullable in the form because the creator hasn't chosen a spot yet. Steps without a server ID need stable keys for React to track them. Two transform functions handle the conversion:
+
+- **On load**, API data gains form keys and nullable settings
+- **On save**, form artifacts are stripped and nulls convert back to omissions
+
+UI components only touch form types. The API shape is never exposed to rendering code.
 
 <HighlightGrid>
 <HighlightCard title="Hunt Sharing">
