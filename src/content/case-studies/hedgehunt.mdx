@@ -85,6 +85,20 @@ All four apps live in a TypeScript monorepo. They deploy independently but share
   caption="HuntHub monorepo, 4 apps + 3 shared packages"
 />
 
+<ProcessFlow title="Type Generation">
+  <ProcessStep label="OpenAPI Spec" detail="Single source of truth" />
+  <ProcessStep label="Codegen" detail="openapi-zod-client" />
+  <ProcessStep label="Types + Zod" detail="Shared package" />
+  <ProcessStep label="CI" detail="Build-time validation" />
+</ProcessFlow>
+
+The generated types define what the API accepts, but the Builder's form state has different needs. A location field that's required in the API needs to be nullable in the form because the creator hasn't chosen a spot yet. Steps without a server ID need stable keys for React to track them. Two transform functions handle the conversion:
+
+- **On load**, API data gains form keys and nullable settings
+- **On save**, form artifacts are stripped and nulls convert back to omissions
+
+UI components only touch form types. The API shape is never exposed to rendering code.
+
 Hunts go through three states: Draft, Published, and Live. Publishing clones the current steps into a versioned snapshot. Releasing points live traffic to that snapshot. Rolling back swaps the pointer to a previous version. No data migration, no downtime.
 
 <Mermaid chart={`graph LR
@@ -337,20 +351,6 @@ The Explorer prefetches next-step media with async `decode()` and an LRU cache. 
 ```
 
 </CodeShowcase>
-
-<ProcessFlow title="Type Generation">
-  <ProcessStep label="OpenAPI Spec" detail="Single source of truth" />
-  <ProcessStep label="Codegen" detail="openapi-zod-client" />
-  <ProcessStep label="Types + Zod" detail="Shared package" />
-  <ProcessStep label="CI" detail="Build-time validation" />
-</ProcessFlow>
-
-The generated types define what the API accepts, but the Builder's form state has different needs. A location field that's required in the API needs to be nullable in the form because the creator hasn't chosen a spot yet. Steps without a server ID need stable keys for React to track them. Two transform functions handle the conversion:
-
-- **On load**, API data gains form keys and nullable settings
-- **On save**, form artifacts are stripped and nulls convert back to omissions
-
-UI components only touch form types. The API shape is never exposed to rendering code.
 
 <HighlightGrid>
 <HighlightCard title="Hunt Sharing">
