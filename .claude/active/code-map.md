@@ -18,7 +18,7 @@ Order: Hero → CaseStudies → About → Contact
 - `content.ts` — Static data: hedgehuntTags, CompanyLogo[], companies, aboutMe, contactEmail, contactLinks
 
 ## Case Study Content — `src/app/case-study/hedgehunt/`
-- `page.tsx` — MDX compilation + rendering, imports from `@/ui/case-study`
+- `page.tsx` — MDX compilation + rendering, imports from `../_components`
 - `content.ts` — `hedgehuntMeta` + `hedgehuntSections` (typed interfaces)
 - `page.module.css` — Layout styles, padding uses `var(--nav-height)` token
 
@@ -31,15 +31,17 @@ Order: Hero → CaseStudies → About → Contact
 - `ScrollLink/` — Client component. `<a>` wrapper that uses `scrollIntoView` for same-page hashes, navigates to homepage for cross-page
 
 ## Icons — `src/ui/icons/`
+- `ArrowRightIcon.tsx` — Phosphor arrow-right (bold) as React SVG component
 - `CopyIcon.tsx` — Phosphor copy icon as React SVG component (currentColor, 1em sizing)
 - `CheckIcon.tsx` — Phosphor check-fat icon as React SVG component
 
-## Case Study UI — `src/ui/case-study/`
+## Case Study Components — `src/app/case-study/_components/`
 - `ExecutiveSummary/` — 2×2 grid (problem, constraints, architecture, results)
 - `DecisionCard/` — Collapsible ADR card using `<details>/<summary>`. Optional `id` prop for deep linking
 - `CodeShowcase/` — Title + description + syntax-highlighted code block. No card wrapper (code block inherits prose.css styling)
 - `Highlight/` — `HighlightGrid` (2-col grid, 1-col on mobile) + `HighlightCard` (compact static card with title + body)
-- `ProcessFlow/` — Horizontal connected steps with CSS arrow connectors. `ProcessFlow` (wrapper with title) + `ProcessStep` (label + detail). Vertical on mobile
+- `DetailGrid/` — `DetailGrid` (2-col `<dl>` grid) + `DetailItem` (`<dt>` + `<dd>`). Mono purple labels, compact cards. For label-description pairs (challenge types, package names)
+- `ProcessFlow/` — Horizontal connected steps with ArrowRightIcon between them. `ProcessFlow` (wrapper with title) + `ProcessStep` (label + detail). Vertical on mobile
 - `StatGrid/` — `StatGrid` (responsive grid) + `Stat` (large number + label). Used for the Numbers section
 - `Mermaid/` — Client-side Mermaid diagram renderer (imports theme from `@/data/theme`)
 - `SectionNav/` — Sticky nav with IntersectionObserver, `top: var(--nav-offset)` syncs with main nav hide/show
@@ -58,7 +60,7 @@ Order: Hero → CaseStudies → About → Contact
 - `theme.ts` — JS-accessible design token values (must stay in sync with tokens.css)
 
 ## Styles
-- `src/styles/tokens.css` — Design tokens (colors, spacing, typography, layout, nav height/offset, transitions, shadows, radius). Includes `--green: #6a8759` for success states
+- `src/styles/tokens.css` — Design tokens (colors, spacing, typography, layout, nav height/offset, transitions, shadows, radius). Includes `--green: #6a8759` for success states, `--purple: #9876aa` for inline code
 - `src/styles/prose.css` — MDX/article typography
 - `src/styles/globals.css` — CSS reset, token import, base body styles
 
@@ -78,6 +80,6 @@ Every folder has a barrel `index.ts`. Import from the group:
 import { Hero, CaseStudies, About, Contact } from "@/app/(home)/_sections";
 import { PageTransition, SectionReveal } from "@/ui/motion";
 import { SectionShell, ArrowLink, ExternalLink, CopyButton, ScrollLink } from "@/ui/shared";
-import { CopyIcon, CheckIcon } from "@/ui/icons";
-import { ExecutiveSummary, DecisionCard, CardField, HighlightGrid, HighlightCard, CodeShowcase, ProcessFlow, ProcessStep, StatGrid, Stat, Mermaid, SectionNav } from "@/ui/case-study";
+import { ArrowRightIcon, CopyIcon, CheckIcon } from "@/ui/icons";
+import { ExecutiveSummary, DecisionCard, CardField, HighlightGrid, HighlightCard, DetailGrid, DetailItem, CodeShowcase, ProcessFlow, ProcessStep, StatGrid, Stat, Mermaid, SectionNav } from "../_components";
 ```

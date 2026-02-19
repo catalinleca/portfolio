@@ -26,7 +26,7 @@
 - **Import order:**
   1. Next.js (`next/link`, `next/image`, etc.)
   2. Third-party (`framer-motion`, `next-mdx-remote`, etc.)
-  3. Shared UI (`@/ui/shared`, `@/ui/case-study`, `@/ui/icons`, etc.)
+  3. Shared UI (`@/ui/shared`, `@/ui/icons`, etc.)
   4. Local imports (content modules, sibling components)
   5. Styles (CSS Modules)
   6. Types

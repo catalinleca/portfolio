@@ -18,7 +18,7 @@ import {
   Stat,
   DetailGrid,
   DetailItem,
-} from "@/ui/case-study";
+} from "../_components";
 import type { Metadata } from "next";
 import { hedgehuntMeta, hedgehuntSections } from "./content";
 import styles from "./page.module.css";
