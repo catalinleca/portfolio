@@ -1,77 +1,98 @@
 ---
 title: "HedgeHunt"
-description: "Architecture and technical decisions behind a full-stack treasure hunt platform."
+description: "Building a platform where creators design treasure hunts and explorers solve them on mobile, without either side breaking the other's experience."
 date: "2024-01-01"
 tags: ["full-stack", "typescript", "monorepo", "react", "node"]
 ---
 
 # HedgeHunt
 
-A platform for creating and playing location-based treasure hunts.
+A platform where creators build treasure hunts and explorers solve them in the real world.
 
 <ExecutiveSummary
-  problem="Content platform where creators build interactive treasure hunts and players solve them concurrently. Four challenge types with AI-powered validation. Editing and playing happen at the same time."
-  constraints="Four independently deployed apps sharing one type system. Immutable content versions. AI failures can't block players."
-  architecture="TypeScript monorepo with OpenAPI-generated types. MongoDB with optimistic concurrency. Server-side player format boundary for answer security."
-  results="Atomic releases with instant rollback. Version-locked play sessions. Zero type drift across apps. Live at hedgehunt.app."
+  product="HedgeHunt is a platform for building and solving real-world treasure hunts. Creators design multi-step hunts with GPS challenges, quizzes, and AI-validated missions in a visual builder. Explorers solve them on mobile using location, camera, and audio."
+  challenge="Creators need to edit hunts while explorers are actively solving them. Both sides share the same data, but a creator's changes can never break an explorer's experience. The platform also generates complete hunts from a text prompt, so AI failures can never block an explorer mid-hunt."
+  approach="A versioning model isolates drafts from live content. Publishing creates an immutable snapshot that explorers play against. A server-side transform strips answer keys before anything reaches the client. All four apps share types generated from a single source."
+  outcome="Publish and roll back without downtime. Explorers play version-locked sessions that never change mid-hunt. Live at hedgehunt.app."
 />
 
 ---
 
 ## Overview
 
-HedgeHunt lets creators build multi-step treasure hunts in a visual editor and players solve them on mobile using GPS, photos, and audio. The platform supports four challenge types: Clue (text-based riddles), Quiz (multiple choice or free-text input), Mission (GPS location verification and media capture), and Task (AI-validated audio and image submissions).
+The platform has three main pieces: a Builder where creators design hunts, an Explorer where players solve them on mobile, and a Backend API that controls game logic and progression. The Builder is a form-heavy React app for designing multi-step hunts. The Explorer is a mobile-first app that walks players through steps one at a time.
 
-The Editor and Player are separate apps. Creators get real-time preview through an iframe that runs the actual Player app with stripped-down hunt data. The server controls game progression through HATEOAS links. Players never decide what comes next.
+Creators start with an empty hunt and add steps. Each step is a different type of challenge.
+
+<DetailGrid>
+  <DetailItem label="Clue" description="Explorers solve a text riddle. No media, no location, just lateral thinking." />
+  <DetailItem label="Quiz" description="Multiple choice or free-text answers. The server validates against stored correct answers." />
+  <DetailItem label="Mission" description="GPS coordinates, photo capture, or audio recording. The explorer goes somewhere and proves it." />
+  <DetailItem label="Task" description="Open-ended submissions that AI validates. No single correct answer." />
+</DetailGrid>
+
+The Builder includes a live preview, an iframe running the actual Explorer with answer keys stripped by the `PlayerExporter` before anything reaches the client. When the hunt is ready, the creator publishes it.
+
+<ProcessFlow title="Creator Journey">
+  <ProcessStep label="Design" detail="Add steps in the Builder" />
+  <ProcessStep label="Preview" detail="Live iframe with real Explorer" />
+  <ProcessStep label="Publish" detail="Freeze content into snapshot" />
+  <ProcessStep label="Release" detail="Point live traffic to version" />
+</ProcessFlow>
+
+An explorer opens a hunt link and works through steps one at a time. Walk to a park entrance and photograph the sign. Answer a quiz about local history. Record an audio response explaining what you see. GPS, camera, and microphone all run through the browser. The explorer submits, the server validates, and the next step appears.
+
+The server controls game progression. Each API response tells the Explorer what actions are available next. Explorers follow server-provided links. They never decide what comes next.
 
 ---
 
 ## Architecture
 
-TypeScript monorepo with four apps and three shared packages.
+All four apps live in a TypeScript monorepo. They deploy independently but share types, UI, and the messaging layer through three packages.
 
-`@hunthub/shared` holds API types and Zod schemas generated from a single OpenAPI spec. Every app imports from here. If the spec changes and a consumer doesn't update, CI fails at build time.
+<DetailGrid>
+  <DetailItem label="@hunthub/shared" description="Single source of truth for all types and validation schemas. Generated from one OpenAPI spec. If the spec changes and an app doesn't update, CI catches it at build time." />
+  <DetailItem label="@hunthub/compass" description="Shared design system. Wraps MUI's createTheme with custom tokens, typography, and component overrides. One import gives any app the full design system." />
+  <DetailItem label="@hunthub/player-sdk" description="Communication layer between Builder and Explorer. Sends hunt data to the Explorer iframe through typed messages. A PlayerExporter strips answer keys before anything reaches the Explorer." />
+</DetailGrid>
 
-`@hunthub/compass` wraps MUI's `createTheme` into a shared package with custom design tokens, typography scales, and component overrides. Any app that imports it gets a consistent visual language without duplicating theme configuration.
-
-`@hunthub/player-sdk` handles the typed postMessage protocol between Editor and Player. The Editor sends hunt data through a `PlayerExporter` that strips answer keys and AI instructions before the iframe receives them.
-
-<Mermaid chart={`graph TD
-  A[HuntHub Monorepo] --> B[Editor App]
-  A --> C[Player App]
-  A --> D[Backend API]
-  A --> E[Landing Page]
-  A --> F["@hunthub/shared"]
-  A --> G["@hunthub/compass"]
-  A --> H["@hunthub/player-sdk"]
-  B --> F
-  B --> G
-  B --> H
+<Mermaid chart={`graph TB
+  subgraph apps ["Applications"]
+    D[Backend API]
+    C[Explorer App]
+    B[Builder App]
+    E[Landing Page]
+  end
+  subgraph pkgs ["Shared Packages"]
+    F["@hunthub/shared"]
+    G["@hunthub/compass"]
+    H["@hunthub/player-sdk"]
+  end
+  D --> F
   C --> F
   C --> G
   C --> H
-  D --> F
-  style A fill:#1a1a1e,stroke:#cc7832,stroke-width:2px,color:#eae8e4
-  style B fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
-  style C fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
+  B --> F
+  B --> G
+  B --> H
   style D fill:#1a1a1e,stroke:#6a8759,stroke-width:2px,color:#eae8e4
+  style C fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
+  style B fill:#1a1a1e,stroke:#6897bb,stroke-width:2px,color:#eae8e4
   style E fill:#1a1a1e,stroke:#9b978f,stroke-width:2px,color:#eae8e4
   style F fill:#151518,stroke:#9876aa,stroke-width:2px,color:#eae8e4
   style G fill:#151518,stroke:#9876aa,stroke-width:2px,color:#eae8e4
   style H fill:#151518,stroke:#9876aa,stroke-width:2px,color:#eae8e4`}
-  caption="HuntHub monorepo — 4 apps + 3 shared packages"
+  caption="HuntHub monorepo, 4 apps + 3 shared packages"
 />
 
-The API runs on Fly.io. Editor and Player deploy to Vercel. The landing page ships to Cloudflare Pages. Static assets go through S3 with CloudFront as the CDN.
-
-Hunts go through three states: Draft, Published, and Live. Publishing freezes the current content into an immutable snapshot. Releasing points live traffic to that snapshot. Rolling back switches the pointer to a previous version. No data migration, no downtime.
+Hunts go through three states: Draft, Published, and Live. Publishing clones the current steps into a versioned snapshot. Releasing points live traffic to that snapshot. Rolling back swaps the pointer to a previous version. No data migration, no downtime.
 
 <Mermaid chart={`graph LR
   A[Draft] -->|Publish| B[Published]
   B -->|Set as Live| C[Live]
   B -->|Continue Editing| A
   C -->|New Draft| A`}
-  caption="Hunt version lifecycle — Draft → Published → Live"
+  caption="Hunt version lifecycle, Draft > Published > Live"
 />
 
 ---
@@ -81,7 +102,7 @@ Hunts go through three states: Draft, Published, and Live. Publishing freezes th
 <DecisionCard id="hunt-versioning" title="Hunt Versioning Model" defaultOpen>
 <CardField label="Context">
 
-Creators edit hunts while players are actively solving them. If a creator modifies step 3 while a player is on step 1, the player could eventually reach content that changed mid-session. We needed complete isolation between editing and playing.
+Creators edit hunts while explorers are actively solving them. If a creator modifies step 3 while an explorer is on step 1, the explorer could eventually reach content that changed mid-session. I needed complete isolation between editing and playing.
 
 </CardField>
 <CardField label="Options">
@@ -93,7 +114,7 @@ Creators edit hunts while players are actively solving them. If a creator modifi
 </CardField>
 <CardField label="Decision">
 
-We went with the three-model approach. `Hunt` is the master record with a `liveVersion` field pointing to whichever `HuntVersion` is currently live. Publishing clones the draft steps into a new `HuntVersion`. Releasing swaps the pointer. Rolling back swaps it to a different version.
+Three models. `Hunt` is the master record with a `liveVersion` field pointing to whichever `HuntVersion` is currently live. Publishing clones the draft steps into a new `HuntVersion`. Releasing swaps the pointer. Rolling back swaps it to a different version.
 
 The release itself is a single `findOneAndUpdate`:
 
@@ -108,14 +129,14 @@ if (!result) {
 }
 ```
 
-The filter `liveVersion: currentLiveVersion` acts as optimistic locking. If someone else released between when we read and when we write, the filter matches nothing and we throw a conflict. No distributed locks, no queues.
+The filter `liveVersion: currentLiveVersion` acts as optimistic locking. If someone else released between the read and the write, the filter matches nothing and the server throws a conflict. No distributed locks, no queues. The same pattern protects saves, using the client's `updatedAt` timestamp to catch concurrent edits at both the hunt and step level.
 
 Automatic version pruning protects against unbounded growth. Old published versions are cleaned up, but the currently live version is always protected from deletion.
 
 </CardField>
 <CardField label="Tradeoff">
 
-More complex schema. Every read that needs step data requires two lookups (version, then steps). Publishing is heavier because we clone step documents. But version isolation is absolute. Creators can edit freely while players see consistent, frozen content. Rollback is a pointer swap.
+More complex schema. Every read that needs step data requires two lookups (version, then steps). Publishing is heavier because it clones step documents. But version isolation is absolute. Creators can edit freely while explorers see consistent, frozen content. Rollback is a pointer swap.
 
 </CardField>
 </DecisionCard>
@@ -123,7 +144,7 @@ More complex schema. Every read that needs step data requires two lookups (versi
 <DecisionCard id="why-mongodb" title="Why MongoDB">
 <CardField label="Context">
 
-Each challenge type has a completely different data shape. A Quiz has options, correct answers, and validation modes. A Mission has GPS coordinates, radius, and media requirements. A Task has AI prompts and audio settings. We needed storage that handles this polymorphism without fighting the schema.
+Each challenge type has a completely different data shape. A Quiz has options, correct answers, and validation modes. A Mission has GPS coordinates, radius, and media requirements. A Task has AI prompts and audio settings. I needed storage that handles this polymorphism without fighting the schema.
 
 </CardField>
 <CardField label="Options">
@@ -135,13 +156,11 @@ Each challenge type has a completely different data shape. A Quiz has options, c
 </CardField>
 <CardField label="Decision">
 
-MongoDB. Challenges are naturally document-shaped with variable structures that map cleanly to embedded objects. The document model also fits the versioning system well. Publishing clones step documents, which is a straightforward `insertMany` rather than a multi-table transaction.
+MongoDB. Challenges are naturally document-shaped with variable structures that map cleanly to embedded objects. Publishing clones step documents with a straightforward `insertMany` rather than a multi-table transaction.
 
-For numeric IDs (MongoDB defaults to ObjectIds), we built a `Counter` collection. Each model has a counter document. `findOneAndUpdate` with `$inc` gives sequential, race-condition-safe, human-readable IDs for URLs and display.
-
-We gave up JOINs. Every "join" is an explicit batch query using `$in` on arrays of IDs to avoid N+1 patterns. We gave up cross-collection ACID, but `withTransaction` covers the critical paths: publish, release, and delete.
-
-The weaker TypeScript integration compared to Prisma is mitigated by using OpenAPI-generated types as the source of truth. Mongoose schemas are secondary, not authoritative.
+- **Numeric IDs.** A `Counter` collection with `findOneAndUpdate` and `$inc` gives sequential, race-condition-safe, human-readable IDs for URLs and display.
+- **No JOINs.** Every "join" is an explicit batch query using `$in` on arrays of IDs, avoiding N+1 problems. `withTransaction` covers the critical paths: publish, release, and delete.
+- **TypeScript tradeoff.** MongoDB's TypeScript support isn't as strong as Prisma's. But the OpenAPI spec is the source of truth, so Mongoose schemas just follow along.
 
 </CardField>
 <CardField label="Tradeoff">
@@ -151,29 +170,29 @@ No compile-time query validation like Prisma provides. Some denormalization is n
 </CardField>
 </DecisionCard>
 
-<DecisionCard id="player-exporter" title="Player Format (PlayerExporter)">
+<DecisionCard id="player-exporter" title="Explorer Format (PlayerExporter)">
 <CardField label="Context">
 
-The full `Step` document contains everything: correct answers, AI validation prompts, scoring criteria, admin notes. Players must never see any of this. Filtering on the client is not an option because the data has already left the server. One missed field or a browser devtools inspection would leak answers.
+The full `Step` document contains everything: correct answers, AI validation prompts, scoring criteria, admin notes. Explorers must never see any of this. Filtering on the client is not an option because the data has already left the server. One missed field or a browser devtools inspection would leak answers.
 
 </CardField>
 <CardField label="Options">
 
-- **Client-side filtering.** Send the full document, strip fields in the Player app. Fast to build. Fundamentally insecure. The data is already on the wire.
+- **Client-side filtering.** Send the full document, strip fields in the Explorer app. Fast to build. Fundamentally insecure. The data is already on the wire.
 - **GraphQL field-level auth.** Let the client request only safe fields. Still risky if a field permission is misconfigured. A new sensitive field defaults to exposed unless someone remembers to restrict it.
 - **Server-side transformation.** A dedicated function that takes a full `Step` and returns a `StepPF` (Player Format). The boundary is structural. The server never sends what it shouldn't.
 
 </CardField>
 <CardField label="Decision">
 
-`PlayerExporter` runs server-side. It takes a full `Step` and produces a `StepPF` containing only what the player needs to see and interact with. Answer keys, AI prompts, validation criteria, and admin metadata are all stripped. Quiz options are randomized at this layer so the order is consistent within a session but unpredictable across sessions.
+`PlayerExporter` runs server-side. It takes a full `Step` and produces a `StepPF` containing only what the explorer needs: no answer keys, no AI prompts, no validation criteria. Quiz options are randomized so the order is consistent within a session but unpredictable across sessions.
 
-The same exporter feeds two consumers: the play API (real players solving hunts) and the editor preview (creators previewing through the iframe). Both receive identical player-safe output. The preview always matches exactly what a real player would experience.
+The same exporter feeds two consumers: the play API and the builder preview. Both receive identical output. The preview always matches exactly what a real explorer would see.
 
 </CardField>
 <CardField label="Tradeoff">
 
-Extra type definitions and a transformation function to maintain for every schema change. But the security boundary is structural, not behavioral. You can't accidentally leak answers because `StepPF` physically doesn't carry them. If we add a new sensitive field to `Step`, the compiler forces us to decide whether `StepPF` should include it.
+Extra type definitions and a transformation function to maintain for every schema change. But the security boundary is structural, not behavioral. You can't accidentally leak answers because `StepPF` physically doesn't carry them. If a new sensitive field is added to `Step`, the compiler forces a decision about whether `StepPF` should include it.
 
 </CardField>
 </DecisionCard>
@@ -181,12 +200,16 @@ Extra type definitions and a transformation function to maintain for every schem
 <DecisionCard id="challenge-type-system" title="Challenge Type System">
 <CardField label="Context">
 
-Four challenge types (Clue, Quiz, Mission, Task) with completely different field schemas. The editor needs to let creators switch a step between types without destroying shared data like title and description. The API needs to validate based on type. The OpenAPI spec needs to generate clean schemas for all four.
+Four challenge types (Clue, Quiz, Mission, Task) with completely different field schemas. Three things need to work at the same time:
+
+- The builder lets creators switch a step between types without destroying shared data like title and description
+- The API validates based on type
+- The OpenAPI spec generates clean schemas for all four
 
 </CardField>
 <CardField label="Options">
 
-- **TypeScript discriminated union.** `ClueStep | QuizStep | MissionStep | TaskStep`. Clean type narrowing with exhaustive `switch` statements. Each variant carries exactly the fields it needs. But OpenAPI codegen handles unions poorly. MongoDB stores one shape per document, so switching types means replacing the document. The editor form state would need to be destroyed and recreated on type change.
+- **TypeScript discriminated union.** `ClueStep | QuizStep | MissionStep | TaskStep`. Clean type narrowing with exhaustive `switch` statements. Each variant carries exactly the fields it needs. But OpenAPI codegen handles unions poorly. MongoDB stores one shape per document, so switching types means replacing the document. The builder form state would need to be destroyed and recreated on type change.
 - **Shared object with nullable fields.** One `Challenge` shape with all four type sub-objects as optional. Only one is populated at a time. Switching types means nulling the old field and setting the new one. Same document, same form state.
 
 </CardField>
@@ -194,12 +217,16 @@ Four challenge types (Clue, Quiz, Mission, Task) with completely different field
 
 Shared object. The schema marks `clue`, `quiz`, `mission`, and `task` as optional + nullable. A Zod discriminator at the API layer validates that exactly one is populated and matches the `type` field. The constraint is runtime, not compile-time.
 
-This made three things simpler. OpenAPI generation works with one schema instead of union complexity. MongoDB stores one document shape where partial updates work naturally. The editor switches a step from Quiz to Mission by nulling one field and setting the other. No document recreation, no form state loss.
+This made three things simpler:
+
+- OpenAPI generation works with one schema instead of union complexity
+- MongoDB stores one document shape where partial updates work naturally
+- The builder switches types by nulling one field and setting another. No document recreation, no form state loss
 
 </CardField>
 <CardField label="Tradeoff">
 
-No compile-time exhaustiveness checking. If you access `challenge.quiz` when the type is actually `mission`, TypeScript won't stop you. We compensate with strict API validation and consistent access through helper functions that check the type before accessing the specific challenge field.
+No compile-time exhaustiveness checking. If you access `challenge.quiz` when the type is actually `mission`, TypeScript won't stop you. I compensate with strict API validation and consistent access through helper functions that check the type before accessing the specific challenge field.
 
 </CardField>
 </DecisionCard>
@@ -207,30 +234,37 @@ No compile-time exhaustiveness checking. If you access `challenge.quiz` when the
 <DecisionCard id="ai-integration" title="AI Integration">
 <CardField label="Context">
 
-Two distinct AI use cases. First: validating player submissions for Missions (photos of specific locations or objects) and Tasks (audio recordings) where exact matching is impossible. Second: generating complete, playable hunts from a text prompt like "a treasure hunt around Central Park about American history." Multiple AI providers handle different media types, and provider failures can never block a player mid-hunt.
+Two distinct AI use cases. Multiple providers handle different media types, and provider failures can never block an explorer mid-hunt.
+
+- **Validation.** Checking explorer submissions for Missions (photos of specific locations or objects) and Tasks (audio recordings) where exact matching is impossible.
+- **Generation.** Creating complete, playable hunts from a text prompt like "a treasure hunt around Central Park about American history."
 
 </CardField>
 <CardField label="Options">
 
-- **Validation with a single provider.** Simpler integration. But a single point of failure. If OpenAI is down, all Mission and Task validation stops and players can't progress.
-- **Validation with multi-provider and hard failure.** Multiple providers, reject submissions when AI is unavailable. Safe, but frustrating for players in the middle of a hunt.
-- **Validation with graceful degradation.** Multiple providers, each specialized by media type. If all fail, auto-pass with a flag. Players never blocked.
+- **Validation with a single provider.** Simpler integration. But a single point of failure. If OpenAI is down, all Mission and Task validation stops and explorers can't progress.
+- **Validation with multi-provider and hard failure.** Multiple providers, reject submissions when AI is unavailable. Safe, but frustrating for explorers in the middle of a hunt.
+- **Validation with graceful degradation.** Multiple providers, each specialized by media type. If all fail, auto-pass with a flag. Explorers never blocked.
 - **Generation with free-form JSON.** Ask the LLM for JSON, parse, hope it validates. The model hallucinates field names, invents enum values, nests things wrong.
 - **Generation with structured outputs.** Enforce the output schema during generation. Enrich with external data after.
 
 </CardField>
 <CardField label="Decision">
 
-For validation, GPT-4o handles text validation and Google Gemini handles image and audio analysis. If a provider fails or times out at 15 seconds, validation auto-passes with a `fallbackUsed` flag. Players are never blocked by infrastructure.
+**Validation.** GPT-4o handles text, Google Gemini handles image and audio. If a provider fails or times out at 15 seconds, validation auto-passes with a `fallbackUsed` flag. Explorers are never blocked by infrastructure. The prompt adapts based on attempt count: after 2 failures, subtle hints. After 3+, direct guidance.
 
-The validation prompt adapts based on attempt count. After 2 failed attempts, the AI starts providing subtle hints in its feedback. After 3+, it gives direct guidance. This keeps the experience challenging without being frustrating.
+**Generation.** OpenAI Structured Outputs with a Zod schema derived from the API types. The schema intentionally omits GPS coordinates since the model would hallucinate them. After generation, each step goes through a geocoding pipeline:
 
-For generation, we use OpenAI Structured Outputs with a Zod schema derived from our API types. The schema uses `Mission.omit({ targetLocation })` so the model generates a description of where to go instead of GPS coordinates, which it would hallucinate. After generation, each step goes through a geocoding pipeline: Google Maps geocodes the location description, and only `ROOFTOP` or `RANGE_INTERPOLATED` precision is accepted. If geocoding fails or returns low precision, the step silently converts from a Mission to a Clue. No unplayable hunts. If schema validation fails, one retry feeds the specific Zod errors back to the model.
+- Google Maps converts location descriptions to coordinates
+- Only high-precision results are accepted
+- If geocoding fails, the step silently converts from a Mission to a Clue
+
+Every generated hunt is immediately playable. If schema validation fails, one retry feeds the specific Zod errors back to the model.
 
 </CardField>
 <CardField label="Tradeoff">
 
-Auto-pass on validation failure means a bad answer could slip through. But blocking players when AI is down is worse for the experience. The generation quality gate trades geographic coverage for accuracy. Some locations become Clues instead of GPS challenges, but every generated hunt is immediately playable without manual fixes.
+Auto-pass on validation failure means a bad answer could slip through. But blocking explorers when AI is down is worse for the experience. The generation quality gate trades geographic coverage for accuracy. Some locations become Clues instead of GPS challenges, but nothing requires manual fixes.
 
 </CardField>
 </DecisionCard>
@@ -239,7 +273,7 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 
 ## Highlights
 
-<CodeShowcase title="Answer Validation" description="Six validators behind one interface. Each challenge type maps to a validator — from Levenshtein distance for fuzzy text to Haversine for GPS proximity to AI for image and audio. Adding a new validator means one map entry. Zero changes to dispatch logic.">
+<CodeShowcase title="Answer Validation" description="Six validators, one interface. Each challenge type maps to its own: fuzzy text matching for quiz inputs, GPS distance for location missions, AI analysis for image and audio. Adding a new challenge type means adding one entry to the map.">
 
 ```typescript
 interface AnswerValidator {
@@ -261,27 +295,20 @@ const validators: Record<AnswerType, AnswerValidator> = {
 
 </CodeShowcase>
 
-<ProcessFlow title="Asset Pipeline">
-  <ProcessStep label="Client" detail="File selected" />
-  <ProcessStep label="Presigned URL" detail="Server generates" />
-  <ProcessStep label="S3" detail="Direct upload" />
-  <ProcessStep label="CloudFront" detail="CDN delivery" />
-</ProcessFlow>
-
 <HighlightGrid>
 <HighlightCard title="Session Management">
 
-Sessions are version-locked. Releasing a new version mid-play doesn't interrupt active players. `localStorage` persistence resumes from the last completed step.
+Sessions are locked to the hunt version that was live when the explorer started. Releasing a new version mid-play doesn't interrupt active explorers. `localStorage` persistence resumes from the last completed step.
 
 </HighlightCard>
-<HighlightCard title="Editor Preview">
+<HighlightCard title="Builder Preview">
 
-The Editor embeds the Player in an iframe via a typed `postMessage` protocol. Same `PlayerExporter` as production. Preview matches exactly what real players see.
+The Builder embeds the Explorer in an iframe with a typed messaging layer. Same `PlayerExporter` as production. Preview matches exactly what real explorers see.
 
 </HighlightCard>
 <HighlightCard title="Prefetching and LRU Cache">
 
-The Player prefetches next-step media with async `decode()` and a bounded LRU cache. Step transitions feel instant because assets are already decoded.
+The Explorer prefetches next-step media with async `decode()` and an LRU cache. Step transitions feel instant because assets are already decoded.
 
 </HighlightCard>
 <HighlightCard title="Compass Design System">
@@ -291,7 +318,7 @@ The Player prefetches next-step media with async `decode()` and a bounded LRU ca
 </HighlightCard>
 </HighlightGrid>
 
-<CodeShowcase title="Play API and HATEOAS" description="Each API response includes hypermedia links for available actions. The Player follows links — it never decides what comes next. Game rules change server-side without touching the client.">
+<CodeShowcase title="Play API" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
 
 ```json
 {
@@ -318,15 +345,22 @@ The Player prefetches next-step media with async `decode()` and a bounded LRU ca
   <ProcessStep label="CI" detail="Build-time validation" />
 </ProcessFlow>
 
+The generated types define what the API accepts, but the Builder's form state has different needs. A location field that's required in the API needs to be nullable in the form because the creator hasn't chosen a spot yet. Steps without a server ID need stable keys for React to track them. Two transform functions handle the conversion:
+
+- **On load**, API data gains form keys and nullable settings
+- **On save**, form artifacts are stripped and nulls convert back to omissions
+
+UI components only touch form types. The API shape is never exposed to rendering code.
+
 <HighlightGrid>
 <HighlightCard title="Hunt Sharing">
 
-Three permission levels (Owner, Admin, View) enforced in server-side middleware. The Editor adapts UI per role, but access control never relies on the client.
+Three permission levels (Owner, Admin, View) enforced in server-side middleware. The Builder adapts UI per role, but access control never relies on the client.
 
 </HighlightCard>
 <HighlightCard title="Media Processing">
 
-Images are compressed client-side via `browser-image-compression` before upload. Audio is captured at low bitrate (32kbps) through `MediaRecorder`. Only the compressed file is uploaded — no originals stored.
+Images are compressed client-side before upload. Audio is captured at low bitrate through `MediaRecorder`. Only compressed files reach S3.
 
 </HighlightCard>
 </HighlightGrid>
@@ -339,24 +373,13 @@ The Hunt/HuntVersion separation was the strongest architectural decision. Optimi
 
 The step storage model is where the tradeoff didn't pay off. Steps as separate documents made publishing straightforward (clone the documents), but every read requires a secondary query. Embedding steps within `HuntVersion` would make the common read path a single document fetch. The publish operation gets more complex, but reads happen far more often than publishes.
 
-The `PlayerExporter` boundary was worth every extra line of code. It turns a behavioral contract ("don't send answers to players") into a structural one that the type system enforces. Every new sensitive field on `Step` requires an explicit decision about whether `StepPF` carries it.
+The `PlayerExporter` boundary was worth every extra line of code. It turns a behavioral contract ("don't send answers to explorers") into a structural one that the type system enforces. Every new sensitive field on `Step` requires an explicit decision about whether `StepPF` carries it.
 
-The iframe SDK is the riskiest integration boundary. Editor and Player deploy independently. A breaking change in the postMessage protocol would silently break preview with no compile-time warning. This needs contract tests between the two apps.
-
----
-
-## Numbers
-
-<StatGrid>
-  <Stat value="4" label="Apps" />
-  <Stat value="3" label="Shared Packages" />
-  <Stat value="4" label="Challenge Types" />
-  <Stat value="6" label="Answer Validators" />
-</StatGrid>
+The iframe SDK is the riskiest integration boundary. Builder and Explorer deploy independently. A breaking change in the postMessage protocol would silently break preview with no compile-time warning. This needs contract tests between the two apps.
 
 ---
 
 ## Links
 
-- [HedgeHunt](https://hedgehunt.app) — live product
-- GitHub — available on request
+- [HedgeHunt](https://hedgehunt.app), live product
+- GitHub, private repo (available on request)

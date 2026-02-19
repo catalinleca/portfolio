@@ -4,7 +4,7 @@
 
 .container {
   overflow-x: auto;
-  min-height: 200px;
+  min-height: 320px;
   background: var(--bg-surface);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-dim);

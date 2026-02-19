@@ -9,9 +9,9 @@ export const Contact = () => {
       <div className={styles.layout}>
         <div className={styles.left}>
           <h2 className={styles.heading}>
-            Let&apos;s build
+            Where to
             <br />
-            <em>something real.</em>
+            <em>find me.</em>
           </h2>
         </div>
         <div className={styles.right}>

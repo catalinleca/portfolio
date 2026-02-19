@@ -16,6 +16,8 @@ import {
   ProcessStep,
   StatGrid,
   Stat,
+  DetailGrid,
+  DetailItem,
 } from "@/ui/case-study";
 import type { Metadata } from "next";
 import { hedgehuntMeta, hedgehuntSections } from "./content";
@@ -39,6 +41,8 @@ const mdxComponents = {
   ProcessStep,
   StatGrid,
   Stat,
+  DetailGrid,
+  DetailItem,
 };
 
 export default async function HedgeHuntCaseStudy() {

@@ -13,10 +13,11 @@ export const CaseStudyCard = () => {
           <div className={styles.overline}>Platform</div>
           <h3 className={styles.title}>HedgeHunt</h3>
           <p className={styles.description}>
-            A full-stack platform for creating and playing real-world treasure
-            hunts — built solo from scratch. React 19 editor with real-time
-            iframe preview, Node.js API with 217 tests, monorepo with 5 apps + 3
-            shared packages.
+            A platform for creating and solving real-world treasure hunts.
+            Design hunts with GPS challenges, quizzes, and missions validated
+            by AI, or generate full hunts from a prompt. Solve them on mobile
+            with location, camera, and audio. Publish, iterate, roll back.
+            Players never notice.
           </p>
           <div className={styles.tags}>
             {hedgehuntTags.map((tag) => (
@@ -47,7 +48,7 @@ export const CaseStudyCard = () => {
             </div>
             <Image
               src="/images/hedgehunt-editor.webp"
-              alt="HedgeHunt editor screenshot"
+              alt="HedgeHunt builder screenshot"
               width={720}
               height={450}
               className={styles.screenshot}

@@ -16,7 +16,7 @@ export const CaseStudies = () => {
             alt={company.name}
             width={120}
             height={32}
-            className={styles.logo}
+            className={`${styles.logo} ${company.name === "Zafran" ? styles.logoZafran : ""}`}
           />
         ))}
       </div>

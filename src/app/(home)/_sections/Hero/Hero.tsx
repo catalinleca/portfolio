@@ -16,10 +16,12 @@ export const Hero = () => {
         <div className={styles.text}>
           <div className={styles.eyebrow}>Senior Software Engineer · {YEARS_EXPERIENCE}+ years</div>
           <h1 className={styles.headline}>
-            Complexity is easy to create. Simplicity takes work.
+            I care about how things are built.
           </h1>
           <p className={styles.intro}>
-            I focus on shaping software so it stays clear, reliable, and easy to build on.
+            I&apos;ve built production platforms end to end, from system
+            design to deployment. I break hard problems into manageable pieces,
+            adapt fast, and leave things in better shape than I found them.
           </p>
           <div className={styles.actions}>
             <ScrollLink

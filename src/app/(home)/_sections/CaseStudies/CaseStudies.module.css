@@ -19,6 +19,15 @@
   }
 }
 
+.logoZafran {
+  width: 92px;
+  opacity: 0.72;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 @media (width <= 600px) {
   .logoStrip {
     gap: var(--space-8);
