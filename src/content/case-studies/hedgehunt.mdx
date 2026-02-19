@@ -12,7 +12,7 @@ A platform where creators build treasure hunts and explorers solve them in the r
 <ExecutiveSummary
   product="HedgeHunt is a platform for building and solving real-world treasure hunts. Creators design multi-step hunts with GPS challenges, quizzes, and AI-validated missions in a visual builder. Explorers solve them on mobile using location, camera, and audio."
   challenge="Creators need to edit hunts while explorers are actively solving them. Both sides share the same data, but a creator's changes can never break an explorer's experience. The platform also generates complete hunts from a text prompt, so AI failures can never block an explorer mid-hunt."
-  approach="A versioning model isolates drafts from live content. Publishing creates an immutable snapshot. A server-side exporter (PlayerExporter) strips answer keys before anything reaches the explorer. All four apps share types generated from a single OpenAPI spec."
+  approach="A versioning model isolates drafts from live content. Publishing creates an immutable snapshot that explorers play against. A server-side transform strips answer keys before anything reaches the client. All four apps share types generated from a single source."
   outcome="Publish and roll back without downtime. Explorers play version-locked sessions that never change mid-hunt. Live at hedgehunt.app."
 />
 
@@ -31,7 +31,7 @@ Creators start with an empty hunt and add steps. Each step is a different type o
   <DetailItem label="Task" description="Open-ended submissions that AI validates. No single correct answer." />
 </DetailGrid>
 
-The Builder includes a live preview, an iframe running the actual Explorer with answer keys stripped server-side. When the hunt is ready, the creator publishes it.
+The Builder includes a live preview, an iframe running the actual Explorer with answer keys stripped by the `PlayerExporter` before anything reaches the client. When the hunt is ready, the creator publishes it.
 
 <ProcessFlow title="Creator Journey">
   <ProcessStep label="Design" detail="Add steps in the Builder" />
@@ -85,7 +85,7 @@ All four apps live in a TypeScript monorepo. They deploy independently but share
   caption="HuntHub monorepo, 4 apps + 3 shared packages"
 />
 
-Hunts go through three states: Draft, Published, and Live. Publishing freezes the current content into an immutable snapshot. Releasing points live traffic to that snapshot. Rolling back switches the pointer to a previous version. No data migration, no downtime.
+Hunts go through three states: Draft, Published, and Live. Publishing clones the current steps into a versioned snapshot. Releasing points live traffic to that snapshot. Rolling back swaps the pointer to a previous version. No data migration, no downtime.
 
 <Mermaid chart={`graph LR
   A[Draft] -->|Publish| B[Published]
@@ -311,7 +311,7 @@ The Explorer prefetches next-step media with async `decode()` and an LRU cache. 
 </HighlightCard>
 </HighlightGrid>
 
-<CodeShowcase title="Play API and HATEOAS" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
+<CodeShowcase title="Play API" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
 
 ```json
 {
