@@ -28,7 +28,6 @@ export const CopyButton = ({ text, className, children }: CopyButtonProps) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => setCopied(false), 1500);
     } catch {
-      // Clipboard API can fail in insecure contexts or when denied
     }
   }, [text]);
 

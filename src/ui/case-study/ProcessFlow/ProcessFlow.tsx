@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { Children, type ReactNode } from "react";
+import { ArrowRightIcon } from "@/ui/icons";
 import styles from "./ProcessFlow.module.css";
 
 interface ProcessFlowProps {
@@ -7,10 +8,21 @@ interface ProcessFlowProps {
 }
 
 export const ProcessFlow = ({ title, children }: ProcessFlowProps) => {
+  const steps = Children.toArray(children);
+
   return (
     <div className={styles.flow}>
       <h4 className={styles.title}>{title}</h4>
-      <div className={styles.steps}>{children}</div>
+      <div className={styles.steps}>
+        {steps.map((step, i) => (
+          <div key={i} className={styles.stepGroup}>
+            {step}
+            {i < steps.length - 1 && (
+              <ArrowRightIcon className={styles.arrow} aria-hidden />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
