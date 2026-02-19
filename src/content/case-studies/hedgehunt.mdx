@@ -200,7 +200,11 @@ Extra type definitions and a transformation function to maintain for every schem
 <DecisionCard id="challenge-type-system" title="Challenge Type System">
 <CardField label="Context">
 
-Four challenge types (Clue, Quiz, Mission, Task) with completely different field schemas. The builder needs to let creators switch a step between types without destroying shared data like title and description. The API needs to validate based on type. The OpenAPI spec needs to generate clean schemas for all four.
+Four challenge types (Clue, Quiz, Mission, Task) with completely different field schemas. Three things need to work at the same time:
+
+- The builder lets creators switch a step between types without destroying shared data like title and description
+- The API validates based on type
+- The OpenAPI spec generates clean schemas for all four
 
 </CardField>
 <CardField label="Options">
@@ -230,7 +234,10 @@ No compile-time exhaustiveness checking. If you access `challenge.quiz` when the
 <DecisionCard id="ai-integration" title="AI Integration">
 <CardField label="Context">
 
-Two distinct AI use cases. First: validating explorer submissions for Missions (photos of specific locations or objects) and Tasks (audio recordings) where exact matching is impossible. Second: generating complete, playable hunts from a text prompt like "a treasure hunt around Central Park about American history." Multiple AI providers handle different media types, and provider failures can never block an explorer mid-hunt.
+Two distinct AI use cases. Multiple providers handle different media types, and provider failures can never block an explorer mid-hunt.
+
+- **Validation.** Checking explorer submissions for Missions (photos of specific locations or objects) and Tasks (audio recordings) where exact matching is impossible.
+- **Generation.** Creating complete, playable hunts from a text prompt like "a treasure hunt around Central Park about American history."
 
 </CardField>
 <CardField label="Options">
