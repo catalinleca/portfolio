@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { trackClick } from "@/analytics";
 import { ExternalLink, ScrollLink } from "@/ui/shared";
 import { contactEmail } from "../content";
 import { CopyEmailBtn } from "./CopyEmailBtn";
@@ -27,26 +28,21 @@ export const Hero = () => {
             <ScrollLink
               href="#work"
               className={`${styles.btn} ${styles.btnAccent}`}
+              {...trackClick("hero_view_work", "hero")}
             >
               View My Work
             </ScrollLink>
             <div className={styles.secondaryLinks}>
-              <ExternalLink href="/Catalin_Leca_Resume.pdf" className={styles.btn}>
+              <ExternalLink href="/Catalin_Leca_Resume.pdf" className={styles.btn} {...trackClick("hero_resume", "hero")}>
                 Resume
               </ExternalLink>
-              <ExternalLink
-                href="https://github.com/catalinleca"
-                className={styles.btn}
-              >
+              <ExternalLink href="https://github.com/catalinleca" className={styles.btn} {...trackClick("hero_github", "hero")}>
                 GitHub
               </ExternalLink>
-              <ExternalLink
-                href="https://linkedin.com/in/catalinleca"
-                className={styles.btn}
-              >
+              <ExternalLink href="https://linkedin.com/in/catalinleca" className={styles.btn} {...trackClick("hero_linkedin", "hero")}>
                 LinkedIn
               </ExternalLink>
-              <CopyEmailBtn email={contactEmail} className={styles.btn} />
+              <CopyEmailBtn email={contactEmail} className={styles.btn} {...trackClick("hero_copy_email", "hero")} />
             </div>
           </div>
         </div>

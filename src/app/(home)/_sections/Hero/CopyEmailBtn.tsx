@@ -1,13 +1,13 @@
+import type { ComponentProps } from "react";
 import { CopyButton } from "@/ui/shared";
 
-interface CopyEmailBtnProps {
+type CopyEmailBtnProps = Omit<ComponentProps<typeof CopyButton>, "text" | "children"> & {
   email: string;
-  className?: string;
-}
+};
 
-export const CopyEmailBtn = ({ email, className }: CopyEmailBtnProps) => {
+export const CopyEmailBtn = ({ email, ...rest }: CopyEmailBtnProps) => {
   return (
-    <CopyButton text={email} className={className}>
+    <CopyButton text={email} {...rest}>
       Email
     </CopyButton>
   );

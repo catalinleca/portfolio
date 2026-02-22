@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Suspense } from "react";
+import { AnalyticsClient } from "@/app/AnalyticsClient";
 import { Nav } from "@/ui/navigation";
 import "@/styles/globals.css";
 
@@ -50,6 +52,9 @@ export default function RootLayout({
       <body
         className={`${dmSerif.variable} ${dmSans.variable} ${jbMono.variable}`}
       >
+        <Suspense fallback={null}>
+          <AnalyticsClient />
+        </Suspense>
         <Nav />
         {children}
       </body>

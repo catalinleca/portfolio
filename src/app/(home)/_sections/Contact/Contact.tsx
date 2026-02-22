@@ -1,3 +1,4 @@
+import { trackClick } from "@/analytics";
 import { SectionShell, ArrowLink } from "@/ui/shared";
 import { contactEmail, contactLinks } from "../content";
 import { CopyEmail } from "./CopyEmail";
@@ -22,6 +23,7 @@ export const Contact = () => {
               href={link.href}
               external={link.external}
               className={styles.link}
+              {...trackClick(`contact_${link.label.toLowerCase().replace(/\s+/g, "_")}`, "contact")}
             >
               {link.label}
             </ArrowLink>

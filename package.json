@@ -13,6 +13,7 @@
     "mermaid": "^11.12.2",
     "next": "16.1.6",
     "next-mdx-remote": "^5.0.0",
+    "posthog-js": "^1.352.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "rehype-pretty-code": "^0.14.1",

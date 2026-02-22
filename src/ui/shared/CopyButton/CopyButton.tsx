@@ -1,16 +1,31 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ButtonHTMLAttributes,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { CopyIcon, CheckIcon } from "@/ui/icons";
 import styles from "./CopyButton.module.css";
 
-interface CopyButtonProps {
+interface CopyButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type" | "children"> {
   text: string;
   className?: string;
   children: ReactNode;
 }
 
-export const CopyButton = ({ text, className, children }: CopyButtonProps) => {
+export const CopyButton = ({
+  text,
+  className,
+  children,
+  onClick,
+  ...rest
+}: CopyButtonProps) => {
   const [copied, setCopied] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
@@ -27,12 +42,26 @@ export const CopyButton = ({ text, className, children }: CopyButtonProps) => {
 
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => setCopied(false), 1500);
-    } catch {
+    } catch (error) {
+      console.warn("Clipboard write failed:", error);
     }
   }, [text]);
 
+  const handleClick = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      void handleCopy();
+      onClick?.(event);
+    },
+    [handleCopy, onClick]
+  );
+
   return (
-    <button type="button" onClick={handleCopy} className={`${styles.copyBtn} ${className ?? ""}`}>
+    <button
+      type="button"
+      className={`${styles.copyBtn} ${className ?? ""}`}
+      {...rest}
+      onClick={handleClick}
+    >
       {children}
       <span className={styles.iconWrap}>
         <CopyIcon className={`${styles.icon} ${copied ? styles.iconOut : styles.iconIn}`} />

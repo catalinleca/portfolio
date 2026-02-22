@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { trackClick } from "@/analytics";
 import { ExternalLink } from "@/ui/shared";
 import { hedgehuntTags } from "../content";
 import { WindowChrome } from "./WindowChrome";
@@ -25,13 +26,10 @@ export const CaseStudyCard = () => {
             ))}
           </div>
           <div className={styles.actions}>
-            <Link href="/case-study/hedgehunt" className={styles.cta}>
+            <Link href="/case-study/hedgehunt" className={styles.cta} {...trackClick("case_study_read", "featured_work")}>
               Read case study →
             </Link>
-            <ExternalLink
-              href="https://hedgehunt.app"
-              className={styles.appLink}
-            >
+            <ExternalLink href="https://hedgehunt.app" className={styles.appLink} {...trackClick("case_study_visit_app", "featured_work")}>
               Visit app ↗
             </ExternalLink>
           </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { trackClick } from "@/analytics";
 import { ExternalLink, ScrollLink } from "@/ui/shared";
 import styles from "./Nav.module.css";
 
@@ -37,23 +38,28 @@ export const Nav = () => {
   return (
     <nav className={`${styles.nav} ${isHidden ? styles.hidden : ""}`}>
       <div className={styles.container}>
-        <Link href="/" className={styles.logo}>
+        <Link href="/" className={styles.logo} {...trackClick("nav_logo", "nav")}>
           Catalin Leca
         </Link>
         <div className={styles.links}>
-          <ScrollLink href="#work" className={styles.link}>
+          <ScrollLink href="#work" className={styles.link} {...trackClick("nav_work", "nav")}>
             work
           </ScrollLink>
-          <ScrollLink href="#about" className={styles.link}>
+          <ScrollLink href="#about" className={styles.link} {...trackClick("nav_about", "nav")}>
             about
           </ScrollLink>
           <ExternalLink
             href="/Catalin_Leca_Resume.pdf"
             className={`${styles.link} ${styles.resumeLink}`}
+            {...trackClick("nav_resume", "nav")}
           >
             Resume
           </ExternalLink>
-          <ScrollLink href="#contact" className={`${styles.link} ${styles.ctaLink}`}>
+          <ScrollLink
+            href="#contact"
+            className={`${styles.link} ${styles.ctaLink}`}
+            {...trackClick("nav_lets_talk", "nav")}
+          >
             Let&apos;s Talk
           </ScrollLink>
         </div>
