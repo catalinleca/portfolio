@@ -1,8 +1,9 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
 import styles from "./ArrowLink.module.css";
 
-interface ArrowLinkProps {
+interface ArrowLinkProps
+  extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "children"> {
   href: string;
   children: ReactNode;
   external?: boolean;
@@ -14,6 +15,7 @@ export const ArrowLink = ({
   children,
   external,
   className,
+  ...rest
 }: ArrowLinkProps) => {
   const combinedClassName = className
     ? `${styles.link} ${className}`
@@ -26,6 +28,7 @@ export const ArrowLink = ({
         className={combinedClassName}
         target="_blank"
         rel="noopener noreferrer"
+        {...rest}
       >
         {children} <span className={styles.arrow}>→</span>
       </a>
@@ -33,7 +36,7 @@ export const ArrowLink = ({
   }
 
   return (
-    <Link href={href} className={combinedClassName}>
+    <Link href={href} className={combinedClassName} {...rest}>
       {children} <span className={styles.arrow}>→</span>
     </Link>
   );

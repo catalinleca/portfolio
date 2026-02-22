@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ANALYTICS_EVENTS } from "@/analytics";
 import { ExternalLink, ScrollLink } from "@/ui/shared";
 import { contactEmail } from "../content";
 import { CopyEmailBtn } from "./CopyEmailBtn";
@@ -27,26 +28,51 @@ export const Hero = () => {
             <ScrollLink
               href="#work"
               className={`${styles.btn} ${styles.btnAccent}`}
+              data-analytics-click={ANALYTICS_EVENTS.click}
+              data-analytics-link-name="hero_view_work"
+              data-analytics-location="hero"
+              data-analytics-section="hero"
             >
               View My Work
             </ScrollLink>
             <div className={styles.secondaryLinks}>
-              <ExternalLink href="/Catalin_Leca_Resume.pdf" className={styles.btn}>
+              <ExternalLink
+                href="/Catalin_Leca_Resume.pdf"
+                className={styles.btn}
+                data-analytics-click={ANALYTICS_EVENTS.click}
+                data-analytics-link-name="hero_resume"
+                data-analytics-location="hero"
+                data-analytics-section="hero"
+              >
                 Resume
               </ExternalLink>
               <ExternalLink
                 href="https://github.com/catalinleca"
                 className={styles.btn}
+                data-analytics-click={ANALYTICS_EVENTS.click}
+                data-analytics-link-name="hero_github"
+                data-analytics-location="hero"
+                data-analytics-section="hero"
               >
                 GitHub
               </ExternalLink>
               <ExternalLink
                 href="https://linkedin.com/in/catalinleca"
                 className={styles.btn}
+                data-analytics-click={ANALYTICS_EVENTS.click}
+                data-analytics-link-name="hero_linkedin"
+                data-analytics-location="hero"
+                data-analytics-section="hero"
               >
                 LinkedIn
               </ExternalLink>
-              <CopyEmailBtn email={contactEmail} className={styles.btn} />
+              <CopyEmailBtn
+                email={contactEmail}
+                className={styles.btn}
+                analyticsLinkName="hero_copy_email"
+                analyticsLocation="hero"
+                analyticsSection="hero"
+              />
             </div>
           </div>
         </div>

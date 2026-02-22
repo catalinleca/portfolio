@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { ANALYTICS_EVENTS } from "@/analytics";
 import { ExternalLink, ScrollLink } from "@/ui/shared";
 import styles from "./Nav.module.css";
 
@@ -37,23 +38,55 @@ export const Nav = () => {
   return (
     <nav className={`${styles.nav} ${isHidden ? styles.hidden : ""}`}>
       <div className={styles.container}>
-        <Link href="/" className={styles.logo}>
+        <Link
+          href="/"
+          className={styles.logo}
+          data-analytics-click={ANALYTICS_EVENTS.click}
+          data-analytics-link-name="nav_logo"
+          data-analytics-location="nav"
+          data-analytics-section="nav"
+        >
           Catalin Leca
         </Link>
         <div className={styles.links}>
-          <ScrollLink href="#work" className={styles.link}>
+          <ScrollLink
+            href="#work"
+            className={styles.link}
+            data-analytics-click={ANALYTICS_EVENTS.click}
+            data-analytics-link-name="nav_work"
+            data-analytics-location="nav"
+            data-analytics-section="nav"
+          >
             work
           </ScrollLink>
-          <ScrollLink href="#about" className={styles.link}>
+          <ScrollLink
+            href="#about"
+            className={styles.link}
+            data-analytics-click={ANALYTICS_EVENTS.click}
+            data-analytics-link-name="nav_about"
+            data-analytics-location="nav"
+            data-analytics-section="nav"
+          >
             about
           </ScrollLink>
           <ExternalLink
             href="/Catalin_Leca_Resume.pdf"
             className={`${styles.link} ${styles.resumeLink}`}
+            data-analytics-click={ANALYTICS_EVENTS.click}
+            data-analytics-link-name="nav_resume"
+            data-analytics-location="nav"
+            data-analytics-section="nav"
           >
             Resume
           </ExternalLink>
-          <ScrollLink href="#contact" className={`${styles.link} ${styles.ctaLink}`}>
+          <ScrollLink
+            href="#contact"
+            className={`${styles.link} ${styles.ctaLink}`}
+            data-analytics-click={ANALYTICS_EVENTS.click}
+            data-analytics-link-name="nav_lets_talk"
+            data-analytics-location="nav"
+            data-analytics-section="nav"
+          >
             Let&apos;s Talk
           </ScrollLink>
         </div>
