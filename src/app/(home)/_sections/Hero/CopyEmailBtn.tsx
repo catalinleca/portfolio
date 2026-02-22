@@ -1,30 +1,13 @@
-import { ANALYTICS_EVENTS } from "@/analytics";
+import type { ComponentProps } from "react";
 import { CopyButton } from "@/ui/shared";
 
-interface CopyEmailBtnProps {
+type CopyEmailBtnProps = Omit<ComponentProps<typeof CopyButton>, "text" | "children"> & {
   email: string;
-  className?: string;
-  analyticsLinkName: string;
-  analyticsLocation: string;
-  analyticsSection?: string;
-}
+};
 
-export const CopyEmailBtn = ({
-  email,
-  className,
-  analyticsLinkName,
-  analyticsLocation,
-  analyticsSection,
-}: CopyEmailBtnProps) => {
+export const CopyEmailBtn = ({ email, ...rest }: CopyEmailBtnProps) => {
   return (
-    <CopyButton
-      text={email}
-      className={className}
-      data-analytics-click={ANALYTICS_EVENTS.click}
-      data-analytics-link-name={analyticsLinkName}
-      data-analytics-location={analyticsLocation}
-      data-analytics-section={analyticsSection}
-    >
+    <CopyButton text={email} {...rest}>
       Email
     </CopyButton>
   );

@@ -1,4 +1,4 @@
-import { ANALYTICS_EVENTS } from "@/analytics";
+import { trackClick } from "@/analytics";
 import { SectionShell, ArrowLink } from "@/ui/shared";
 import { contactEmail, contactLinks } from "../content";
 import { CopyEmail } from "./CopyEmail";
@@ -23,10 +23,7 @@ export const Contact = () => {
               href={link.href}
               external={link.external}
               className={styles.link}
-              data-analytics-click={ANALYTICS_EVENTS.click}
-              data-analytics-link-name={`contact_${link.label.toLowerCase().replace(/\s+/g, "_")}`}
-              data-analytics-location="contact"
-              data-analytics-section="contact"
+              {...trackClick(`contact_${link.label.toLowerCase().replace(/\s+/g, "_")}`, "contact")}
             >
               {link.label}
             </ArrowLink>

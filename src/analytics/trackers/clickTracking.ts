@@ -1,3 +1,4 @@
+import { ANALYTICS_EVENTS } from "../constants";
 import type { AnalyticsProperties, CaptureEvent } from "../types";
 
 const sanitizeProperties = (
@@ -38,18 +39,12 @@ export const registerClickTracking = (captureEvent: CaptureEvent): void => {
       return;
     }
 
-    const eventName = trackableElement.dataset.analyticsClick;
-    if (eventName == null || eventName.length === 0) {
-      return;
-    }
-
     const href =
       trackableElement instanceof HTMLAnchorElement
         ? trackableElement.getAttribute("href") ?? undefined
         : undefined;
 
     const eventProperties = sanitizeProperties({
-      click_location: trackableElement.dataset.analyticsLocation,
       link_name: trackableElement.dataset.analyticsLinkName,
       section_name: trackableElement.dataset.analyticsSection,
       click_text: getElementText(trackableElement),
@@ -57,6 +52,6 @@ export const registerClickTracking = (captureEvent: CaptureEvent): void => {
       page_path: window.location.pathname,
     });
 
-    captureEvent(eventName, eventProperties);
+    captureEvent(ANALYTICS_EVENTS.click, eventProperties);
   });
 };

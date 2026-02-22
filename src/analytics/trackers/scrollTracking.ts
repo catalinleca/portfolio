@@ -14,7 +14,9 @@ const getReachedScrollDepth = (): number => {
 };
 
 export const registerScrollTracking = (captureEvent: CaptureEvent): void => {
-  const handleScroll = () => {
+  let ticking = false;
+
+  const checkThresholds = () => {
     const reachedDepth = getReachedScrollDepth();
     const currentPath = window.location.pathname;
 
@@ -36,6 +38,18 @@ export const registerScrollTracking = (captureEvent: CaptureEvent): void => {
     });
   };
 
+  const handleScroll = () => {
+    if (ticking) {
+      return;
+    }
+
+    ticking = true;
+    requestAnimationFrame(() => {
+      checkThresholds();
+      ticking = false;
+    });
+  };
+
   window.addEventListener("scroll", handleScroll, { passive: true });
-  handleScroll();
+  checkThresholds();
 };
