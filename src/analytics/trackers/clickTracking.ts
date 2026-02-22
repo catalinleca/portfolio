@@ -27,7 +27,15 @@ const getElementText = (element: HTMLElement): string | undefined => {
   return normalizedText.slice(0, 80);
 };
 
+let isClickTrackingRegistered = false;
+
 export const registerClickTracking = (captureEvent: CaptureEvent): void => {
+  if (isClickTrackingRegistered) {
+    return;
+  }
+
+  isClickTrackingRegistered = true;
+
   document.addEventListener("click", (event) => {
     const clickedElement = event.target;
     if (!(clickedElement instanceof HTMLElement)) {

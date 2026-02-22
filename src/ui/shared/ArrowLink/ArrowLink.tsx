@@ -26,9 +26,9 @@ export const ArrowLink = ({
       <a
         href={href}
         className={combinedClassName}
+        {...rest}
         target="_blank"
         rel="noopener noreferrer"
-        {...rest}
       >
         {children} <span className={styles.arrow}>→</span>
       </a>

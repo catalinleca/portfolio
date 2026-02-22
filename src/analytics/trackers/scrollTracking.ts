@@ -13,7 +13,15 @@ const getReachedScrollDepth = (): number => {
   return Math.round((window.scrollY / maxScrollableDistance) * 100);
 };
 
+let isScrollTrackingRegistered = false;
+
 export const registerScrollTracking = (captureEvent: CaptureEvent): void => {
+  if (isScrollTrackingRegistered) {
+    return;
+  }
+
+  isScrollTrackingRegistered = true;
+
   let ticking = false;
 
   const checkThresholds = () => {

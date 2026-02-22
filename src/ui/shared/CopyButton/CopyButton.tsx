@@ -42,7 +42,8 @@ export const CopyButton = ({
 
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => setCopied(false), 1500);
-    } catch {
+    } catch (error) {
+      console.warn("Clipboard write failed:", error);
     }
   }, [text]);
 
