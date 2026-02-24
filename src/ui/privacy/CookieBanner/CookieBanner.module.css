@@ -1,4 +1,10 @@
 .banner {
+  --cookie-accent-soft: rgb(204 120 50 / 10%);
+  --cookie-accent-border: rgb(204 120 50 / 35%);
+  --cookie-accent-border-strong: rgb(204 120 50 / 45%);
+  --cookie-accent-surface: rgb(204 120 50 / 8%);
+  --cookie-accent-surface-hover: rgb(204 120 50 / 14%);
+
   position: fixed;
   left: 50%;
   bottom: var(--space-4);
@@ -8,7 +14,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background:
-    linear-gradient(120deg, rgb(204 120 50 / 10%), transparent 30%),
+    linear-gradient(120deg, var(--cookie-accent-soft), transparent 30%),
     linear-gradient(180deg, rgb(255 255 255 / 2%), transparent 50%),
     var(--bg-raised);
   box-shadow: 0 16px 40px rgb(0 0 0 / 35%);
@@ -62,7 +68,7 @@
 }
 
 .statusEnabled {
-  border: 1px solid rgb(204 120 50 / 35%);
+  border: 1px solid var(--cookie-accent-border);
   color: var(--accent);
 }
 
@@ -238,14 +244,14 @@
 }
 
 .btnAffirm {
-  border-color: rgb(204 120 50 / 45%);
+  border-color: var(--cookie-accent-border-strong);
   color: var(--accent);
-  background: rgb(204 120 50 / 8%);
+  background: var(--cookie-accent-surface);
 
   &:hover {
     border-color: var(--accent);
     color: var(--accent);
-    background: rgb(204 120 50 / 14%);
+    background: var(--cookie-accent-surface-hover);
   }
 }
 
