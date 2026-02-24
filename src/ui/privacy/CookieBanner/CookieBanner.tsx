@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
 import type { MouseEvent } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   getCookieConsentSnapshot,
   saveCookieConsent,
@@ -13,8 +14,15 @@ import styles from "./CookieBanner.module.css";
 const hasAnalyticsKey = (process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "").length > 0;
 const subscribeToHydration = () => () => {};
 const DEFAULT_ANALYTICS_ENABLED = true;
+const PRIVACY_PATH = "/privacy";
+const COOKIES_HASH = "#cookies";
+
+const normalizePathname = (value: string): string =>
+  value.endsWith("/") && value.length > 1 ? value.slice(0, -1) : value;
 
 export const CookieBanner = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const isHydrated = useSyncExternalStore(subscribeToHydration, () => true, () => false);
   const consent = useSyncExternalStore(subscribeToCookieConsent, getCookieConsentSnapshot, () => null);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
@@ -26,18 +34,28 @@ export const CookieBanner = () => {
   };
 
   const handleCookieDetailsClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (!window.location.pathname.startsWith("/privacy")) {
+    event.preventDefault();
+
+    const currentPath = normalizePathname(pathname);
+    if (currentPath !== PRIVACY_PATH) {
+      router.push(`${PRIVACY_PATH}${COOKIES_HASH}`);
       return;
     }
 
-    event.preventDefault();
     const cookieSection = document.getElementById("cookies");
     if (cookieSection == null) {
+      router.push(`${PRIVACY_PATH}${COOKIES_HASH}`);
       return;
     }
 
     cookieSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.history.replaceState({}, "", "/privacy#cookies");
+
+    if (window.location.hash === COOKIES_HASH) {
+      // Force hash refresh to keep repeated clicks deterministic.
+      window.history.replaceState({}, "", PRIVACY_PATH);
+    }
+
+    window.history.replaceState({}, "", `${PRIVACY_PATH}${COOKIES_HASH}`);
   };
 
   if (!hasAnalyticsKey || !isHydrated) {
@@ -46,11 +64,10 @@ export const CookieBanner = () => {
 
   const hasDecision = consent != null;
   const isBannerVisible = !hasDecision || isPreferencesOpen;
-  const consentStateLabel = hasDecision
-    ? consent.analytics
-      ? "Analytics enabled"
-      : "Essentials only"
-    : "Decision pending";
+  const persistedAnalyticsEnabled = consent?.analytics ?? DEFAULT_ANALYTICS_ENABLED;
+  const analyticsEnabledForUi = isPreferencesOpen ? isAnalyticsEnabled : persistedAnalyticsEnabled;
+  const shouldShowStatus = hasDecision || isPreferencesOpen;
+  const consentStateLabel = analyticsEnabledForUi ? "Analytics enabled" : "Analytics disabled";
 
   const saveConsent = (analyticsEnabled: boolean) => {
     saveCookieConsent(analyticsEnabled);
@@ -81,7 +98,13 @@ export const CookieBanner = () => {
           </p>
         </div>
         <div className={styles.headControls}>
-          <span className={styles.status}>{consentStateLabel}</span>
+          {shouldShowStatus && (
+            <span
+              className={`${styles.status} ${analyticsEnabledForUi ? styles.statusEnabled : styles.statusDisabled}`}
+            >
+              {consentStateLabel}
+            </span>
+          )}
           {isPreferencesOpen && hasDecision && (
             <button
               type="button"
@@ -100,7 +123,7 @@ export const CookieBanner = () => {
           <button type="button" className={styles.btnPrimary} onClick={() => saveConsent(true)}>
             Accept all
           </button>
-          <button type="button" className={styles.btnGhost} onClick={() => saveConsent(false)}>
+          <button type="button" className={`${styles.btnGhost} ${styles.btnSubtle}`} onClick={() => saveConsent(false)}>
             Accept essentials
           </button>
           <button type="button" className={styles.btnText} onClick={openPreferences}>
@@ -154,10 +177,10 @@ export const CookieBanner = () => {
           </div>
 
           <div className={`${styles.actions} ${styles.preferencesActions}`}>
-            <button type="button" className={styles.btnGhost} onClick={() => saveConsent(false)}>
+            <button type="button" className={`${styles.btnGhost} ${styles.btnSubtle}`} onClick={() => saveConsent(false)}>
               Essentials only
             </button>
-            <button type="button" className={styles.btnGhost} onClick={() => saveConsent(true)}>
+            <button type="button" className={`${styles.btnGhost} ${styles.btnAffirm}`} onClick={() => saveConsent(true)}>
               Accept all
             </button>
             <button type="button" className={styles.btnPrimary} onClick={() => saveConsent(isAnalyticsEnabled)}>

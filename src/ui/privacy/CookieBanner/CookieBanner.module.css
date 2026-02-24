@@ -53,14 +53,22 @@
   align-items: center;
   height: 28px;
   padding: 0 0.65rem;
-  border: 1px solid rgb(204 120 50 / 35%);
   border-radius: 999px;
-  color: var(--accent);
   font-family: var(--font-mono);
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   white-space: nowrap;
+}
+
+.statusEnabled {
+  border: 1px solid rgb(204 120 50 / 35%);
+  color: var(--accent);
+}
+
+.statusDisabled {
+  border: 1px solid var(--border);
+  color: var(--text-muted);
 }
 
 .iconClose {
@@ -226,6 +234,28 @@
   &:hover {
     color: var(--text-bright);
     border-color: var(--text-muted);
+  }
+}
+
+.btnAffirm {
+  border-color: rgb(204 120 50 / 45%);
+  color: var(--accent);
+  background: rgb(204 120 50 / 8%);
+
+  &:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgb(204 120 50 / 14%);
+  }
+}
+
+.btnSubtle {
+  border-color: var(--border-dim);
+  color: var(--text-dim);
+
+  &:hover {
+    border-color: var(--border);
+    color: var(--text-muted);
   }
 }
 
