@@ -53,3 +53,16 @@ export const capturePortfolioEvent: CaptureEvent = (eventName, properties = {}) 
 
   posthog.capture(eventName, properties);
 };
+
+export const setPortfolioAnalyticsEnabled = (enabled: boolean): void => {
+  if (!isAnalyticsInitialized) {
+    return;
+  }
+
+  if (enabled) {
+    posthog.opt_in_capturing();
+    return;
+  }
+
+  posthog.opt_out_capturing();
+};

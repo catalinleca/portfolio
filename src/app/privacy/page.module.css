@@ -1,0 +1,112 @@
+.main {
+  min-height: calc(100vh - 180px);
+  padding: calc(var(--nav-height) + var(--space-12)) var(--gutter) var(--space-16);
+}
+
+.article {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: var(--space-4);
+  font-family: var(--font-serif);
+  color: var(--text-bright);
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+.lead {
+  margin-top: var(--space-5);
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.meta {
+  margin-top: var(--space-3);
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+.section {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-dim);
+  scroll-margin-top: calc(var(--nav-height) + var(--space-6));
+}
+
+.section h2 {
+  font-family: var(--font-serif);
+  color: var(--text-bright);
+  font-size: 1.5rem;
+  margin-bottom: var(--space-3);
+}
+
+.section p {
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.section p + p {
+  margin-top: var(--space-3);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-3);
+  margin-left: 1.15rem;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.inlineLink {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+
+  &:hover {
+    color: var(--accent-hover);
+  }
+}
+
+.actions {
+  margin-top: var(--space-5);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  padding: 0.58rem 0.92rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    background var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--text-bright);
+    border-color: var(--text-muted);
+  }
+}
+
+@media (width <= 740px) {
+  .main {
+    padding: calc(var(--nav-height) + var(--space-10)) var(--gutter-mobile) var(--space-12);
+  }
+}

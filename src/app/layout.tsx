@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { AnalyticsClient } from "@/app/AnalyticsClient";
+import { CookieBanner } from "@/ui/privacy";
 import { Nav } from "@/ui/navigation";
 import "@/styles/globals.css";
 
@@ -57,6 +58,7 @@ export default function RootLayout({
         </Suspense>
         <Nav />
         {children}
+        <CookieBanner />
       </body>
     </html>
   );
