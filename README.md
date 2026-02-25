@@ -25,6 +25,7 @@ This portfolio includes manual PostHog tracking for:
 - Page views on route changes
 - CTA/link clicks marked with `data-analytics-*`
 - Scroll depth milestones (25/50/75/90)
+- Tracking runs only after explicit cookie consent from the in-app banner
 
 Configure environment variables:
 

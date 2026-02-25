@@ -32,6 +32,7 @@ export const initPortfolioAnalytics = (): void => {
     api_host: getPosthogHost(),
     autocapture: false,
     capture_pageview: false,
+    opt_out_capturing_by_default: true,
   });
 
   posthog.register(buildPortfolioContext());
@@ -52,4 +53,17 @@ export const capturePortfolioEvent: CaptureEvent = (eventName, properties = {}) 
   }
 
   posthog.capture(eventName, properties);
+};
+
+export const setPortfolioAnalyticsEnabled = (enabled: boolean): void => {
+  if (!isAnalyticsInitialized) {
+    return;
+  }
+
+  if (enabled) {
+    posthog.opt_in_capturing();
+    return;
+  }
+
+  posthog.opt_out_capturing();
 };
