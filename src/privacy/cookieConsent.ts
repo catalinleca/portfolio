@@ -141,7 +141,13 @@ export const saveCookieConsent = (analyticsEnabled: boolean): CookieConsent => {
   if (isClient()) {
     try {
       window.localStorage.setItem(COOKIE_CONSENT_STORAGE_KEY, JSON.stringify(consent));
-    } catch {}
+    } catch (error) {
+      console.warn("Failed to persist cookie consent", {
+        key: COOKIE_CONSENT_STORAGE_KEY,
+        consent,
+        error,
+      });
+    }
   }
 
   updateCookieConsentSnapshot(consent);

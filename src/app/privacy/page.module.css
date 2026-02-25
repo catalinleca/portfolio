@@ -1,6 +1,6 @@
 @layer components {
   .main {
-    min-height: calc(100vh - 180px);
+    min-height: calc(100vh - var(--nav-height) - var(--space-12));
     padding: calc(var(--nav-height) + var(--space-12)) var(--gutter) var(--space-16);
   }
 

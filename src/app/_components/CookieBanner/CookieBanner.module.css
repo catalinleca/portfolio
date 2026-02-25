@@ -9,7 +9,6 @@
       --cookie-shadow-color: color-mix(in srgb, var(--bg) 70%, transparent);
       --cookie-switch-on-bg: color-mix(in srgb, var(--accent) 20%, transparent);
       --cookie-switch-on-border: color-mix(in srgb, var(--accent) 60%, transparent);
-      --cookie-settings-bg: color-mix(in srgb, var(--bg) 92%, transparent);
   
       position: fixed;
       left: 50%;
@@ -289,7 +288,7 @@
     z-index: 110;
     border: 1px solid var(--border);
     border-radius: 999px;
-    background: var(--cookie-settings-bg);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
     color: var(--text-muted);
     font-family: var(--font-mono);
     font-size: 0.7rem;

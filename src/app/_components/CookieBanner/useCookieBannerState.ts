@@ -76,11 +76,9 @@ export const useCookieBannerState = (): UseCookieBannerStateResult => {
   };
 
   const syncCookiesHash = () => {
-    if (window.location.hash === COOKIES_HASH) {
-      window.history.replaceState({}, "", PRIVACY_PATH);
+    if (window.location.hash !== COOKIES_HASH) {
+      window.history.replaceState({}, "", `${PRIVACY_PATH}${COOKIES_HASH}`);
     }
-
-    window.history.replaceState({}, "", `${PRIVACY_PATH}${COOKIES_HASH}`);
   };
 
   const handleCookieDetailsClick = (event: MouseEvent<HTMLAnchorElement>) => {
