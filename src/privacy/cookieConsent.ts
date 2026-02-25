@@ -44,7 +44,8 @@ const readCookieConsentFromStorage = (): CookieConsent | null => {
     }
 
     return parsedValue;
-  } catch {
+  } catch (error) {
+    console.warn("Failed to read cookie consent", { key: COOKIE_CONSENT_STORAGE_KEY, error });
     return null;
   }
 };
@@ -100,7 +101,12 @@ const refreshCookieConsentFromStorage = (): void => {
 };
 
 const handleStorageEvent = (event: StorageEvent): void => {
-  if (event.key !== COOKIE_CONSENT_STORAGE_KEY) {
+  if (event.storageArea !== window.localStorage) {
+    return;
+  }
+
+  // event.key is null when localStorage.clear() is called
+  if (event.key !== null && event.key !== COOKIE_CONSENT_STORAGE_KEY) {
     return;
   }
 

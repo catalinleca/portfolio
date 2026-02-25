@@ -155,7 +155,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    transition: all var(--duration-fast) var(--ease-out);
+    transition:
+      background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
     cursor: pointer;
   }
   
