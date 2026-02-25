@@ -1,17 +1,26 @@
+import type { MouseEventHandler } from "react";
 import styles from "./CookieBanner.module.css";
 import { CookieBannerPreferenceActions } from "./CookieBannerPreferenceActions";
 import { CookieBannerPreferenceLinks } from "./CookieBannerPreferenceLinks";
 import { CookieBannerPreferenceRows } from "./CookieBannerPreferenceRows";
-import type { CookieBannerPreferencesPanelProps } from "./types";
 
-export const CookieBannerPreferencesPanel = ({
+interface CookieBannerPreferencesProps {
+  isAnalyticsEnabled: boolean;
+  onToggleAnalytics: () => void;
+  onCookieDetailsClick: MouseEventHandler<HTMLAnchorElement>;
+  onSavePreferences: () => void;
+  onAcceptAll: () => void;
+  onAcceptEssentials: () => void;
+}
+
+export const CookieBannerPreferences = ({
   isAnalyticsEnabled,
   onToggleAnalytics,
   onCookieDetailsClick,
   onSavePreferences,
   onAcceptAll,
   onAcceptEssentials,
-}: CookieBannerPreferencesPanelProps) => {
+}: CookieBannerPreferencesProps) => {
   return (
     <div className={styles.preferences}>
       <CookieBannerPreferenceRows

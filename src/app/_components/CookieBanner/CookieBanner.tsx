@@ -2,7 +2,7 @@
 
 import { CookieBannerCollapsedActions } from "./CookieBannerCollapsedActions";
 import { CookieBannerHeader } from "./CookieBannerHeader";
-import { CookieBannerPreferencesPanel } from "./CookieBannerPreferencesPanel";
+import { CookieBannerPreferences } from "./CookieBannerPreferences";
 import { useCookieBannerState } from "./useCookieBannerState";
 import styles from "./CookieBanner.module.css";
 
@@ -42,7 +42,7 @@ export const CookieBanner = () => {
       )}
 
       {state.isPreferencesOpen && (
-        <CookieBannerPreferencesPanel
+        <CookieBannerPreferences
           isAnalyticsEnabled={state.isAnalyticsEnabled}
           onToggleAnalytics={actions.toggleAnalytics}
           onCookieDetailsClick={actions.handleCookieDetailsClick}

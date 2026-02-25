@@ -1,5 +1,10 @@
 import styles from "./CookieBanner.module.css";
-import type { CookieBannerCollapsedActionsProps } from "./types";
+
+interface CookieBannerCollapsedActionsProps {
+  onAcceptAll: () => void;
+  onAcceptEssentials: () => void;
+  onManagePreferences: () => void;
+}
 
 export const CookieBannerCollapsedActions = ({
   onAcceptAll,

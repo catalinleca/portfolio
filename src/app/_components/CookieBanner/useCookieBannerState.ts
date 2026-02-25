@@ -84,13 +84,12 @@ export const useCookieBannerState = (): UseCookieBannerStateResult => {
   };
 
   const handleCookieDetailsClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
     const currentPath = normalizePathname(pathname);
     if (currentPath !== PRIVACY_PATH) {
-      router.push(`${PRIVACY_PATH}${COOKIES_HASH}`);
       return;
     }
+
+    event.preventDefault();
 
     const cookieSection = document.getElementById("cookies");
     if (cookieSection == null) {

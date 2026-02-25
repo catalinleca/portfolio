@@ -1,5 +1,12 @@
 import styles from "./CookieBanner.module.css";
-import type { CookieBannerHeaderProps } from "./types";
+
+interface CookieBannerHeaderProps {
+  isPreferencesOpen: boolean;
+  hasDecision: boolean;
+  shouldRenderStatusBadge: boolean;
+  isAnalyticsEnabled: boolean;
+  onClosePreferences: () => void;
+}
 
 const getStatusLabel = (isAnalyticsEnabled: boolean): string =>
   isAnalyticsEnabled ? "Analytics enabled" : "Analytics disabled";
