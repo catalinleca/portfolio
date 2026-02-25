@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { AnalyticsClient } from "@/app/AnalyticsClient";
-import { CookieBanner } from "@/ui/privacy";
+import { CookieBanner } from "@/app/_components/CookieBanner";
 import { Nav } from "@/ui/navigation";
 import "@/styles/globals.css";
 

@@ -1,0 +1,26 @@
+import styles from "./CookieBanner.module.css";
+import type { CookieBannerCollapsedActionsProps } from "./types";
+
+export const CookieBannerCollapsedActions = ({
+  onAcceptAll,
+  onAcceptEssentials,
+  onManagePreferences,
+}: CookieBannerCollapsedActionsProps) => {
+  return (
+    <div className={styles.actions}>
+      <button type="button" className={styles.btnPrimary} onClick={onAcceptAll}>
+        Accept all
+      </button>
+      <button
+        type="button"
+        className={`${styles.btnGhost} ${styles.btnSubtle}`}
+        onClick={onAcceptEssentials}
+      >
+        Accept essentials
+      </button>
+      <button type="button" className={styles.btnText} onClick={onManagePreferences}>
+        Manage preferences
+      </button>
+    </div>
+  );
+};

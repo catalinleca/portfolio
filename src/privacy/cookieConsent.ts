@@ -71,7 +71,9 @@ const listeners = new Set<ConsentListener>();
 let windowListenersAttached = false;
 
 const notifyListeners = (): void => {
-  listeners.forEach((listener) => listener());
+  for (const listener of listeners) {
+    listener();
+  }
 };
 
 const getSnapshotValue = (): CookieConsent | null => {

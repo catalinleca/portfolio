@@ -1,0 +1,1 @@
+export { PrivacyArticle } from "./PrivacyArticle";
