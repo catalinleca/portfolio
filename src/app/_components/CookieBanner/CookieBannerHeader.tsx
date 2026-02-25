@@ -42,7 +42,7 @@ export const CookieBannerHeader = ({
             className={styles.iconClose}
             onClick={onClosePreferences}
           >
-            x
+            ×
           </button>
         )}
       </div>

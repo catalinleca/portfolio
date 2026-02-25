@@ -11,7 +11,7 @@ import {
 
 const noOperation = () => {};
 const subscribeToHydration = () => noOperation;
-const DEFAULT_ANALYTICS_ENABLED = true;
+const DEFAULT_ANALYTICS_ENABLED = false;
 const PRIVACY_PATH = "/privacy";
 const COOKIES_HASH = "#cookies";
 

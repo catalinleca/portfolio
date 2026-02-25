@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { MouseEventHandler } from "react";
+import { ExternalLink } from "@/ui/shared/ExternalLink/ExternalLink";
 import styles from "./CookieBanner.module.css";
 
 interface CookieBannerPreferenceLinksProps {
@@ -17,9 +18,9 @@ export const CookieBannerPreferenceLinks = ({
       <Link href="/privacy#cookies" className={styles.link} onClick={onCookieDetailsClick}>
         Cookie details
       </Link>
-      <a href="https://posthog.com/privacy" target="_blank" rel="noreferrer" className={styles.link}>
+      <ExternalLink href="https://posthog.com/privacy" className={styles.link}>
         PostHog privacy
-      </a>
+      </ExternalLink>
     </div>
   );
 };

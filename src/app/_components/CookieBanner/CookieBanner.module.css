@@ -288,7 +288,7 @@
     z-index: 110;
     border: 1px solid var(--border);
     border-radius: 999px;
-    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    background: var(--bg);
     color: var(--text-muted);
     font-family: var(--font-mono);
     font-size: 0.7rem;
@@ -318,6 +318,12 @@
     }
   }
   
+  @media (prefers-reduced-motion: reduce) {
+    .banner {
+      animation: none;
+    }
+  }
+
   @media (width <= 900px) {
     .banner {
       width: calc(100% - (var(--gutter-mobile) * 2));

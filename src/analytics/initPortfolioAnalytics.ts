@@ -32,6 +32,7 @@ export const initPortfolioAnalytics = (): void => {
     api_host: getPosthogHost(),
     autocapture: false,
     capture_pageview: false,
+    opt_out_capturing_by_default: true,
   });
 
   posthog.register(buildPortfolioContext());

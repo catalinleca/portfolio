@@ -1,3 +1,4 @@
+import { ExternalLink } from "@/ui/shared/ExternalLink/ExternalLink";
 import styles from "../page.module.css";
 
 export const PrivacyAnalyticsSection = () => {
@@ -11,9 +12,9 @@ export const PrivacyAnalyticsSection = () => {
       </p>
       <p>
         Provider privacy details:{" "}
-        <a href="https://posthog.com/privacy" target="_blank" rel="noreferrer" className={styles.inlineLink}>
+        <ExternalLink href="https://posthog.com/privacy" className={styles.inlineLink}>
           PostHog Privacy Policy
-        </a>
+        </ExternalLink>
         .
       </p>
     </section>
