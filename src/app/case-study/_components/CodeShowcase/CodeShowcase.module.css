@@ -33,4 +33,14 @@
   & pre {
     margin: 0;
   }
+
+  & > figure {
+    margin: var(--space-4) 0 0;
+  }
+
+  & img {
+    width: 100%;
+    border-radius: var(--radius-md);
+    margin-top: var(--space-4);
+  }
 }

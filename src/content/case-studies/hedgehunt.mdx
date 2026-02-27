@@ -394,18 +394,23 @@ const validators: Record<AnswerType, AnswerValidator> = {
 
 </CodeShowcase>
 
-<HighlightGrid>
-<HighlightCard title="Durable Analytics">
+<CodeShowcase title="Hunt Activity" description="Creators had no visibility into how players interacted with their hunts. The backend captured session data as players progressed through steps, but none of it was surfaced. Anonymous sessions expire after 24 hours, so any analytics reading raw sessions directly would lose data over time. Every play event writes to two stores: a session record that expires and a running totals document that doesn't. The analytics service reads both, so recent sessions have full detail and lifetime metrics are always accurate.">
 
-Anonymous play sessions expire after 24 hours. If analytics read raw sessions directly, long-term metrics would decay as old documents are deleted. Every play event writes to two stores: the session record (temporary) and a `HuntStats` document with running totals (permanent). Averages are computed at read time from the totals, never stored. The analytics service reads both, so recent sessions have full detail and lifetime metrics are always accurate.
+<Mermaid chart={`flowchart LR
+  A["Player starts hunt"] --> B["Game Server"]
+  B --> C["Session Record\n"]
+  B --> D["Running Totals\n"]
+  E["Creator opens Activity"] --> F["Analytics Service"]
+  C --> F
+  D --> F
+  F --> G["Stats Dialog"]`}
+  caption="Every play event writes to both stores. Session records expire, but running totals don't. The analytics service reads both."
+/>
 
-</HighlightCard>
-<HighlightCard title="Fire-and-Forget Stats">
+![Activity Overview](/images/hedgehunt-overview.webp)
+![Session Drill-Down](/images/hedgehunt-sessions.webp)
 
-Stats writes happen after the game transaction commits, asynchronously. If the analytics write fails, the player's progression is unaffected. Counters update at two boundaries: when a player starts a session and when they finish. Nothing in between. This prevents double-counting and keeps the play path responsive.
-
-</HighlightCard>
-</HighlightGrid>
+</CodeShowcase>
 
 <HighlightGrid>
 <HighlightCard title="Builder Preview">

@@ -40,14 +40,11 @@ const getMermaid = () => {
   return initPromise;
 };
 
-const stripSvgDimensions = (svgString: string): string => {
-  const doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
-  const svg = doc.documentElement;
-  svg.removeAttribute("width");
-  svg.removeAttribute("height");
-  svg.removeAttribute("style");
-  return svg.outerHTML;
-};
+const stripSvgDimensions = (svgString: string): string =>
+  svgString
+    .replace(/<svg([^>]*?) width="[^"]*"/, "<svg$1")
+    .replace(/<svg([^>]*?) height="[^"]*"/, "<svg$1")
+    .replace(/<svg([^>]*?) style="[^"]*"/, "<svg$1");
 
 export const Mermaid = ({ chart, caption }: MermaidProps) => {
   const [svg, setSvg] = useState<string | null>(null);
