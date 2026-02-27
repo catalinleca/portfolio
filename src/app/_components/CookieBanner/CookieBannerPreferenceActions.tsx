@@ -12,7 +12,7 @@ export const CookieBannerPreferenceActions = ({
   onAcceptEssentials,
 }: CookieBannerPreferenceActionsProps) => {
   return (
-    <div className={`${styles.actions} ${styles.preferencesActions}`}>
+    <div className={styles.actions}>
       <button
         type="button"
         className={`${styles.btnGhost} ${styles.btnSubtle}`}
