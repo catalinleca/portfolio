@@ -13,29 +13,34 @@ let initPromise: Promise<typeof import("mermaid").default> | null = null;
 
 const getMermaid = () => {
   if (!initPromise) {
-    initPromise = import("mermaid").then((mod) => {
-      mod.default.initialize({
-        startOnLoad: false,
-        theme: "dark",
-        themeVariables: {
-          primaryColor: theme.accent,
-          primaryTextColor: theme.textBright,
-          primaryBorderColor: theme.text,
-          lineColor: theme.text,
-          secondaryColor: theme.bgSurface,
-          tertiaryColor: theme.bgRaised,
-          background: theme.bg,
-          mainBkg: theme.bgSurface,
-          nodeBorder: theme.text,
-          clusterBkg: theme.bgRaised,
-          clusterBorder: theme.textMuted,
-          titleColor: theme.textBright,
-          edgeLabelBackground: theme.bgSurface,
-        },
-        fontFamily: theme.fontMono,
+    initPromise = import("mermaid")
+      .then((mod) => {
+        mod.default.initialize({
+          startOnLoad: false,
+          theme: "dark",
+          themeVariables: {
+            primaryColor: theme.accent,
+            primaryTextColor: theme.textBright,
+            primaryBorderColor: theme.text,
+            lineColor: theme.text,
+            secondaryColor: theme.bgSurface,
+            tertiaryColor: theme.bgRaised,
+            background: theme.bg,
+            mainBkg: theme.bgSurface,
+            nodeBorder: theme.text,
+            clusterBkg: theme.bgRaised,
+            clusterBorder: theme.textMuted,
+            titleColor: theme.textBright,
+            edgeLabelBackground: theme.bgSurface,
+          },
+          fontFamily: theme.fontMono,
+        });
+        return mod.default;
+      })
+      .catch((error) => {
+        initPromise = null;
+        throw error;
       });
-      return mod.default;
-    });
   }
   return initPromise;
 };
@@ -46,28 +51,32 @@ const stripSvgDimensions = (svgString: string): string =>
     .replace(/<svg([^>]*?) height="[^"]*"/, "<svg$1")
     .replace(/<svg([^>]*?) style="[^"]*"/, "<svg$1");
 
+interface RenderResult {
+  chart: string;
+  svg?: string;
+  error?: string;
+}
+
 export const Mermaid = ({ chart, caption }: MermaidProps) => {
-  const [svg, setSvg] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<RenderResult | null>(null);
   const id = useId().replace(/:/g, "m");
 
   useEffect(() => {
     let cancelled = false;
-    setError(null);
-    setSvg(null);
 
     (async () => {
       try {
         const mermaid = await getMermaid();
-        const result = await mermaid.render(`mermaid-${id}`, chart);
+        const rendered = await mermaid.render(`mermaid-${id}`, chart);
         if (!cancelled) {
-          setSvg(stripSvgDimensions(result.svg));
+          setResult({ chart, svg: stripSvgDimensions(rendered.svg) });
         }
       } catch (err) {
         if (!cancelled) {
-          setError(
-            err instanceof Error ? err.message : "Failed to render diagram",
-          );
+          setResult({
+            chart,
+            error: err instanceof Error ? err.message : "Failed to render diagram",
+          });
         }
       }
     })();
@@ -77,20 +86,22 @@ export const Mermaid = ({ chart, caption }: MermaidProps) => {
     };
   }, [chart, id]);
 
-  if (error) {
+  const isLoading = !result || result.chart !== chart;
+
+  if (!isLoading && result.error) {
     return (
       <div className={styles.error}>
-        <p>Diagram error: {error}</p>
+        <p>Diagram error: {result.error}</p>
       </div>
     );
   }
 
   return (
     <figure className={styles.figure}>
-      {svg ? (
+      {!isLoading && result.svg ? (
         <div
           className={styles.container}
-          dangerouslySetInnerHTML={{ __html: svg }}
+          dangerouslySetInnerHTML={{ __html: result.svg }}
         />
       ) : (
         <div className={styles.container}>
