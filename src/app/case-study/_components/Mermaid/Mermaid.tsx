@@ -9,6 +9,46 @@ interface MermaidProps {
   caption?: string;
 }
 
+let initPromise: Promise<typeof import("mermaid").default> | null = null;
+
+const getMermaid = () => {
+  if (!initPromise) {
+    initPromise = import("mermaid").then((mod) => {
+      mod.default.initialize({
+        startOnLoad: false,
+        theme: "dark",
+        themeVariables: {
+          primaryColor: theme.accent,
+          primaryTextColor: theme.textBright,
+          primaryBorderColor: theme.text,
+          lineColor: theme.text,
+          secondaryColor: theme.bgSurface,
+          tertiaryColor: theme.bgRaised,
+          background: theme.bg,
+          mainBkg: theme.bgSurface,
+          nodeBorder: theme.text,
+          clusterBkg: theme.bgRaised,
+          clusterBorder: theme.textMuted,
+          titleColor: theme.textBright,
+          edgeLabelBackground: theme.bgSurface,
+        },
+        fontFamily: theme.fontMono,
+      });
+      return mod.default;
+    });
+  }
+  return initPromise;
+};
+
+const stripSvgDimensions = (svgString: string): string => {
+  const doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
+  const svg = doc.documentElement;
+  svg.removeAttribute("width");
+  svg.removeAttribute("height");
+  svg.removeAttribute("style");
+  return svg.outerHTML;
+};
+
 export const Mermaid = ({ chart, caption }: MermaidProps) => {
   const [svg, setSvg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -21,30 +61,11 @@ export const Mermaid = ({ chart, caption }: MermaidProps) => {
 
     (async () => {
       try {
-        const mermaid = (await import("mermaid")).default;
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: "dark",
-          themeVariables: {
-            primaryColor: theme.accent,
-            primaryTextColor: theme.textBright,
-            primaryBorderColor: theme.text,
-            lineColor: theme.text,
-            secondaryColor: theme.bgSurface,
-            tertiaryColor: theme.bgRaised,
-            background: theme.bg,
-            mainBkg: theme.bgSurface,
-            nodeBorder: theme.text,
-            clusterBkg: theme.bgRaised,
-            clusterBorder: theme.textMuted,
-            titleColor: theme.textBright,
-            edgeLabelBackground: theme.bgSurface,
-          },
-          fontFamily: theme.fontMono,
-        });
-
+        const mermaid = await getMermaid();
         const result = await mermaid.render(`mermaid-${id}`, chart);
-        if (!cancelled) setSvg(result.svg);
+        if (!cancelled) {
+          setSvg(stripSvgDimensions(result.svg));
+        }
       } catch (err) {
         if (!cancelled) {
           setError(

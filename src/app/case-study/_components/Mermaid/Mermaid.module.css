@@ -1,8 +1,5 @@
 .figure {
   margin: var(--space-8) 0;
-}
-
-.figure {
   max-width: var(--max-width-wide);
 }
 
