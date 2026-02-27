@@ -299,7 +299,7 @@ Generation creates a hunt from nothing. A creator types a prompt, the API return
 </CardField>
 <CardField label="Decision">
 
-Claude PTC. On the first inference, the model writes a Python script. The script calls `getHunt` to read the current state, modifies steps in memory, calls `geocodeLocations` for new location-based missions, and calls `saveHunt` with the complete steps array. Each tool call pauses the runtime. The backend executes it against real services and resumes the script with the result. When the script finishes, Claude reads stdout and writes a summary on the second inference.
+Claude's Programmatic Tool Calling. On the first inference, the model writes a Python script. The script calls `getHunt` to read the current state, modifies steps in memory, calls `geocodeLocations` for new location-based missions, and calls `saveHunt` with the complete steps array. Each tool call pauses the script. The backend executes it against real services and resumes with the result. When the script finishes, Claude reads the output and writes a summary on the second inference.
 
 </CardField>
 </CardSection>
@@ -324,7 +324,7 @@ Claude PTC. On the first inference, the model writes a Python script. The script
 
 Two inferences for any edit, regardless of how many tools it uses. Tool results stay in Python variables and never re-enter the context window. A five-tool edit costs the same as a one-tool edit.
 
-I started with seven tools. `getHunt`, `getStep`, `addStep`, `updateStep`, `removeStep`, `updateHunt`, `geocodeLocation`. Most turned out to be wasteful. `getStep` added a round-trip for no benefit since `getHunt` already returns all steps. Individual step mutations couldn't handle reordering and required multiple calls for multi-step edits. I consolidated down to `getHunt`, `updateHunt`, `saveHunt`, and `geocodeLocations`. `saveHunt` accepts the full steps array and saves atomically. Adding, removing, reordering, and updating steps are all one call.
+I started with seven tools: `getHunt`, `getStep`, `addStep`, `updateStep`, `removeStep`, `updateHunt`, and `geocodeLocation`. Most turned out to be wasteful. `getStep` added a round-trip for no benefit since `getHunt` already returns all steps. Individual step mutations couldn't handle reordering and required multiple calls for multi-step edits. I consolidated down to four: `getHunt`, `updateHunt`, `saveHunt`, and `geocodeLocations`. `saveHunt` accepts the full steps array and saves atomically. Adding, removing, reordering, and updating steps are all one call.
 
 </CardField>
 <CardField label="Tradeoff">
