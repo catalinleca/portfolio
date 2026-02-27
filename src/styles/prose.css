@@ -3,6 +3,7 @@
   font-size: var(--text-lg);
   line-height: var(--leading-relaxed);
   color: var(--text);
+  width: 100%;
   max-width: var(--max-width-wide);
   margin: 0 auto;
 
