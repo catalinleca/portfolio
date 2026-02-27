@@ -9,7 +9,7 @@ import styles from "./CookieBanner.module.css";
 const hasAnalyticsKey = (process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "").length > 0;
 
 export const CookieBanner = () => {
-  const { actions, state } = useCookieBannerState();
+  const { actions, state, bannerRef } = useCookieBannerState();
 
   if (!hasAnalyticsKey || !state.isReady) {
     return null;
@@ -24,7 +24,7 @@ export const CookieBanner = () => {
   }
 
   return (
-    <aside className={styles.banner} role="dialog" aria-label="Cookie preferences">
+    <aside ref={bannerRef} className={styles.banner} role="dialog" aria-label="Cookie preferences">
       <CookieBannerHeader
         isPreferencesOpen={state.isPreferencesOpen}
         hasDecision={state.hasDecision}
