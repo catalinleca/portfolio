@@ -41,6 +41,5 @@
   & img {
     width: 100%;
     border-radius: var(--radius-md);
-    margin-top: var(--space-4);
   }
 }

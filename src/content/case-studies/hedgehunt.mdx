@@ -407,10 +407,13 @@ const validators: Record<AnswerType, AnswerValidator> = {
   caption="Every play event writes to both stores. Session records expire, but running totals don't. The analytics service reads both."
 />
 
-![Activity Overview](/images/hedgehunt-overview.webp)
-![Session Drill-Down](/images/hedgehunt-sessions.webp)
 
 </CodeShowcase>
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', maxWidth: 'var(--max-width-wide)', marginInline: 'auto' }}>
+<img src="/images/hedgehunt-overview.webp" alt="Activity Overview, step breakdown and insights" style={{ width: '100%', borderRadius: 'var(--radius-md)' }} />
+<img src="/images/hedgehunt-sessions.webp" alt="Session drill-down with player submissions and AI feedback" style={{ width: '100%', borderRadius: 'var(--radius-md)' }} />
+</div>
 
 <HighlightGrid>
 <HighlightCard title="Builder Preview">
