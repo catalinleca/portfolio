@@ -69,7 +69,7 @@ export const syncInternalTrafficModeFromQueryParam = (): void => {
       window.localStorage.setItem(ANALYTICS_INTERNAL_STORAGE_KEY, "true");
     }
   } catch {
-    console.debug("analytics error");
+    // localStorage may be unavailable (private browsing, storage full)
   }
 
   queryParams.delete(ANALYTICS_INTERNAL_QUERY_PARAM);
