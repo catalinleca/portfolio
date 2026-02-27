@@ -55,6 +55,8 @@ export default async function HedgeHuntCaseStudy() {
     source,
     options: {
       parseFrontmatter: true,
+      blockJS: false,
+      blockDangerousJS: true,
       mdxOptions: {
         rehypePlugins: [
           rehypeSlug,
