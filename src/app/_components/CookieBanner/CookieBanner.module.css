@@ -14,7 +14,7 @@
   bottom: var(--space-4);
   transform: translateX(-50%);
   z-index: 120;
-  width: min(920px, calc(100% - (var(--gutter) * 2)));
+  width: calc(100% - (var(--gutter) * 2));
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background:
@@ -199,9 +199,11 @@
 }
 
 .actions {
-  margin-top: var(--space-5);
+  margin-top: var(--space-6);
+  padding-top: var(--space-2);
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   flex-wrap: wrap;
   gap: 0.6rem;
 }
@@ -352,18 +354,8 @@
   }
 
   .actions {
-    margin-top: var(--space-4);
-  }
-
-  .preferencesActions {
-    justify-content: flex-start;
-  }
-
-  .btnPrimary,
-  .btnGhost,
-  .btnText {
-    width: 100%;
-    text-align: center;
+    margin-top: var(--space-5);
+    padding-top: var(--space-2);
   }
 
   .preferenceRow {
