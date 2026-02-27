@@ -1,5 +1,7 @@
 .showcase {
-  margin: var(--space-8) 0;
+  margin-block: var(--space-8);
+  max-width: var(--max-width-text);
+  margin-inline: auto;
 }
 
 .header {

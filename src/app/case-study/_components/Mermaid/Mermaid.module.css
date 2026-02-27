@@ -2,6 +2,10 @@
   margin: var(--space-8) 0;
 }
 
+.figure {
+  max-width: var(--max-width-wide);
+}
+
 .container {
   overflow-x: auto;
   min-height: 320px;

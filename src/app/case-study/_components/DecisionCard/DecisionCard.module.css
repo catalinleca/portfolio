@@ -4,6 +4,8 @@
   background: var(--bg-surface);
   margin-bottom: var(--space-4);
   overflow: hidden;
+  max-width: var(--max-width-text);
+  margin-inline: auto;
 
   &[open] .chevron {
     transform: rotate(90deg);
@@ -103,4 +105,62 @@
     border-radius: var(--radius-sm);
     color: var(--purple);
   }
+}
+
+/* ── Breakout mode: card splits into floating sections ── */
+.breakoutCard {
+  border: none;
+  background: none;
+  border-radius: 0;
+  overflow: visible;
+  max-width: var(--max-width-wide);
+}
+
+.breakoutCard .summary {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  max-width: var(--max-width-text);
+  margin-inline: auto;
+}
+
+.breakoutCard[open] .summary {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-bottom-color: var(--border-dim);
+}
+
+.breakoutCard .content {
+  padding: 0;
+  border-top: none;
+  gap: var(--space-3);
+}
+
+.section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  padding: var(--space-4) var(--space-6) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow: hidden;
+  max-width: var(--max-width-text);
+  margin-inline: auto;
+}
+
+/* First section connects to summary — no gap, shared borders */
+.breakoutCard .content > .section:first-child {
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.breakout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.breakout > * {
+  margin-block: 0;
 }

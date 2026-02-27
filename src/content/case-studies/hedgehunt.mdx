@@ -283,7 +283,8 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 </CardField>
 </DecisionCard>
 
-<DecisionCard id="ai-hunt-editing" title="AI Hunt Editing">
+<DecisionCard id="ai-hunt-editing" title="AI Hunt Editing" variant="breakout">
+<CardSection>
 <CardField label="Context">
 
 Generation creates a hunt from nothing. A creator types a prompt, the API returns a complete hunt. Editing is a different problem. The creator already has a hunt open in the Builder and wants to modify it with natural language. "Make step 3 harder." "Add a photo mission near the Eiffel Tower." "Remove the last two steps." The model needs to read the current state, decide what to change, and apply changes through the same backend services the Builder uses. I needed an approach that could handle multi-step edits without each tool call adding another round-trip to the model.
@@ -300,21 +301,26 @@ Generation creates a hunt from nothing. A creator types a prompt, the API return
 
 Claude PTC. On the first inference, the model writes a Python script. The script calls `getHunt` to read the current state, modifies steps in memory, calls `geocodeLocations` for new location-based missions, and calls `saveHunt` with the complete steps array. Each tool call pauses the runtime. The backend executes it against real services and resumes the script with the result. When the script finishes, Claude reads stdout and writes a summary on the second inference.
 
-<ProcessFlow title="Traditional Agent Loop">
-  <ProcessStep label="Inference 1" detail="Decide to call getHunt" />
-  <ProcessStep label="Execute" detail="Run tool, return result to model" />
-  <ProcessStep label="Inference 2" detail="Decide to call saveHunt" />
-  <ProcessStep label="Execute" detail="Run tool, return result to model" />
-  <ProcessStep label="Inference 3" detail="Decide to call geocodeLocations" />
-  <ProcessStep label="Execute" detail="Run tool, return result to model" />
-  <ProcessStep label="Inference 4" detail="Write summary" />
-</ProcessFlow>
-
-<ProcessFlow title="Programmatic Tool Calling">
-  <ProcessStep label="Inference 1" detail="Write Python script with all tool calls" />
-  <ProcessStep label="Execute" detail="Script runs, pauses on each tool call" />
-  <ProcessStep label="Inference 2" detail="Read stdout, write summary" />
-</ProcessFlow>
+</CardField>
+</CardSection>
+<CardBreakout>
+  <ProcessFlow title="Traditional Agent Loop">
+    <ProcessStep label="Inference 1" detail="Decide to call getHunt" />
+    <ProcessStep label="Execute" detail="Run tool, return result to model" />
+    <ProcessStep label="Inference 2" detail="Decide to call saveHunt" />
+    <ProcessStep label="Execute" detail="Run tool, return result to model" />
+    <ProcessStep label="Inference 3" detail="Decide to call geocodeLocations" />
+    <ProcessStep label="Execute" detail="Run tool, return result to model" />
+    <ProcessStep label="Inference 4" detail="Write summary" />
+  </ProcessFlow>
+  <ProcessFlow title="Programmatic Tool Calling">
+    <ProcessStep label="Inference 1" detail="Write Python script with all tool calls" />
+    <ProcessStep label="Execute" detail="Script runs, pauses on each tool call" />
+    <ProcessStep label="Inference 2" detail="Read stdout, write summary" />
+  </ProcessFlow>
+</CardBreakout>
+<CardSection>
+<CardField label="Decision">
 
 Two inferences for any edit, regardless of how many tools it uses. Tool results stay in Python variables and never re-enter the context window. A five-tool edit costs the same as a one-tool edit.
 
@@ -326,6 +332,7 @@ I started with seven tools. `getHunt`, `getStep`, `addStep`, `updateStep`, `remo
 Tied to Claude's code execution API. The model must produce valid Python in a single pass, so the system prompt needs precise tool documentation and examples. Container startup adds latency to the first call. But for edits that touch multiple steps and need geocoding, the inference reduction is significant. The model makes all creative decisions at code-writing time. Everything after that is execution.
 
 </CardField>
+</CardSection>
 </DecisionCard>
 
 ---

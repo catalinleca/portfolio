@@ -59,6 +59,7 @@
 
   /* Layout */
   --max-width-text: 720px;
+  --max-width-wide: 960px;
   --max-width-content: 1120px;
   --gutter: 2.5rem;
   --gutter-mobile: 1.5rem;

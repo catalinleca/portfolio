@@ -54,6 +54,10 @@
   margin-top: var(--space-1);
 }
 
+.flow {
+  max-width: var(--max-width-wide);
+}
+
 @media (width <= 639px) {
   .steps {
     flex-direction: column;
