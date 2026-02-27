@@ -20,11 +20,11 @@ export const CookieBannerPreferenceActions = ({
       >
         Essentials only
       </button>
-      <button type="button" className={styles.btnPrimary} onClick={onAcceptAll}>
-        Accept all
-      </button>
       <button type="button" className={`${styles.btnGhost} ${styles.btnAffirm}`} onClick={onSavePreferences}>
         Save preferences
+      </button>
+      <button type="button" className={styles.btnPrimary} onClick={onAcceptAll}>
+        Accept all
       </button>
     </div>
   );
