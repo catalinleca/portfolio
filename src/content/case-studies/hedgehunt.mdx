@@ -339,6 +339,39 @@ Tied to Claude's code execution API. The model must produce valid Python in a si
 
 ## Highlights
 
+<CodeShowcase title="Play API" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
+
+```json
+{
+  "step": {
+    "id": 3,
+    "type": "mission",
+    "title": "Find the hidden statue",
+    "challenge": { "radius": 50 }
+  },
+  "_links": {
+    "submit": { "href": "/api/play/sessions/abc/submit", "method": "POST" },
+    "hint":   { "href": "/api/play/sessions/abc/hint",   "method": "GET"  },
+    "skip":   null
+  }
+}
+```
+
+</CodeShowcase>
+
+<HighlightGrid>
+<HighlightCard title="Session Management">
+
+Sessions are locked to the hunt version that was live when the explorer started. Releasing a new version mid-play doesn't interrupt active explorers. `localStorage` persistence resumes from the last completed step.
+
+</HighlightCard>
+<HighlightCard title="Prefetching and LRU Cache">
+
+The Explorer prefetches next-step media with async `decode()` and an LRU cache. Step transitions feel instant because assets are already decoded.
+
+</HighlightCard>
+</HighlightGrid>
+
 <CodeShowcase title="Answer Validation" description="Six validators, one interface. Each challenge type maps to its own: fuzzy text matching for quiz inputs, GPS distance for location missions, AI analysis for image and audio. Adding a new challenge type means adding one entry to the map.">
 
 ```typescript
@@ -362,57 +395,27 @@ const validators: Record<AnswerType, AnswerValidator> = {
 </CodeShowcase>
 
 <HighlightGrid>
-<HighlightCard title="Session Management">
+<HighlightCard title="Durable Analytics">
 
-Sessions are locked to the hunt version that was live when the explorer started. Releasing a new version mid-play doesn't interrupt active explorers. `localStorage` persistence resumes from the last completed step.
+Anonymous play sessions expire after 24 hours. If analytics read raw sessions directly, long-term metrics would decay as old documents are deleted. Every play event writes to two stores: the session record (temporary) and a `HuntStats` document with running totals (permanent). Averages are computed at read time from the totals, never stored. The analytics service reads both, so recent sessions have full detail and lifetime metrics are always accurate.
 
 </HighlightCard>
+<HighlightCard title="Fire-and-Forget Stats">
+
+Stats writes happen after the game transaction commits, asynchronously. If the analytics write fails, the player's progression is unaffected. Counters update at two boundaries: when a player starts a session and when they finish. Nothing in between. This prevents double-counting and keeps the play path responsive.
+
+</HighlightCard>
+</HighlightGrid>
+
+<HighlightGrid>
 <HighlightCard title="Builder Preview">
 
 The Builder embeds the Explorer in an iframe with a typed messaging layer. Same `PlayerExporter` as production. Preview matches exactly what real explorers see.
 
 </HighlightCard>
-<HighlightCard title="Prefetching and LRU Cache">
-
-The Explorer prefetches next-step media with async `decode()` and an LRU cache. Step transitions feel instant because assets are already decoded.
-
-</HighlightCard>
-<HighlightCard title="Compass Design System">
-
-`@hunthub/compass` wraps MUI's `createTheme` with shared tokens, typography scales, and responsive mixins. One import gives any app the full design system.
-
-</HighlightCard>
-</HighlightGrid>
-
-<CodeShowcase title="Play API" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
-
-```json
-{
-  "step": {
-    "id": 3,
-    "type": "mission",
-    "title": "Find the hidden statue",
-    "challenge": { "radius": 50 }
-  },
-  "_links": {
-    "submit": { "href": "/api/play/sessions/abc/submit", "method": "POST" },
-    "hint":   { "href": "/api/play/sessions/abc/hint",   "method": "GET"  },
-    "skip":   null
-  }
-}
-```
-
-</CodeShowcase>
-
-<HighlightGrid>
 <HighlightCard title="Hunt Sharing">
 
 Three permission levels (Owner, Admin, View) enforced in server-side middleware. The Builder adapts UI per role, but access control never relies on the client.
-
-</HighlightCard>
-<HighlightCard title="Media Processing">
-
-Images are compressed client-side before upload. Audio is captured at low bitrate through `MediaRecorder`. Only compressed files reach S3.
 
 </HighlightCard>
 </HighlightGrid>
@@ -426,6 +429,19 @@ Before sending an instruction to the AI, the editor saves the current form state
 <HighlightCard title="Prompt Trimming">
 
 The system prompt includes four fields per step: ID, type, title, mission type. Full data is available through `getHunt`. The model gets enough context to decide what to change without processing 50 fields per step on every request.
+
+</HighlightCard>
+</HighlightGrid>
+
+<HighlightGrid>
+<HighlightCard title="Compass Design System">
+
+`@hunthub/compass` wraps MUI's `createTheme` with shared tokens, typography scales, and responsive mixins. One import gives any app the full design system.
+
+</HighlightCard>
+<HighlightCard title="Media Processing">
+
+Images are compressed client-side before upload. Audio is captured at low bitrate through `MediaRecorder`. Only compressed files reach S3.
 
 </HighlightCard>
 </HighlightGrid>
