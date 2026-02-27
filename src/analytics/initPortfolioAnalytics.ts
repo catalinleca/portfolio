@@ -29,7 +29,8 @@ export const initPortfolioAnalytics = (): void => {
   syncInternalTrafficModeFromQueryParam();
 
   posthog.init(analyticsKey, {
-    api_host: getPosthogHost(),
+    api_host: "/ingest",
+    ui_host: getPosthogHost(),
     autocapture: false,
     capture_pageview: false,
     opt_out_capturing_by_default: true,
