@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
-import type { MouseEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import type { MouseEvent, RefObject } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   getCookieConsentSnapshot,
@@ -40,6 +40,7 @@ interface CookieBannerActions {
 
 export interface UseCookieBannerStateResult {
   actions: CookieBannerActions;
+  bannerRef: RefObject<HTMLElement | null>;
   state: CookieBannerState;
 }
 
@@ -52,6 +53,7 @@ export const useCookieBannerState = (): UseCookieBannerStateResult => {
     getCookieConsentSnapshot,
     () => null
   );
+  const bannerRef = useRef<HTMLElement>(null);
   const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
   const [isAnalyticsEnabled, setIsAnalyticsEnabled] = useState(DEFAULT_ANALYTICS_ENABLED);
   const hasDecision = consent != null;
@@ -59,6 +61,21 @@ export const useCookieBannerState = (): UseCookieBannerStateResult => {
   const persistedAnalyticsEnabled = consent?.analytics ?? DEFAULT_ANALYTICS_ENABLED;
   const activeAnalyticsState = isPreferencesOpen ? isAnalyticsEnabled : persistedAnalyticsEnabled;
   const shouldRenderStatusBadge = isPreferencesOpen || hasDecision;
+
+  useEffect(() => {
+    if (!isPreferencesOpen || !hasDecision) {
+      return
+    };
+
+    const handleClickOutside = (event: globalThis.MouseEvent) => {
+      if (bannerRef.current && !bannerRef.current.contains(event.target as Node)) {
+        setIsPreferencesOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isPreferencesOpen, hasDecision]);
 
   const closePreferences = () => {
     setIsPreferencesOpen(false);
@@ -100,6 +117,7 @@ export const useCookieBannerState = (): UseCookieBannerStateResult => {
   };
 
   return {
+    bannerRef,
     state: {
       activeAnalyticsState,
       hasDecision,

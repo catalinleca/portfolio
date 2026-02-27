@@ -1,5 +1,11 @@
 .showcase {
-  margin: var(--space-8) 0;
+  margin-block: var(--space-8);
+  max-width: var(--max-width-text);
+  margin-inline: auto;
+  padding: var(--space-4) var(--space-6);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 .header {
@@ -26,5 +32,14 @@
 .code {
   & pre {
     margin: 0;
+  }
+
+  & > figure {
+    margin: var(--space-4) 0 0;
+  }
+
+  & img {
+    width: 100%;
+    border-radius: var(--radius-md);
   }
 }

@@ -283,9 +283,94 @@ Auto-pass on validation failure means a bad answer could slip through. But block
 </CardField>
 </DecisionCard>
 
+<DecisionCard id="ai-hunt-editing" title="AI Hunt Editing" variant="breakout">
+<CardSection>
+<CardField label="Context">
+
+Generation creates a hunt from nothing. A creator types a prompt, the API returns a complete hunt. Editing is a different problem. The creator already has a hunt open in the Builder and wants to modify it with natural language. "Make step 3 harder." "Add a photo mission near the Eiffel Tower." "Remove the last two steps." The model needs to read the current state, decide what to change, and apply changes through the same backend services the Builder uses. I needed an approach that could handle multi-step edits without each tool call adding another round-trip to the model.
+
+</CardField>
+<CardField label="Options">
+
+- **Traditional agent loop.** One model inference per tool call. The model calls `getHunt`, waits for the result, decides what to change, calls `saveHunt`, waits again, writes a summary. A three-tool edit needs four inferences. Every tool result feeds back into the context window, so the model re-reads the full hunt JSON on each turn.
+- **Client-side diffing.** Send the full hunt to the model, get the modified version back, validate, save. No tool calling. But the model must reproduce every field it didn't touch. One dropped field and data is lost silently.
+- **Programmatic Tool Calling.** The model writes a Python script upfront that handles all tool calls. Each call pauses execution while the backend runs it. Python resumes with the result in a local variable. Creative decisions happen once at code-writing time. The script is mechanical execution.
+
+</CardField>
+<CardField label="Decision">
+
+Claude's Programmatic Tool Calling. On the first inference, the model writes a Python script. The script calls `getHunt` to read the current state, modifies steps in memory, calls `geocodeLocations` for new location-based missions, and calls `saveHunt` with the complete steps array. Each tool call pauses the script. The backend executes it against real services and resumes with the result. When the script finishes, Claude reads the output and writes a summary on the second inference.
+
+</CardField>
+</CardSection>
+<CardBreakout>
+  <ProcessFlow title="Traditional Agent Loop">
+    <ProcessStep label="Inference 1" detail="Decide to call getHunt" />
+    <ProcessStep label="Execute" detail="Run tool, return result to model" />
+    <ProcessStep label="Inference 2" detail="Decide to call saveHunt" />
+    <ProcessStep label="Execute" detail="Run tool, return result to model" />
+    <ProcessStep label="Inference 3" detail="Decide to call geocodeLocations" />
+    <ProcessStep label="Execute" detail="Run tool, return result to model" />
+    <ProcessStep label="Inference 4" detail="Write summary" />
+  </ProcessFlow>
+  <ProcessFlow title="Programmatic Tool Calling">
+    <ProcessStep label="Inference 1" detail="Write Python script with all tool calls" />
+    <ProcessStep label="Execute" detail="Script runs, pauses on each tool call" />
+    <ProcessStep label="Inference 2" detail="Read stdout, write summary" />
+  </ProcessFlow>
+</CardBreakout>
+<CardSection>
+<CardField label="Decision">
+
+Two inferences for any edit, regardless of how many tools it uses. Tool results stay in Python variables and never re-enter the context window. A five-tool edit costs the same as a one-tool edit.
+
+I started with seven tools: `getHunt`, `getStep`, `addStep`, `updateStep`, `removeStep`, `updateHunt`, and `geocodeLocation`. Most turned out to be wasteful. `getStep` added a round-trip for no benefit since `getHunt` already returns all steps. Individual step mutations couldn't handle reordering and required multiple calls for multi-step edits. I consolidated down to four: `getHunt`, `updateHunt`, `saveHunt`, and `geocodeLocations`. `saveHunt` accepts the full steps array and saves atomically. Adding, removing, reordering, and updating steps are all one call.
+
+</CardField>
+<CardField label="Tradeoff">
+
+Tied to Claude's code execution API. The model must produce valid Python in a single pass, so the system prompt needs precise tool documentation and examples. Container startup adds latency to the first call. But for edits that touch multiple steps and need geocoding, the inference reduction is significant. The model makes all creative decisions at code-writing time. Everything after that is execution.
+
+</CardField>
+</CardSection>
+</DecisionCard>
+
 ---
 
 ## Highlights
+
+<CodeShowcase title="Play API" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
+
+```json
+{
+  "step": {
+    "id": 3,
+    "type": "mission",
+    "title": "Find the hidden statue",
+    "challenge": { "radius": 50 }
+  },
+  "_links": {
+    "submit": { "href": "/api/play/sessions/abc/submit", "method": "POST" },
+    "hint":   { "href": "/api/play/sessions/abc/hint",   "method": "GET"  },
+    "skip":   null
+  }
+}
+```
+
+</CodeShowcase>
+
+<HighlightGrid>
+<HighlightCard title="Session Management">
+
+Sessions are locked to the hunt version that was live when the explorer started. Releasing a new version mid-play doesn't interrupt active explorers. `localStorage` persistence resumes from the last completed step.
+
+</HighlightCard>
+<HighlightCard title="Prefetching and LRU Cache">
+
+The Explorer prefetches next-step media with async `decode()` and an LRU cache. Step transitions feel instant because assets are already decoded.
+
+</HighlightCard>
+</HighlightGrid>
 
 <CodeShowcase title="Answer Validation" description="Six validators, one interface. Each challenge type maps to its own: fuzzy text matching for quiz inputs, GPS distance for location missions, AI analysis for image and audio. Adding a new challenge type means adding one entry to the map.">
 
@@ -309,53 +394,57 @@ const validators: Record<AnswerType, AnswerValidator> = {
 
 </CodeShowcase>
 
+<CodeShowcase title="Hunt Activity" description="Creators had no visibility into how players interacted with their hunts. The backend captured session data as players progressed through steps, but none of it was surfaced. Anonymous sessions expire after 24 hours, so any analytics reading raw sessions directly would lose data over time. Every play event writes to two stores: a session record that expires and a running totals document that doesn't. The analytics service reads both, so recent sessions have full detail and lifetime metrics are always accurate.">
+
+<Mermaid chart={`flowchart LR
+  A["Player starts hunt"] --> B["Game Server"]
+  B --> C["Session Record\n"]
+  B --> D["Running Totals\n"]
+  E["Creator opens Activity"] --> F["Analytics Service"]
+  C --> F
+  D --> F
+  F --> G["Stats Dialog"]`}
+  caption="Every play event writes to both stores. Session records expire, but running totals don't. The analytics service reads both."
+/>
+
+
+</CodeShowcase>
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-3)', maxWidth: 'var(--max-width-wide)', marginInline: 'auto' }}>
+<img src="/images/hedgehunt-overview.webp" alt="Activity Overview, step breakdown and insights" style={{ width: '100%', borderRadius: 'var(--radius-md)' }} />
+<img src="/images/hedgehunt-sessions.webp" alt="Session drill-down with player submissions and AI feedback" style={{ width: '100%', borderRadius: 'var(--radius-md)' }} />
+</div>
+
 <HighlightGrid>
-<HighlightCard title="Session Management">
-
-Sessions are locked to the hunt version that was live when the explorer started. Releasing a new version mid-play doesn't interrupt active explorers. `localStorage` persistence resumes from the last completed step.
-
-</HighlightCard>
 <HighlightCard title="Builder Preview">
 
 The Builder embeds the Explorer in an iframe with a typed messaging layer. Same `PlayerExporter` as production. Preview matches exactly what real explorers see.
 
 </HighlightCard>
-<HighlightCard title="Prefetching and LRU Cache">
+<HighlightCard title="Hunt Sharing">
 
-The Explorer prefetches next-step media with async `decode()` and an LRU cache. Step transitions feel instant because assets are already decoded.
-
-</HighlightCard>
-<HighlightCard title="Compass Design System">
-
-`@hunthub/compass` wraps MUI's `createTheme` with shared tokens, typography scales, and responsive mixins. One import gives any app the full design system.
+Three permission levels (Owner, Admin, View) enforced in server-side middleware. The Builder adapts UI per role, but access control never relies on the client.
 
 </HighlightCard>
 </HighlightGrid>
 
-<CodeShowcase title="Play API" description="Each API response tells the Explorer what it can do next. The Explorer follows server-provided links, it never decides on its own. Game rules live on the server, so they can change without touching the client.">
+<HighlightGrid>
+<HighlightCard title="Form Auto-Save">
 
-```json
-{
-  "step": {
-    "id": 3,
-    "type": "mission",
-    "title": "Find the hidden statue",
-    "challenge": { "radius": 50 }
-  },
-  "_links": {
-    "submit": { "href": "/api/play/sessions/abc/submit", "method": "POST" },
-    "hint":   { "href": "/api/play/sessions/abc/hint",   "method": "GET"  },
-    "skip":   null
-  }
-}
-```
+Before sending an instruction to the AI, the editor saves the current form state. The model always edits the latest data, not whatever was last persisted. After the edit completes, the form resets to the returned hunt while preserving the creator's step selection.
 
-</CodeShowcase>
+</HighlightCard>
+<HighlightCard title="Prompt Trimming">
+
+The system prompt includes four fields per step: ID, type, title, mission type. Full data is available through `getHunt`. The model gets enough context to decide what to change without processing 50 fields per step on every request.
+
+</HighlightCard>
+</HighlightGrid>
 
 <HighlightGrid>
-<HighlightCard title="Hunt Sharing">
+<HighlightCard title="Compass Design System">
 
-Three permission levels (Owner, Admin, View) enforced in server-side middleware. The Builder adapts UI per role, but access control never relies on the client.
+`@hunthub/compass` wraps MUI's `createTheme` with shared tokens, typography scales, and responsive mixins. One import gives any app the full design system.
 
 </HighlightCard>
 <HighlightCard title="Media Processing">

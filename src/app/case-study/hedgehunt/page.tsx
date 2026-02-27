@@ -7,7 +7,9 @@ import {
   SectionNav,
   ExecutiveSummary,
   DecisionCard,
+  CardSection,
   CardField,
+  CardBreakout,
   HighlightGrid,
   HighlightCard,
   Mermaid,
@@ -32,7 +34,9 @@ export const metadata: Metadata = {
 const mdxComponents = {
   ExecutiveSummary,
   DecisionCard,
+  CardSection,
   CardField,
+  CardBreakout,
   HighlightGrid,
   HighlightCard,
   Mermaid,
@@ -51,6 +55,8 @@ export default async function HedgeHuntCaseStudy() {
     source,
     options: {
       parseFrontmatter: true,
+      blockJS: false,
+      blockDangerousJS: true,
       mdxOptions: {
         rehypePlugins: [
           rehypeSlug,

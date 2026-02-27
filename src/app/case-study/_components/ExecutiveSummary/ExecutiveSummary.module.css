@@ -2,7 +2,9 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-6);
-  margin: var(--space-8) 0 var(--space-12);
+  margin-block: var(--space-8) var(--space-12);
+  max-width: var(--max-width-text);
+  margin-inline: auto;
   padding: var(--space-8);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);

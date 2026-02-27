@@ -6,6 +6,7 @@ interface DecisionCardProps {
   title: string;
   children: ReactNode;
   defaultOpen?: boolean;
+  variant?: "breakout";
 }
 
 export const DecisionCard = ({
@@ -13,9 +14,15 @@ export const DecisionCard = ({
   title,
   children,
   defaultOpen = false,
+  variant,
 }: DecisionCardProps) => {
+  const className =
+    variant === "breakout"
+      ? `${styles.card} ${styles.breakoutCard}`
+      : styles.card;
+
   return (
-    <details id={id} className={styles.card} open={defaultOpen || undefined}>
+    <details id={id} className={className} open={defaultOpen || undefined}>
       <summary className={styles.summary}>
         <span className={styles.title}>{title}</span>
         <span className={styles.chevron} aria-hidden="true" />
