@@ -12,7 +12,7 @@ export const CookieBannerPreferenceActions = ({
   onAcceptEssentials,
 }: CookieBannerPreferenceActionsProps) => {
   return (
-    <div className={`${styles.actions} ${styles.preferencesActions}`}>
+    <div className={styles.actions}>
       <button
         type="button"
         className={`${styles.btnGhost} ${styles.btnSubtle}`}
@@ -20,11 +20,11 @@ export const CookieBannerPreferenceActions = ({
       >
         Essentials only
       </button>
-      <button type="button" className={styles.btnPrimary} onClick={onAcceptAll}>
-        Accept all
-      </button>
       <button type="button" className={`${styles.btnGhost} ${styles.btnAffirm}`} onClick={onSavePreferences}>
         Save preferences
+      </button>
+      <button type="button" className={styles.btnPrimary} onClick={onAcceptAll}>
+        Accept all
       </button>
     </div>
   );

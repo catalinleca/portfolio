@@ -26,7 +26,7 @@
 }
 
 .lead {
-  margin-top: var(--space-5);
+  margin-top: var(--space-2);
   color: var(--text);
   font-size: 1rem;
   line-height: 1.7;

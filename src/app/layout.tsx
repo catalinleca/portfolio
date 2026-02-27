@@ -29,16 +29,17 @@ const jbMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Catalin Leca — Senior Software Engineer",
+  metadataBase: new URL("https://catalinleca.dev"),
+  title: "Catalin Leca | Senior Software Engineer",
   description:
-    "I build complex, production-grade systems — from complex UIs and real-time experiences to multi-service platforms and infrastructure.",
+    "I build production-grade systems, from complex UIs and real-time experiences to multi-service platforms and infrastructure.",
   other: {
     "theme-color": "#0e0e11",
   },
   openGraph: {
-    title: "Catalin Leca — Senior Software Engineer",
+    title: "Catalin Leca | Senior Software Engineer",
     description:
-      "I build complex, production-grade systems — from complex UIs and real-time experiences to multi-service platforms and infrastructure.",
+      "I build production-grade systems, from complex UIs and real-time experiences to multi-service platforms and infrastructure.",
     type: "website",
   },
 };

@@ -20,9 +20,7 @@ export const Hero = () => {
             I care about how things are built.
           </h1>
           <p className={styles.intro}>
-            I&apos;ve built production platforms end to end, from system
-            design to deployment. I break hard problems into manageable pieces,
-            adapt fast, and leave things in better shape than I found them.
+            I break hard problems into manageable pieces, adapt fast and leave things in better shape than they were.
           </p>
           <div className={styles.actions}>
             <ScrollLink

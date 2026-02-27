@@ -13,9 +13,6 @@ export const CookieBannerCollapsedActions = ({
 }: CookieBannerCollapsedActionsProps) => {
   return (
     <div className={styles.actions}>
-      <button type="button" className={styles.btnPrimary} onClick={onAcceptAll}>
-        Accept all
-      </button>
       <button
         type="button"
         className={`${styles.btnGhost} ${styles.btnSubtle}`}
@@ -23,8 +20,15 @@ export const CookieBannerCollapsedActions = ({
       >
         Accept essentials
       </button>
-      <button type="button" className={styles.btnText} onClick={onManagePreferences}>
+      <button
+        type="button"
+        className={`${styles.btnGhost} ${styles.btnAffirm}`}
+        onClick={onManagePreferences}
+      >
         Manage preferences
+      </button>
+      <button type="button" className={styles.btnPrimary} onClick={onAcceptAll}>
+        Accept all
       </button>
     </div>
   );

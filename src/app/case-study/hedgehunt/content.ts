@@ -9,7 +9,7 @@ export interface CaseStudyMeta {
 }
 
 export const hedgehuntMeta: CaseStudyMeta = {
-  title: "HedgeHunt Case Study — Catalin Leca",
+  title: "HedgeHunt Case Study | Catalin Leca",
   description:
     "Architecture and technical decisions behind a full-stack treasure hunt platform.",
 };
