@@ -43,6 +43,12 @@ const hasSearchEngineReferrer = (referrerDomain: string): boolean => {
   });
 };
 
+const replaceUrlWithQueryParams = (queryParams: URLSearchParams): void => {
+  const queryString = queryParams.toString();
+  const nextUrl = `${window.location.pathname}${queryString.length > 0 ? `?${queryString}` : ""}${window.location.hash}`;
+  window.history.replaceState({}, "", nextUrl);
+};
+
 const getQueryParamValue = (name: string): string | undefined => {
   const queryParams = new URLSearchParams(window.location.search);
   const value = queryParams.get(name);
@@ -73,9 +79,7 @@ export const syncInternalTrafficModeFromQueryParam = (): void => {
   }
 
   queryParams.delete(ANALYTICS_INTERNAL_QUERY_PARAM);
-  const queryString = queryParams.toString();
-  const nextUrl = `${window.location.pathname}${queryString.length > 0 ? `?${queryString}` : ""}${window.location.hash}`;
-  window.history.replaceState({}, "", nextUrl);
+  replaceUrlWithQueryParams(queryParams);
 };
 
 const resolveTrafficType = (): "internal" | "external" => {
@@ -133,9 +137,7 @@ export const stripUtmParams = (): void => {
     queryParams.delete(param);
   }
 
-  const queryString = queryParams.toString();
-  const nextUrl = `${window.location.pathname}${queryString.length > 0 ? `?${queryString}` : ""}${window.location.hash}`;
-  window.history.replaceState({}, "", nextUrl);
+  replaceUrlWithQueryParams(queryParams);
 };
 
 export const buildPortfolioContext = (): AnalyticsProperties => {
