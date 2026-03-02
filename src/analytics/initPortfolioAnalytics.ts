@@ -1,6 +1,6 @@
 import posthog from "posthog-js";
 import { DEFAULT_POSTHOG_HOST } from "./constants";
-import { buildPortfolioContext, syncInternalTrafficModeFromQueryParam } from "./context";
+import { buildPortfolioContext, stripUtmParams, syncInternalTrafficModeFromQueryParam } from "./context";
 import { registerClickTracking, registerScrollTracking } from "./trackers";
 import type { CaptureEvent } from "./types";
 
@@ -37,6 +37,7 @@ export const initPortfolioAnalytics = (): void => {
   });
 
   posthog.register(buildPortfolioContext());
+  stripUtmParams();
 
   const captureEvent: CaptureEvent = (eventName, properties = {}) => {
     posthog.capture(eventName, properties);

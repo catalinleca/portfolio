@@ -113,6 +113,31 @@ const resolveSourceChannel = (
   return "referral";
 };
 
+const UTM_PARAMS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
+
+export const stripUtmParams = (): void => {
+  const queryParams = new URLSearchParams(window.location.search);
+  const hadUtm = UTM_PARAMS.some((param) => queryParams.has(param));
+
+  if (!hadUtm) {
+    return;
+  }
+
+  for (const param of UTM_PARAMS) {
+    queryParams.delete(param);
+  }
+
+  const queryString = queryParams.toString();
+  const nextUrl = `${window.location.pathname}${queryString.length > 0 ? `?${queryString}` : ""}${window.location.hash}`;
+  window.history.replaceState({}, "", nextUrl);
+};
+
 export const buildPortfolioContext = (): AnalyticsProperties => {
   const utmSource = getQueryParamValue("utm_source");
   const referrerDomain = resolveReferrerDomain();
