@@ -29,7 +29,7 @@ export const CaseStudyCard = () => {
             <Link href="/case-study/hedgehunt" className={styles.cta} {...trackClick("case_study_read", "featured_work")}>
               Read case study →
             </Link>
-            <ExternalLink href="https://hedgehunt.app" className={styles.appLink} {...trackClick("case_study_visit_app", "featured_work")}>
+            <ExternalLink href="https://hedgehunt.app?utm_source=portfolio" className={styles.appLink} {...trackClick("case_study_visit_app", "featured_work")}>
               Visit app ↗
             </ExternalLink>
           </div>
