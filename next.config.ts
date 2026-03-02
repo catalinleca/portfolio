@@ -15,6 +15,18 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  redirects: async () => [
+    {
+      source: "/li",
+      destination: "/?utm_source=linkedin",
+      permanent: true,
+    },
+    {
+      source: "/res",
+      destination: "/?utm_source=resume",
+      permanent: true,
+    },
+  ],
   headers: async () => [
     {
       source: "/(.*)",
