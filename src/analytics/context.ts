@@ -43,6 +43,12 @@ const hasSearchEngineReferrer = (referrerDomain: string): boolean => {
   });
 };
 
+const replaceUrlWithQueryParams = (queryParams: URLSearchParams): void => {
+  const queryString = queryParams.toString();
+  const nextUrl = `${window.location.pathname}${queryString.length > 0 ? `?${queryString}` : ""}${window.location.hash}`;
+  window.history.replaceState({}, "", nextUrl);
+};
+
 const getQueryParamValue = (name: string): string | undefined => {
   const queryParams = new URLSearchParams(window.location.search);
   const value = queryParams.get(name);
@@ -73,9 +79,7 @@ export const syncInternalTrafficModeFromQueryParam = (): void => {
   }
 
   queryParams.delete(ANALYTICS_INTERNAL_QUERY_PARAM);
-  const queryString = queryParams.toString();
-  const nextUrl = `${window.location.pathname}${queryString.length > 0 ? `?${queryString}` : ""}${window.location.hash}`;
-  window.history.replaceState({}, "", nextUrl);
+  replaceUrlWithQueryParams(queryParams);
 };
 
 const resolveTrafficType = (): "internal" | "external" => {
@@ -111,6 +115,29 @@ const resolveSourceChannel = (
   }
 
   return "referral";
+};
+
+const UTM_PARAMS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
+
+export const stripUtmParams = (): void => {
+  const queryParams = new URLSearchParams(window.location.search);
+  const hadUtm = UTM_PARAMS.some((param) => queryParams.has(param));
+
+  if (!hadUtm) {
+    return;
+  }
+
+  for (const param of UTM_PARAMS) {
+    queryParams.delete(param);
+  }
+
+  replaceUrlWithQueryParams(queryParams);
 };
 
 export const buildPortfolioContext = (): AnalyticsProperties => {
