@@ -5,3 +5,8 @@ export {
   initPortfolioAnalytics,
   setPortfolioAnalyticsEnabled,
 } from "./initPortfolioAnalytics";
+export {
+  trackCaseStudySectionViewed,
+  trackCaseStudySectionNavClicked,
+  trackCaseStudyDecisionExpanded,
+} from "./caseStudyAnalytics";

@@ -1,0 +1,1 @@
+export { MdxLink } from "./MdxLink";
