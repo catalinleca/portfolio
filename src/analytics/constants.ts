@@ -2,6 +2,9 @@ export const ANALYTICS_EVENTS = {
   click: "portfolio_click",
   pageView: "portfolio_page_view",
   scrollDepth: "portfolio_scroll_depth",
+  caseStudySectionViewed: "case_study_section_viewed",
+  caseStudySectionNavClicked: "case_study_section_nav_clicked",
+  caseStudyDecisionExpanded: "case_study_decision_expanded",
 } as const;
 
 export const ANALYTICS_INTERNAL_QUERY_PARAM = "internal";

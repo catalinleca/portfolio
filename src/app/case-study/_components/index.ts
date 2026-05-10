@@ -7,3 +7,4 @@ export { CodeShowcase } from "./CodeShowcase";
 export { ProcessFlow, ProcessStep } from "./ProcessFlow";
 export { StatGrid, Stat } from "./StatGrid";
 export { DetailGrid, DetailItem } from "./DetailGrid";
+export { MdxLink } from "./MdxLink";

@@ -20,6 +20,7 @@ import {
   Stat,
   DetailGrid,
   DetailItem,
+  MdxLink,
 } from "../_components";
 import type { Metadata } from "next";
 import { hedgehuntMeta, hedgehuntSections } from "./content";
@@ -47,6 +48,7 @@ const mdxComponents = {
   Stat,
   DetailGrid,
   DetailItem,
+  a: MdxLink,
 };
 
 export default async function HedgeHuntCaseStudy() {

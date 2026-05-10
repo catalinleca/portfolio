@@ -1,4 +1,7 @@
-import type { ReactNode } from "react";
+"use client";
+
+import type { ReactNode, SyntheticEvent } from "react";
+import { trackCaseStudyDecisionExpanded } from "@/analytics";
 import styles from "./DecisionCard.module.css";
 
 interface DecisionCardProps {
@@ -21,8 +24,27 @@ export const DecisionCard = ({
       ? `${styles.card} ${styles.breakoutCard}`
       : styles.card;
 
+  const trackCaseStudyDecisionExpandedOnOpen = (
+    event: SyntheticEvent<HTMLDetailsElement>,
+  ) => {
+    if (id == null ) {
+      return
+    };
+
+    if (!event.currentTarget.open) {
+      return
+    };
+
+    trackCaseStudyDecisionExpanded(id);
+  };
+
   return (
-    <details id={id} className={className} open={defaultOpen || undefined}>
+    <details
+      id={id}
+      className={className}
+      open={defaultOpen || undefined}
+      onToggle={trackCaseStudyDecisionExpandedOnOpen}
+    >
       <summary className={styles.summary}>
         <span className={styles.title}>{title}</span>
         <span className={styles.chevron} aria-hidden="true" />

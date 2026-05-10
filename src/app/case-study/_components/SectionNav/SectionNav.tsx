@@ -1,6 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import {
+  trackCaseStudySectionNavClicked,
+  trackCaseStudySectionViewed,
+} from "@/analytics";
 import styles from "./SectionNav.module.css";
 
 interface Section {
@@ -18,6 +22,7 @@ const prefersReducedMotion =
 
 export const SectionNav = ({ sections }: SectionNavProps) => {
   const [activeId, setActiveId] = useState(sections[0]?.id ?? "");
+  const viewedSectionsRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -28,8 +33,15 @@ export const SectionNav = ({ sections }: SectionNavProps) => {
 
       const observer = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveId(section.id);
+          if (!entry.isIntersecting) {
+            return
+          };
+
+          setActiveId(section.id);
+
+          if (!viewedSectionsRef.current.has(section.id)) {
+            viewedSectionsRef.current.add(section.id);
+            trackCaseStudySectionViewed(section.id);
           }
         },
         { rootMargin: "-120px 0px -60% 0px", threshold: 0 },
@@ -46,7 +58,9 @@ export const SectionNav = ({ sections }: SectionNavProps) => {
     };
   }, [sections]);
 
-  const handleClick = (id: string) => {
+  const trackCaseStudySectionNavClickedAndScroll = (id: string) => {
+    trackCaseStudySectionNavClicked(id);
+
     const el = document.getElementById(id);
     if (!el) return;
 
@@ -63,7 +77,7 @@ export const SectionNav = ({ sections }: SectionNavProps) => {
           <li key={section.id}>
             <button
               className={`${styles.link} ${activeId === section.id ? styles.active : ""}`}
-              onClick={() => handleClick(section.id)}
+              onClick={() => trackCaseStudySectionNavClickedAndScroll(section.id)}
               type="button"
             >
               {section.label}
