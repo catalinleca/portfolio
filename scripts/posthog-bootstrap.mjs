@@ -181,11 +181,12 @@ const dashboards = [
       },
       {
         name: "Top referrer domains",
-        description: "Inbound referrers (excludes UTM-tagged links).",
+        description: "Inbound referrers (excludes UTM-tagged campaign traffic).",
         query: trendsInsight({
           series: [eventsNode({ event: "portfolio_page_view", math: "dau" })],
           display: "ActionsTable",
           breakdown: { property: "referrer_domain" },
+          properties: [PROPERTY("source_channel", "campaign", "is_not")],
         }),
       },
       {
@@ -468,7 +469,9 @@ const dashboards = [
             eventsNode({
               event: "portfolio_click",
               math: "total",
-              properties: [PROPERTY("link_name", "hero_github")],
+              properties: [
+                PROPERTY("link_name", ["hero_github", "contact_github"]),
+              ],
             }),
           ],
           display: "ActionsLineGraph",
